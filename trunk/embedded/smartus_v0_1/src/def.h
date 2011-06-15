@@ -5,9 +5,9 @@
 #include <stdlib.h>
 #include <uart.h>
 #include <timer.h>
+#include <adc.h>
 #include "periph.h"
 #include "usart.h"
-
 
 //Define DEBUG for torminal output
 //#define DEBUG
@@ -20,7 +20,6 @@
 
 void setup_oscillator(void);
 void config(void);
-void setup_timer1(void);
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 //                                                                                         //
@@ -80,5 +79,9 @@ void setup_timer1(void);
 
 #define KS0108_RST			LATBbits.LATB12
 #define TRIS_KS0108_RST		TRISBbits.TRISB12
+
+//Module radio
+#define TRM_TX	1
+#define TRM_RX	0
 
 #endif

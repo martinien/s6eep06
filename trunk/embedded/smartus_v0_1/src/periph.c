@@ -40,6 +40,34 @@ void define_io(void)
 
 void peripheral_pin_select(void)
 {
+	//INT1 - SWA - RB4/RP4
+	RPINR0bits.INT1R = 4;	
+	
+	//UART1 : GPS ou PC (commenter au choix)
+	RPINR18bits.U1RXR = 14;		//PIC RX = RB14/RP14 : USB
+	RPOR7bits.RP15R = 3;		//PIC TX = RB15/RP15 : USB	
+//	RPINR18bits.U1RXR = 3;		//PIC RX = RB3/RP3 : GPS
+//	RPOR1bits.RP2R  = 3;		//PIC TX = RB2/RP2 : GPS
+
+}
+
+void radio_dir(unsigned char dir)
+{
+	if(dir == TRM_TX)
+	{
+		//Transmission
+		TRIS_TXRX = 0;			//Output
+		RPOR4bits.RP9R = 5;		//RP9 = U2TX
+		TR = 1;					//Transmit mode
+	}
+	else
+	{
+		//Réception
+		TRIS_TXRX = 1;			//Input
+		RPOR4bits.RP9R = 0;		//No peripheral output
+		RPINR19bits.U2RXR = 9;	//RP9 = U2RX
+		TR = 0;					//Receive mode
+	}
 }
 
 //Timer 1, interrupt 10ms
@@ -61,4 +89,33 @@ void setup_timer1(void)
 	IEC0bits.T1IE = 1;
 	
 	T1CONbits.TON = 1;		//Timer1 On
+}
+
+void setup_adc(void)
+{
+	AD1CON1bits.ADON = 0;		//ADC Off
+	AD1CON1bits.ADSIDL = 0;		//Continue in idle
+	AD1CON1bits.FORM = 0;		//Integer (unsigned)
+	AD1CON1bits.SSRC = 7;		//Auto-convert
+	AD1CON1bits.ASAM = 0;		//No auto sampling
+	
+	AD1CON2bits.VCFG = 0;		//Ref = AVdd & AVss
+	AD1CON2bits.CSCNA = 0;		//Use the channel selected by CHOSA
+	AD1CON2bits.SMPI = 0;		//Interrupt after each conversion
+	AD1CON2bits.BUFM = 0;		//One 16-word buffer
+	AD1CON2bits.ALTS = 0;		//Always use MUXA
+	
+	AD1CON3bits.ADRC = 1;		//Internal ADC clock
+	AD1CON3bits.SAMC = 31;		//Auto-sample time
+	
+	AD1CHSbits.CH0NA = 0;		//Negative input is Vr-
+	AD1CHSbits.CH0SA = 0;		//Sample AN0	
+		
+	AD1PCFG = 0xFFFC;			//All Digital except AN0 & AN1
+	
+	//Enable ints and module:
+	_AD1IF = 0;
+	_AD1IE = 1;
+	AD1CON1bits.ADON = 1;		//ADC On
+	AD1CON1bits.SAMP = 1;		//New conversion
 }
