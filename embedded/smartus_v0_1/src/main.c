@@ -5,13 +5,9 @@
 // =>
 
 //Config fuses
-//Refer to p24fj16ga004.h for the details		//ToDo!
+//Refer to p24fj16ga004.h for the details
 _CONFIG1(JTAGEN_OFF & GCP_OFF & GWRP_OFF & BKBUG_ON & ICS_PGx1 & FWDTEN_OFF);
 _CONFIG2(IESO_OFF & SOSCSEL_LPSOSC & WUTSEL_FST & FNOSC_FRCPLL & FCKSM_CSDCMD & OSCIOFNC_ON);
-
-//Prototypes:
-void init_default_variables(void);
-void update_variables(void);
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////
@@ -20,6 +16,8 @@ void update_variables(void);
 //                                                                                          //
 //////////////////////////////////////////////////////////////////////////////////////////////
 
+//interrupt.c
+extern volatile int nombre;	//Pour encodeur
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 //                                                                                          //
@@ -31,8 +29,6 @@ int main(void)
 	//Initial configuration
 	setup_oscillator();
 	config();
-	
-
 
 	//Main loop
 	while (1)
@@ -65,10 +61,7 @@ void setup_oscillator(void)
 }
 
 void config(void)
-{
-	//All Digital except AN0 & AN1
-	AD1PCFG = 0xFFFC;
-	
+{	
 	//Define inputs/outputs
 	define_io();		
 	
@@ -76,6 +69,14 @@ void config(void)
 	peripheral_pin_select();
 	
 	//Config peripherals:
-	setup_usart1(); 		//PC interface
+	setup_usart1(); 		//PC/GPS
+	setup_usart2(); 		//Radio
 	setup_timer1();			//10ms timebase
+	setup_adc();			//ADC
+	
+	//Encoder interrupts:
+	_INT0IF = 0;
+	_INT1IF = 0;
+	_INT0IE = 1;
+	_INT1IE = 1;
 }
