@@ -6,8 +6,13 @@
 #include <uart.h>
 #include <timer.h>
 #include <adc.h>
+#include <libpic30.h>
 #include "periph.h"
 #include "usart.h"
+#include "KS0108.h"
+#include "graphic.h"
+
+#define FCY 32000000
 
 //Define DEBUG for torminal output
 //#define DEBUG

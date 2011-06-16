@@ -119,3 +119,13 @@ void setup_adc(void)
 	AD1CON1bits.ADON = 1;		//ADC On
 	AD1CON1bits.SAMP = 1;		//New conversion
 }
+
+void delay_us(unsigned int t)
+{
+	unsigned int repeat = 0;
+	
+	for(repeat = 0; repeat < t; repeat++)	//Environ 1.68µs
+	{
+		Nop();	
+ 	}  	
+}
