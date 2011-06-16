@@ -13,5 +13,6 @@ void peripheral_pin_select(void);
 void setup_adc(void);
 void setup_timer1(void);
 void radio_dir(unsigned char dir);
+void delay_us(unsigned int t);
 
 #endif

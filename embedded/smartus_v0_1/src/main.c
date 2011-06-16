@@ -19,6 +19,9 @@ _CONFIG2(IESO_OFF & SOSCSEL_LPSOSC & WUTSEL_FST & FNOSC_FRCPLL & FCKSM_CSDCMD & 
 //interrupt.c
 extern volatile int nombre;	//Pour encodeur
 
+//Images bitmap converties
+extern char test[];
+
 //////////////////////////////////////////////////////////////////////////////////////////////
 //                                                                                          //
 //                                        Main function                                     //
@@ -26,6 +29,9 @@ extern volatile int nombre;	//Pour encodeur
 //////////////////////////////////////////////////////////////////////////////////////////////
 int main(void)
 {	
+	int last_nombre = 0;
+	char str[] = "Test de String...";
+	
 	//Initial configuration
 	setup_oscillator();
 	config();
@@ -33,9 +39,30 @@ int main(void)
 	//Main loop
 	while (1)
 	{
-
+		//Test: encodeur et GLCD
+		if(last_nombre != nombre)	//Si une transition a eu lieu
+		{
+			switch(nombre)
+			{
+				case 0:
+					GLCD_ClearScreen();
+					GLCD_GoTo(0,0);
+					GLCD_WriteString(str);
+					GLCD_SetPixel(10, 20, 1);
+					break;
+				case 1:
+					GLCD_Bitmap(test, 0, 0, 128, 64);
+					break;
+				default:
+					GLCD_ClearScreen();
+					GLCD_GoTo(0,0);
+					GLCD_WriteChar(nombre + 48);
+					break;
+			}
+		}
+		
+		last_nombre = nombre;
 	}
-
     return 0;
 }
 
@@ -79,4 +106,9 @@ void config(void)
 	_INT1IF = 0;
 	_INT0IE = 1;
 	_INT1IE = 1;
+	
+	//Init GLCD
+	GLCD_Initalize();
+	//Delay10KTCYx(0);
+	GLCD_ClearScreen();		
 }
