@@ -1,13 +1,30 @@
 #include "def.h"
+#include <libpic30.h>
 
 //ToDo:
 //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 // =>
 
+//Tests:
+//=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+//=> Flash LED: 			OK
+//=> Rotary encoder : 		OK
+//=> Serial port (PC) : 	OK
+//=> ADC 10bits : 			OK
+//=> Serial port (GPS) : 
+//=> Serial port (LINX) :
+//=> RF Communication :		
+//=> GLCD :					
+
 //Config fuses
 //Refer to p24fj16ga004.h for the details
 _CONFIG1(JTAGEN_OFF & GCP_OFF & GWRP_OFF & BKBUG_ON & ICS_PGx1 & FWDTEN_OFF);
 _CONFIG2(IESO_OFF & SOSCSEL_LPSOSC & WUTSEL_FST & FNOSC_FRCPLL & FCKSM_CSDCMD & OSCIOFNC_ON);
+
+//Warnings
+#ifndef USE_GLCD
+#warning "GLCD Disabled!"
+#endif
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////
@@ -18,6 +35,7 @@ _CONFIG2(IESO_OFF & SOSCSEL_LPSOSC & WUTSEL_FST & FNOSC_FRCPLL & FCKSM_CSDCMD & 
 
 //interrupt.c
 extern volatile int nombre;	//Pour encodeur
+extern volatile unsigned int adc_result[];
 
 //Images bitmap converties
 extern char test[];
@@ -35,6 +53,12 @@ int main(void)
 	//Initial configuration
 	setup_oscillator();
 	config();
+	
+	//Démo:
+	while(1)
+	{
+		demo_numerisation();
+	}//Démo... commenter au final
 
 	//Main loop
 	while (1)
@@ -59,6 +83,10 @@ int main(void)
 					GLCD_WriteChar(nombre + 48);
 					break;
 			}
+
+			//Message d'introduction
+			puts_usart1((char *)str);
+
 		}
 		
 		last_nombre = nombre;
@@ -107,8 +135,20 @@ void config(void)
 	_INT0IE = 1;
 	_INT1IE = 1;
 	
+	#ifdef USE_GLCD
 	//Init GLCD
 	GLCD_Initalize();
 	//Delay10KTCYx(0);
-	GLCD_ClearScreen();		
+	GLCD_ClearScreen();
+	#endif		
+}
+
+//Démo projet
+void demo_numerisation(void)
+{
+	char str[10];
+	
+	sprintf(str, "ADC: %i\r", adc_result[1]);
+	puts_usart1((char *)str);
+	delay_us(10000);
 }

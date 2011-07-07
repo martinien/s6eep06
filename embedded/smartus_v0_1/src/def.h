@@ -3,6 +3,7 @@
 
 #include <p24fj16GA004.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <uart.h>
 #include <timer.h>
 #include <adc.h>
@@ -14,8 +15,9 @@
 
 #define FCY 32000000
 
-//Define DEBUG for torminal output
+//Define DEBUG for terminal output
 //#define DEBUG
+//#define USE_GLCD 
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 //                                                                                          //
@@ -25,6 +27,7 @@
 
 void setup_oscillator(void);
 void config(void);
+void demo_numerisation(void);
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 //                                                                                         //
