@@ -43,6 +43,7 @@ char uart_buf[128];
 
 void main(void)
 {	
+	unsigned char data0 = 0, data1 = 0, data2 = 0;
 	//Init
 	pre_config();
 	config();
@@ -62,10 +63,23 @@ void main(void)
 	//Main loop
 	while(1)
 	{
+		//Création des nombres:
+		data0++;
+		if(data0 > 99)
+			data0 = 0;
+			
+		data1 = ((TMR1L >> 2)+(TMR1L >> 3));
+		
+		data2 = (data0 + data1);
+		if(data2 > 99)
+			data2 = data0;
+			
 		//Émet un string sur le port série...
-		sprintf(uart_buf, "uControl: An OpenECoSys Project (http://openecosys.org/). Random data (Timer value): %d\r\n", TMR1L);
+		sprintf(uart_buf, "ID %02d NBBAT %02d QUEUE %02d", data0, data1, data2);
 	//	while(busy_usart1);
 		puts_usart1((char *)uart_buf);
+		
+
 		
 		Delay10KTCYx(160);	//Attend 100ms
 	}

@@ -106,7 +106,12 @@ unsigned char GLCD_ReadStatus(unsigned char controller)
 	status = (DATA & 0xFF);
 	KS0108_EN = 0;
 	GLCD_DisableController(controller);
+	
+	#ifdef USE_GLCD
 	return status;
+	#else
+	return 0;
+	#endif
 }
 
 //-------------------------------------------------------------------------------------------------
