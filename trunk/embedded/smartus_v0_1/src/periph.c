@@ -43,11 +43,18 @@ void peripheral_pin_select(void)
 	//INT1 - SWA - RB4/RP4
 	RPINR0bits.INT1R = 4;	
 	
-	//UART1 : GPS ou PC (commenter au choix)
+	//UART1 : 
+	#ifdef GPS_FEEDTHROUGH
+	//Transfert les messages GPS au PC
+	RPOR7bits.RP15R = 3;		//PIC TX = RB15/RP15 : USB	
+	RPINR18bits.U1RXR = 3;		//PIC RX = RB3/RP3 : GPS
+	#else
+	//GPS ou PC (commenter au choix)
 	RPINR18bits.U1RXR = 14;		//PIC RX = RB14/RP14 : USB
 	RPOR7bits.RP15R = 3;		//PIC TX = RB15/RP15 : USB	
 //	RPINR18bits.U1RXR = 3;		//PIC RX = RB3/RP3 : GPS
 //	RPOR1bits.RP2R  = 3;		//PIC TX = RB2/RP2 : GPS
+	#endif
 
 }
 

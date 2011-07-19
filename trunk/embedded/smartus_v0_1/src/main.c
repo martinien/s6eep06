@@ -25,6 +25,17 @@ _CONFIG2(IESO_OFF & SOSCSEL_LPSOSC & WUTSEL_FST & FNOSC_FRCPLL & FCKSM_CSDCMD & 
 #ifndef USE_GLCD
 #warning "GLCD Disabled!"
 #endif
+#ifdef BORNE
+#warning "Ce module est une BORNE!"
+#endif
+#ifdef AUTO
+#warning "Ce module est une AUTO!"
+#endif
+#ifdef GPS_FEEDTHROUGH
+#warning "GPS Feedthrough activated!"
+#endif
+
+
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////
@@ -54,11 +65,15 @@ int main(void)
 	setup_oscillator();
 	config();
 	
-	//Démo:
-	while(1)
-	{
-		demo_numerisation();
-	}//Démo... commenter au final
+//	//Démo:
+//	while(1)
+//	{
+//		demo_numerisation();
+//	}//Démo... commenter au final
+
+	//Test de communication radio:
+//	radio_dir(TRM_RX);	//Module en réception
+	radio_dir(TRM_TX);		//Module en émission
 
 	//Main loop
 	while (1)
@@ -86,7 +101,6 @@ int main(void)
 
 			//Message d'introduction
 			puts_usart1((char *)str);
-
 		}
 		
 		last_nombre = nombre;

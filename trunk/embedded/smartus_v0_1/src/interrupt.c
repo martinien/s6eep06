@@ -33,7 +33,7 @@ void __attribute__ ((interrupt, no_auto_psv)) _U2RXInterrupt(void)
 {
 	char rx = U2RXREG;	
 	
-	U2TXREG = rx;			//Echo
+	U1TXREG = rx;			//Echo sur UART1 (USB)
 	IFS1bits.U2RXIF = 0;	//Clear flag
 }
 
@@ -56,6 +56,10 @@ void __attribute__ ((interrupt, no_auto_psv)) _T1Interrupt(void)
 	{
 		refresh_led = 0;
 		ALIVE ^= 1;
+		
+		//Test de communication:
+		//U2TXREG = 'U';
+		puts_usart2("Test de string!");
 	}
 	
 	//Start and ADC conversion

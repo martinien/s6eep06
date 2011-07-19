@@ -19,7 +19,7 @@ char uart_buf[128];	//Caracter buffer
 
 void setup_usart1(void) 
 {
-	//UART1 config: Fcy = 16MHz, 19200 8N1
+	//UART1 config: Fcy = 16MHz, 9600 8N1
 	
 	U1MODEbits.UARTEN = 0;	//Disable UART1
 	//U1MODEbits.UFRZ = 0;	//Module continue in debug
@@ -42,7 +42,7 @@ void setup_usart1(void)
 	U1STAbits.URXISEL = 0;	//Interrupt on any character
 	U1STAbits.ADDEN = 0;	//Address detect disabled
 	
-	U1BRG = 51;				//19200 (from table)
+	U1BRG = 103;				//103 = 9600, 51 = 19200 (from table)
 
 	//Interrupts on reception only:
 	IFS0bits.U1RXIF = 0;
@@ -102,11 +102,11 @@ void puts_usart1(char *data)
 	} while( *data++ );
 }
 
-//UART2:
+//UART2: Module Radio
 
 void setup_usart2(void) 
 {
-	//UART2 config: Fcy = 16MHz, 19200 8N1
+	//UART2 config: Fcy = 16MHz, 300 8N1
 	
 	U2MODEbits.UARTEN = 0;	//Disable UART1
 	//U2MODEbits.UFRZ = 0;	//Module continue in debug
@@ -129,7 +129,7 @@ void setup_usart2(void)
 	U2STAbits.URXISEL = 0;	//Interrupt on any character
 	U2STAbits.ADDEN = 0;	//Address detect disabled
 	
-	U2BRG = 51;				//19200 (from table)
+	U2BRG = 3332;				//300 = 3332 (from table)
 
 	//Interrupts on reception only:
 	IFS1bits.U2RXIF = 0;
