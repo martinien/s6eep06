@@ -4,6 +4,7 @@ volatile unsigned int refresh_led = 0;
 volatile int nombre = 0;	//Pour encodeur
 volatile unsigned int adc_channel = 0;
 volatile unsigned int adc_result[2] = {0,0};
+volatile unsigned rf_cnt = 0, rf_flag = 0;
 #define REFRESH_RATE 9
 
 //////////////////////////////////////////////////////////////////////////////////////////////
@@ -55,12 +56,16 @@ void __attribute__ ((interrupt, no_auto_psv)) _T1Interrupt(void)
 	else
 	{
 		refresh_led = 0;
-		ALIVE ^= 1;
-		
-		//Test de communication:
-		//U2TXREG = 'U';
-		puts_usart2("Test de string!");
+		ALIVE ^= 1;		
 	}
+	
+	//RF
+	++rf_cnt;
+	if(rf_cnt >= 19)	// ~200ms
+	{
+		rf_cnt = 0;
+		rf_flag = 1;
+	}	
 	
 	//Start and ADC conversion
 	if(adc_channel >= 1)

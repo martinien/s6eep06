@@ -3,7 +3,7 @@
 
 //ToDo:
 //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-// =>
+// => Gérer RSSI
 
 //Tests:
 //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
@@ -11,10 +11,10 @@
 //=> Rotary encoder : 		OK
 //=> Serial port (PC) : 	OK
 //=> ADC 10bits : 			OK
-//=> Serial port (GPS) : 
-//=> Serial port (LINX) :
-//=> RF Communication :		
-//=> GLCD :					
+//=> Serial port (GPS) : 	OK
+//=> Serial port (LINX) :	OK
+//=> RF Communication :		OK	
+//=> GLCD :					In process
 
 //Config fuses
 //Refer to p24fj16ga004.h for the details
@@ -47,6 +47,7 @@ _CONFIG2(IESO_OFF & SOSCSEL_LPSOSC & WUTSEL_FST & FNOSC_FRCPLL & FCKSM_CSDCMD & 
 //interrupt.c
 extern volatile int nombre;	//Pour encodeur
 extern volatile unsigned int adc_result[];
+extern volatile unsigned rf_flag;
 
 //Images bitmap converties
 extern char test[];
@@ -101,6 +102,15 @@ int main(void)
 
 			//Message d'introduction
 			puts_usart1((char *)str);
+		}
+		
+		//Flags
+		if(rf_flag)
+		{
+			rf_flag = 0;
+			
+			//On envoie ici les requêtes:
+			puts_usart2("Test de string!");	//À enlever
 		}
 		
 		last_nombre = nombre;
