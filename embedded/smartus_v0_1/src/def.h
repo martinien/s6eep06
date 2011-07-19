@@ -15,9 +15,13 @@
 
 #define FCY 32000000
 
+//Configuration du module:
 //Define DEBUG for terminal output
 //#define DEBUG
 //#define USE_GLCD 
+//#define BORNE
+#define AUTO
+//#define GPS_FEEDTHROUGH
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 //                                                                                          //
@@ -67,8 +71,8 @@ void demo_numerisation(void);
 #define TRIS_TR			TRISBbits.TRISB8
 
 //KS0108 GLCD
-#define DATA PORTC							//Attention, seuls les 8 LSB!
-#define TRIS_DATA TRISC
+#define DATA 				PORTC			//Attention, seuls les 8 LSB!
+#define TRIS_DATA 			TRISC
 
 #define KS0108_EN			LATAbits.LATA2
 #define TRIS_KS0108_EN		TRISAbits.TRISA2
