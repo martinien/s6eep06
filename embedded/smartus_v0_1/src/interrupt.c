@@ -84,6 +84,7 @@ void __attribute__ ((interrupt, no_auto_psv)) _T1Interrupt(void)
 void __attribute__ ((interrupt, no_auto_psv)) _INT0Interrupt(void)
 {
 	//Do something useful...
+	GLCD_ClearScreen();
 	
 	_INT0IF = 0;	//Clear flag
 }

@@ -76,6 +76,9 @@ int main(void)
 //	radio_dir(TRM_RX);	//Module en réception
 	radio_dir(TRM_TX);		//Module en émission
 	
+	//Display welcome screen:	ToDo
+	GLCD_Bitmap(test, 0, 0, 128, 64);
+	
 	//Main loop
 	while (1)
 	{
