@@ -106,7 +106,7 @@ void puts_usart1(char *data)
 
 void setup_usart2(void) 
 {
-	//UART2 config: Fcy = 16MHz, 300 8N1
+	//UART2 config: Fcy = 16MHz, 900 8N1
 	
 	U2MODEbits.UARTEN = 0;	//Disable UART2
 	//U2MODEbits.UFRZ = 0;	//Module continue in debug
@@ -122,14 +122,14 @@ void setup_usart2(void)
 	U2MODEbits.PDSEL = 0;	//8N
 	U2MODEbits.STSEL = 0;	//1 stop (8N1)
 	
-	//U1STAbits.UTXISEL = 0;	//Interrupt on any TX
+	//U1STAbits.UTXISEL = 0;//Interrupt on any TX
 	U2STAbits.UTXINV = 0;	//Idle = 1
 	U2STAbits.UTXBRK = 0;	//Disabled
 	U2STAbits.UTXEN = 0;	//TX Disabled
 	U2STAbits.URXISEL = 0;	//Interrupt on any character
 	U2STAbits.ADDEN = 0;	//Address detect disabled
 	
-	U2BRG = 3332;				//300 = 3332 (from table)
+	U2BRG = 1110;			//300 = 3332 (from table), 1110 = 900
 
 	//Interrupts on reception only:
 	IFS1bits.U2RXIF = 0;

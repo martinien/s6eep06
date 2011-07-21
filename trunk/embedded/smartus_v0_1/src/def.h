@@ -22,7 +22,7 @@
 #define USE_GLCD 
 #define BORNE
 //#define AUTO
-#define GPS_FEEDTHROUGH
+//#define GPS_FEEDTHROUGH
 //test
 
 //////////////////////////////////////////////////////////////////////////////////////////////
@@ -40,6 +40,12 @@ void demo_numerisation(void);
 //                                          Definitions                                    //
 //                                                                                         //
 /////////////////////////////////////////////////////////////////////////////////////////////
+
+#define ADC_RSSI 	0
+#define ADC_POT		1
+
+//Pins:
+//======
 
 //LED
 #define ALIVE			PORTBbits.RB13
