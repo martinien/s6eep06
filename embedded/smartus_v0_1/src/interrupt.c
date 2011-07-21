@@ -32,16 +32,32 @@ void __attribute__ ((interrupt, no_auto_psv)) _U1TXInterrupt(void)
 //Uart2 Receive: RF
 void __attribute__ ((interrupt, no_auto_psv)) _U2RXInterrupt(void)
 {
-	char rx = U2RXREG;	
-	U1TXREG = rx;			//Echo sur UART1 (USB)
+	char rx = '0', dump = '0';
 	
-	#ifdef BORNE
-	if((rx >= '0') && (rx <= '5'))
-	{
-		GLCD_GoTo(0,0);
-		GLCD_WriteChar(rx);		//Affiche sur le GLCD
+	if(U2STAbits.FERR)
+	{	
+		//Si erreur de framing, on dump
+		dump = U2RXREG;
 	}
-	#endif
+	else
+	{
+		//Sinon, on utilise la valeur
+		rx = U2RXREG;
+		
+		//On effectue une action uniquement si RSSI est assez haut	
+		if(1)	//ToDo: RSSI
+		{	
+			U1TXREG = rx;				//Echo sur UART1 (USB)
+			
+			#ifdef BORNE
+			if((rx >= '0') && (rx <= '5'))
+			{
+				GLCD_GoTo(0,0);
+				GLCD_WriteChar(rx);		//Affiche sur le GLCD
+			}
+			#endif
+		}
+	}
 	
 	IFS1bits.U2RXIF = 0;	//Clear flag
 }
