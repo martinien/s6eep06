@@ -12,6 +12,7 @@
 #include "usart.h"
 #include "KS0108.h"
 #include "graphic.h"
+#include "commRF.h"
 
 #define FCY 32000000
 
