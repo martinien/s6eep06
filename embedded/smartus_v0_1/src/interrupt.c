@@ -56,7 +56,7 @@ void __attribute__ ((interrupt, no_auto_psv)) _T1Interrupt(void)
 	else
 	{
 		refresh_led = 0;
-		ALIVE ^= 1;		
+		ALIVE ^= 1;
 	}
 	
 	//RF

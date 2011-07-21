@@ -14,7 +14,7 @@
 //=> Serial port (GPS) : 	OK
 //=> Serial port (LINX) :	OK
 //=> RF Communication :		OK	
-//=> GLCD :					In process
+//=> GLCD :					OK
 
 //Config fuses
 //Refer to p24fj16ga004.h for the details
@@ -66,7 +66,7 @@ int main(void)
 	setup_oscillator();
 	config();
 	
-//	//Démo:
+//	//Démo numérisation:
 //	while(1)
 //	{
 //		demo_numerisation();
@@ -75,7 +75,7 @@ int main(void)
 	//Test de communication radio:
 //	radio_dir(TRM_RX);	//Module en réception
 	radio_dir(TRM_TX);		//Module en émission
-
+	
 	//Main loop
 	while (1)
 	{
@@ -98,10 +98,8 @@ int main(void)
 					GLCD_GoTo(0,0);
 					GLCD_WriteChar(nombre + 48);
 					break;
-			}
-
-			//Message d'introduction
-			puts_usart1((char *)str);
+			}			
+			last_nombre = nombre;
 		}
 		
 		//Flags
@@ -111,9 +109,8 @@ int main(void)
 			
 			//On envoie ici les requêtes:
 			puts_usart2("Test de string!");	//À enlever
+			//Commentaire: le display est lent car cette fonction est très lente... 300bauds
 		}
-		
-		last_nombre = nombre;
 	}
     return 0;
 }
