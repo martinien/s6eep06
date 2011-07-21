@@ -18,7 +18,7 @@
 //Configuration du module:
 //Define DEBUG for terminal output
 //#define DEBUG
-//#define USE_GLCD 
+#define USE_GLCD 
 //#define BORNE
 #define AUTO
 //#define GPS_FEEDTHROUGH

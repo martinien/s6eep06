@@ -28,10 +28,13 @@ void GLCD_Initalize(void)
 	unsigned char i;
 	GLCD_InitializePorts();
 	
-	for(i = 0; i < 3; i++)
+	for(i = 0; i < 2; i++)
 	{
 		GLCD_WriteCommand((DISPLAY_ON_CMD | GLCD_ON), i);
 	}
+	
+	GLCD_ClearScreen();
+	GLCD_GoTo(0,0);
 }
 //-------------------------------------------------------------------------------------------------
 // Positionne le curseur, x =  largeur et y = hauteur

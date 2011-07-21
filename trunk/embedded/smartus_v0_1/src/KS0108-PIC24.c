@@ -36,7 +36,7 @@ void GLCD_InitializePorts(void)
 	KS0108_EN = 0;
 	KS0108_RS = 0;
 	KS0108_RW = 0;
-	KS0108_RST = 0;
+	KS0108_RST = 1;			//Was 0
 	KS0108_CS1 = 0;
 	KS0108_CS2 = 0;
 	
@@ -46,7 +46,7 @@ void GLCD_InitializePorts(void)
 	TRIS_KS0108_CS2 = 0;
 	TRIS_KS0108_RW = 0;
 	TRIS_KS0108_RS = 0;
-	TRIS_KS0108_RST = 1;
+	TRIS_KS0108_RST = 0;	//Was 1
 }
 //-------------------------------------------------------------------------------------------------
 // Enable Controller (0-1)
@@ -63,6 +63,10 @@ void GLCD_EnableController(unsigned char controller)
 			KS0108_CS1 = 0;
 			KS0108_CS2 = 1;
 			break;
+		default:
+			KS0108_CS1 = 0;
+			KS0108_CS2 = 0;
+			break;
 	}
 }
 //-------------------------------------------------------------------------------------------------
@@ -73,12 +77,16 @@ void GLCD_DisableController(unsigned char controller)
 	switch(controller)
 	{
 		case 0 : 
-			KS0108_CS1 = 1;
+			KS0108_CS1 = 0;
 			KS0108_CS2 = 0;
 			break;
 		case 1 : 
 			KS0108_CS1 = 0;
-			KS0108_CS2 = 1;
+			KS0108_CS2 = 0;
+			break;
+		default:
+			KS0108_CS1 = 0;
+			KS0108_CS2 = 0;
 			break;
 	}
 }
@@ -124,10 +132,10 @@ void GLCD_WriteCommand(unsigned char commandToWrite, unsigned char controller)
 		
 	TRIS_DATA &= 0xFF00;
 	KS0108_RW = 0;	
-	KS0108_RS = 0;	
-	GLCD_EnableController(controller);
-	DATA = (commandToWrite & 0xFF);
+	KS0108_RS = 0;
 	KS0108_EN = 1;
+	GLCD_EnableController(controller);
+	DATA = (commandToWrite & 0xFF);	
 	delay_us(10);	//Delay100TCYx(1);	//Réduire?
 	KS0108_EN = 0;
 	GLCD_DisableController(controller);
