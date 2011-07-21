@@ -13,7 +13,7 @@ volatile unsigned rf_cnt = 0, rf_flag = 0;
 //                                                                                          //
 //////////////////////////////////////////////////////////////////////////////////////////////
 
-//Uart1 Receive
+//Uart1 Receive: USB/GPS
 void __attribute__ ((interrupt, no_auto_psv)) _U1RXInterrupt(void)
 {
 	char rx = U1RXREG;	
@@ -29,12 +29,20 @@ void __attribute__ ((interrupt, no_auto_psv)) _U1TXInterrupt(void)
 	IFS0bits.U1TXIF = 0;	//Clear flag
 }
 
-//Uart2 Receive
+//Uart2 Receive: RF
 void __attribute__ ((interrupt, no_auto_psv)) _U2RXInterrupt(void)
 {
 	char rx = U2RXREG;	
-	
 	U1TXREG = rx;			//Echo sur UART1 (USB)
+	
+	#ifdef BORNE
+	if((rx >= '0') && (rx <= '5'))
+	{
+		GLCD_GoTo(0,0);
+		GLCD_WriteChar(rx);		//Affiche sur le GLCD
+	}
+	#endif
+	
 	IFS1bits.U2RXIF = 0;	//Clear flag
 }
 
@@ -61,7 +69,7 @@ void __attribute__ ((interrupt, no_auto_psv)) _T1Interrupt(void)
 	
 	//RF
 	++rf_cnt;
-	if(rf_cnt >= 19)	// ~200ms
+	if(rf_cnt >= 39)	// ~400ms
 	{
 		rf_cnt = 0;
 		rf_flag = 1;

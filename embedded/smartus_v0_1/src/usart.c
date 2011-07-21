@@ -108,7 +108,7 @@ void setup_usart2(void)
 {
 	//UART2 config: Fcy = 16MHz, 300 8N1
 	
-	U2MODEbits.UARTEN = 0;	//Disable UART1
+	U2MODEbits.UARTEN = 0;	//Disable UART2
 	//U2MODEbits.UFRZ = 0;	//Module continue in debug
 	U2MODEbits.USIDL = 0;	//Module continue in idle
 	U2MODEbits.RTSMD = 1;	//Simplex
@@ -138,13 +138,13 @@ void setup_usart2(void)
 	IEC1bits.U2RXIE = 1;
 	IPC7bits.U2RXIP = 4;	//Priority of 4 (0 = disabled, 7 = max)
 	
-	U2MODEbits.UARTEN = 1;	//Enable UART1
+	U2MODEbits.UARTEN = 1;	//Enable UART2
 	U2STAbits.UTXEN = 1;	//TX Enabled
 }
 
 void putc_usart2(char data)
 {	
-  	U2TXREG = data & 0xFF;  //Write the data byte to the USART1	
+  	U2TXREG = data & 0xFF;  //Write the data byte to the USART2	
 }
 
 char getc_usart2(void)

@@ -73,11 +73,16 @@ int main(void)
 //	}//Démo... commenter au final
 
 	//Test de communication radio:
-//	radio_dir(TRM_RX);	//Module en réception
+	#ifdef BORNE
+	radio_dir(TRM_RX);	//Module en réception
+	#endif
+	
+	#ifdef AUTO
 	radio_dir(TRM_TX);		//Module en émission
+	#endif
 	
 	//Display welcome screen:	ToDo
-	GLCD_Bitmap(test, 0, 0, 128, 64);
+//	GLCD_Bitmap(test, 0, 0, 128, 64);
 	
 	//Main loop
 	while (1)
@@ -102,7 +107,7 @@ int main(void)
 					GLCD_WriteChar(nombre + 48);
 					break;
 			}			
-			last_nombre = nombre;
+			last_nombre = nombre;		
 		}
 		
 		//Flags
@@ -110,8 +115,13 @@ int main(void)
 		{
 			rf_flag = 0;
 			
+			#ifdef AUTO
+			sprintf(str, "Value is : %i", nombre);
+			puts_usart2(str);
+			#endif
+			
 			//On envoie ici les requêtes:
-			puts_usart2("Test de string!");	//À enlever
+			//puts_usart2("Test plus");//À enlever
 			//Commentaire: le display est lent car cette fonction est très lente... 300bauds
 		}
 	}
