@@ -2,6 +2,8 @@
 
 volatile unsigned int refresh_led = 0;
 volatile int nombre = 0;	//Pour encodeur
+volatile int buttonPress = 0;	//Pour encodeur
+volatile int timer1 = 0;
 volatile unsigned int adc_channel = 0;
 volatile unsigned int adc_result[2] = {0,0};
 volatile unsigned rf_cnt = 0, rf_flag = 0;
@@ -72,6 +74,7 @@ void __attribute__ ((interrupt, no_auto_psv)) _U2TXInterrupt(void)
 //Timer 1 : 10ms
 void __attribute__ ((interrupt, no_auto_psv)) _T1Interrupt(void)
 {
+	timer1++;
 	//LED
 	if(refresh_led < REFRESH_RATE)
 	{
@@ -107,7 +110,7 @@ void __attribute__ ((interrupt, no_auto_psv)) _T1Interrupt(void)
 //INT0 : Encoder switch (press)
 void __attribute__ ((interrupt, no_auto_psv)) _INT0Interrupt(void)
 {
-	//Do something useful...
+	buttonPress = 1;
 	GLCD_ClearScreen();
 	
 	_INT0IF = 0;	//Clear flag
@@ -121,10 +124,10 @@ void __attribute__ ((interrupt, no_auto_psv)) _INT1Interrupt(void)
     else				//Rotation anti-horaire
 		--nombre;
 		
-	if(nombre > 5)
+	if(nombre > 2)
 		nombre = 0;
 	if(nombre < 0)
-		nombre = 5;	
+		nombre = 2;	
 	
 	_INT1IF = 0;	//Clear flag
 }
