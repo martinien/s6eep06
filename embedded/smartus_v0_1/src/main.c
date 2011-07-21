@@ -51,6 +51,7 @@ extern volatile unsigned rf_flag;
 
 //Images bitmap converties
 extern char test[];
+extern char Base1[], Base2[];
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 //                                                                                          //
@@ -82,7 +83,7 @@ int main(void)
 	#endif
 	
 	//Display welcome screen:	ToDo
-//	GLCD_Bitmap(test, 0, 0, 128, 64);
+	GLCD_Bitmap(Base1, 0, 0, 128, 64);
 	
 	//Main loop
 	while (1)
@@ -99,7 +100,19 @@ int main(void)
 					GLCD_SetPixel(10, 20, 1);
 					break;
 				case 1:
+					GLCD_ClearScreen();
+					GLCD_GoTo(0,0);
 					GLCD_Bitmap(test, 0, 0, 128, 64);
+					break;
+				case 2:
+					GLCD_ClearScreen();
+					GLCD_GoTo(0,0);
+					GLCD_Bitmap(Base1, 0, 0, 128, 64);
+					break;
+				case 3:
+					GLCD_ClearScreen();
+					GLCD_GoTo(0,0);
+					GLCD_Bitmap(Base2, 0, 0, 128, 64);
 					break;
 				default:
 					GLCD_ClearScreen();
