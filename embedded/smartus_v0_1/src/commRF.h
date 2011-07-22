@@ -10,5 +10,6 @@
 void construire_trame_envoie(char *trame, char *donnee8);
 //void inc_seq(char *num_seq);
 char rf_envoie(char *donnee8);
+char rf_valider_confirmation(char *trame);
 
 #endif
