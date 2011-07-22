@@ -7,8 +7,8 @@
 //                                                                         //
 /////////////////////////////////////////////////////////////////////////////
 
-void construire_trame(char *trame, char *data8, char *num_seq);
-void inc_seq(char *num_seq);
-char rf_envoie(char *data8, char *num_seq);
+void construire_trame_envoie(char *trame, char *donnee8);
+//void inc_seq(char *num_seq);
+char rf_envoie(char *donnee8);
 
 #endif
