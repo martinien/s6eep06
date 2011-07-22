@@ -1,8 +1,12 @@
 #include "commRF.h"
 #include "def.h"
 
+//Paramètres de la couche de liason de données
 #define FANION 0xE7
+#define NBRFANION 1
 #define ADRESSE 0xA0
+#define CONFIRMATION 0xAA
+#define ATTENTE_CONF 400	//milliseconde
 
 
 //==========================================================================================//
@@ -13,34 +17,43 @@
 //==========================================================================================//
 
 
-void construire_trame(char *trame, char *data8, char *num_seq)
+void construire_trame_envoie(char *trame, char *donnee8)
 {
-    trame[0] = FANION;
-    trame[1] = ADRESSE | *num_seq;
-    trame[2] = *data8;
-    trame[3] = FANION;
+int i =0;
+    for(i=0; i<NBRFANION ; i++)
+	{
+		trame[i] = FANION;
+	}
+
+    trame[i] = *donnee8;
+    trame[i+1] = FANION;
 }
 
-void inc_seq(char *num_seq)
-{
-    if(*num_seq >= "0b00001111")
-        *num_seq = "0b00000000" && num_seq;
-    else
-        *num_seq += 1;
-}
+//void inc_seq(char *num_seq)
+//{
+//    if(*num_seq >= "0b00001111")
+//        *num_seq = "0b00000000" && num_seq;
+//    else
+//        *num_seq += 1;
+//}
 
-char rf_envoie(char *data8, char *num_seq)
+//Envoie normale
+char rf_envoie(char *donnee8)
 {
-    char trame[4];
-    
-    construire_trame(&trame, data8, num_seq);
-	inc_seq(num_seq);
+	char trame[NBRFANION+2];
+
+    construire_trame_envoie(&trame[NBRFANION+2], donnee8);
     
     //Envoie de donnée
     radio_dir(TRM_TX);
-    puts_usart2(&trame);
+    puts_usart2(&trame[NBRFANION+2]);
+    
     
     //Ajout du mode confirmation
+    //radio_dir(TRM_RX);
     
-    return 1;
+       
+    return "REUSSIE";
 }
+
+// Envoie de confirmation
