@@ -6,7 +6,7 @@ volatile int buttonPress = 0;	//Pour encodeur
 volatile int timer1 = 0;
 volatile unsigned int adc_channel = 0;
 volatile unsigned int adc_result[2] = {0,0};
-volatile unsigned rf_cnt = 0, rf_flag = 0;
+volatile unsigned rf_cnt = 0, rf_flag = 0, rf_rx_flag = 0, envoie =0, rf_delai_flag =0;
 #define REFRESH_RATE 9
 
 //////////////////////////////////////////////////////////////////////////////////////////////
@@ -45,6 +45,7 @@ void __attribute__ ((interrupt, no_auto_psv)) _U2RXInterrupt(void)
 	{
 		//Sinon, on utilise la valeur
 		rx = U2RXREG;
+		rf_rx_flag = 1;
 		
 		//On effectue une action uniquement si RSSI est assez haut	
 		if(1)	//ToDo: RSSI
@@ -87,11 +88,14 @@ void __attribute__ ((interrupt, no_auto_psv)) _T1Interrupt(void)
 	}
 	
 	//RF
-	++rf_cnt;
+	if(envoie)
+	{
+		++rf_cnt;	
+	}
 	if(rf_cnt >= 39)	// ~400ms
 	{
 		rf_cnt = 0;
-		rf_flag = 1;
+		rf_delai_flag = 1;
 	}	
 	
 	//Start and ADC conversion

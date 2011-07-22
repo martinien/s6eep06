@@ -47,8 +47,7 @@ _CONFIG2(IESO_OFF & SOSCSEL_LPSOSC & WUTSEL_FST & FNOSC_FRCPLL & FCKSM_CSDCMD & 
 //interrupt.c
 extern volatile int nombre;	//Pour encodeur
 extern volatile unsigned int adc_result[];
-extern volatile unsigned rf_flag;
-
+extern volatile unsigned rfdelai_flag, rf_rx_flag, rf_delai_flag, envoie;
 //Images bitmap converties
 extern char test[];
 extern char Base1[], Base2[];
@@ -59,13 +58,20 @@ extern char Base1[], Base2[];
 //                                                                                          //
 //////////////////////////////////////////////////////////////////////////////////////////////
 int main(void)
-{	
+{	//Test
 	int last_nombre = 0;
 	char str[] = "Test de String...";
+	char tx = 0b00110101; //donnee de test de la couche application
+	
+	//Variables
+	
 	
 	//Initial configuration
 	setup_oscillator();
 	config();
+	
+	
+
 	
 //	//Démo numérisation:
 //	while(1)
@@ -73,21 +79,25 @@ int main(void)
 //		demo_numerisation();
 //	}//Démo... commenter au final
 
-	//Test de communication radio:
-	#ifdef BORNE
-	radio_dir(TRM_RX);	//Module en réception
-	#endif
+	////Test de communication radio:
+	//#ifdef BORNE
+	//radio_dir(TRM_RX);	//Module en réception
+	//#endif
+	//
+	//#ifdef AUTO
+	//radio_dir(TRM_TX);		//Module en émission
+	//#endif
 	
-	#ifdef AUTO
-	radio_dir(TRM_TX);		//Module en émission
-	#endif
-	
+
+
 	//Display welcome screen:	ToDo
 	GLCD_Bitmap(Base1, 0, 0, 128, 64);
 	
 	//Main loop
 	while (1)
 	{
+		
+		
 		//Test: encodeur et GLCD
 		if(last_nombre != nombre)	//Si une transition a eu lieu
 		{
@@ -123,20 +133,49 @@ int main(void)
 			last_nombre = nombre;		
 		}
 		
-		//Flags
-		if(rf_flag)
+		#ifdef BORNE
+		//Protocole de liaison de données
+		//Envoie de donnée
+		if(envoie == 0 && tx!= 0b00000000)
 		{
-			rf_flag = 0;
-			
-			#ifdef AUTO
-			sprintf(str, "Value is : %i", nombre);
-			puts_usart2(str);
-			#endif
-			
-			//On envoie ici les requêtes:
-			//puts_usart2("Test plus");//À enlever
-			//Commentaire: le display est lent car cette fonction est très lente... 300bauds
+			envoie = rf_envoie(&tx);
 		}
+		//Attente de confirmation
+		if(envoie == 1)
+		{
+			//Lecture de la confirmation
+			if(rf_rx_flag == 1)
+			{
+				//envoie = rf_valider_confirmation();
+				rf_rx_flag == 0;
+			}
+			//Délai de réponse atteint
+			if(rf_delai_flag == 1)
+			{
+				rf_delai_flag == 0;
+				envoie = rf_envoie(&tx);
+			}
+		}
+	
+		#endif
+		
+		//Flags
+
+		
+		
+		//if(rf_flag)
+		//{
+		//	rf_flag = 0;
+		//	
+		//	#ifdef AUTO
+		//	sprintf(str, "Value is : %i", nombre);
+		//	puts_usart2(str);
+		//	#endif
+		//	
+		//	//On envoie ici les requêtes:
+		//	//puts_usart2("Test plus");//À enlever
+		//	//Commentaire: le display est lent car cette fonction est très lente... 300bauds
+		//}
 	}
     return 0;
 }
