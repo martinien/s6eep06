@@ -66,9 +66,8 @@ int main(void)
 	
 	//Variables
 	char trameRX[NBRFANION+2];
-	char decalage = 0;
 	char trame_complete = 0;
-	char contexte_trame =0;		//Indique la position dans la réception de la trame
+	unsigned decalage = 0, contexte_trame =0;		//Indique la position dans la réception de la trame
 	
 	
 	//Initial configuration
@@ -96,47 +95,47 @@ int main(void)
 
 
 	//Display welcome screen:	ToDo
-	GLCD_Bitmap(Base1, 0, 0, 128, 64);
+	//GLCD_BITMAP(BASE1, 0, 0, 128, 64);
 	
 	//Main loop
 	while (1)
 	{
 		
 		
-		//Test: encodeur et GLCD
-		if(last_nombre != nombre)	//Si une transition a eu lieu
-		{
-			switch(nombre)
-			{
-				case 0:
-					GLCD_ClearScreen();
-					GLCD_GoTo(0,0);
-					GLCD_WriteString(str);
-					GLCD_SetPixel(10, 20, 1);
-					break;
-				case 1:
-					GLCD_ClearScreen();
-					GLCD_GoTo(0,0);
-					GLCD_Bitmap(test, 0, 0, 128, 64);
-					break;
-				case 2:
-					GLCD_ClearScreen();
-					GLCD_GoTo(0,0);
-					GLCD_Bitmap(Base1, 0, 0, 128, 64);
-					break;
-				case 3:
-					GLCD_ClearScreen();
-					GLCD_GoTo(0,0);
-					GLCD_Bitmap(Base2, 0, 0, 128, 64);
-					break;
-				default:
-					GLCD_ClearScreen();
-					GLCD_GoTo(0,0);
-					GLCD_WriteChar(nombre + 48);
-					break;
-			}			
-			last_nombre = nombre;		
-		}
+		//Test: encodeur et GLCD******************************************************************à réactiver
+		//if(last_nombre != nombre)	//Si une transition a eu lieu
+		//{
+		//	switch(nombre)
+		//	{
+		//		case 0:
+		//			GLCD_ClearScreen();
+		//			GLCD_GoTo(0,0);
+		//			GLCD_WriteString(str);
+		//			GLCD_SetPixel(10, 20, 1);
+		//			break;
+		//		case 1:
+		//			GLCD_ClearScreen();
+		//			GLCD_GoTo(0,0);
+		//			GLCD_Bitmap(test, 0, 0, 128, 64);
+		//			break;
+		//		case 2:
+		//			GLCD_ClearScreen();
+		//			GLCD_GoTo(0,0);
+		//			GLCD_Bitmap(Base1, 0, 0, 128, 64);
+		//			break;
+		//		case 3:
+		//			GLCD_ClearScreen();
+		//			GLCD_GoTo(0,0);
+		//			GLCD_Bitmap(Base2, 0, 0, 128, 64);
+		//			break;
+		//		default:
+		//			GLCD_ClearScreen();
+		//			GLCD_GoTo(0,0);
+		//			GLCD_WriteChar(nombre + 48);
+		//			break;
+		//	}			
+		//	last_nombre = nombre;		
+		//}
 		
 		//Donnée entrante
 		if(rf_rx_flag == 1 && trame_complete == 0)
@@ -146,10 +145,10 @@ int main(void)
 		#ifdef BORNE
 		//Protocole de liaison de données
 		//Envoie de donnée
-		if(envoie == 0 && tx!= 0b00000000)
+		/*if(envoie == 0 && tx!= 0b00000000)
 		{
 			envoie = rf_envoie(&tx);
-		}
+		}*/
 		////Attente de confirmation
 		//if(envoie == 1)
 		//{
@@ -223,7 +222,7 @@ void config(void)
 	setup_usart1(); 		//PC/GPS
 	setup_usart2(); 		//Radio
 	setup_timer1();			//10ms timebase
-	setup_adc();			//ADC
+	//setup_adc();			//ADC
 	
 	//Encoder interrupts:
 	_INT0IF = 0;
@@ -233,9 +232,9 @@ void config(void)
 	
 	#ifdef USE_GLCD
 	//Init GLCD
-	GLCD_Initalize();
+//	GLCD_Initalize();
 	//Delay10KTCYx(0);
-	GLCD_ClearScreen();
+	//GLCD_ClearScreen();
 	#endif		
 }
 

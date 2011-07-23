@@ -1,7 +1,8 @@
 #include "commRF.h"
 #include "def.h"
 
-
+//variables
+extern volatile unsigned rf_rx_flag;
 
 
 //==========================================================================================//
@@ -67,29 +68,45 @@ char rf_valider_confirmation(char *trame)
 }
 
 //Detection de trame complète
-void rf_detection_trame(char *RX, char *decalage, char *trame_complete, char *trame, char *cnt)
+void rf_detection_trame(char *RX, unsigned *decalage, char *trame_complete, char *trame, unsigned *cnt)
 {
     if(*decalage != 0)
     {
-	//Ranger les bits dans la trame afin d'obtenir une trame complète
-	trame[*cnt] = (*RX << (*decalage-1));
-	trame[*cnt-1] = (*RX >> 8-(*decalage-1)) & rf_decalage_masque(*decalage);
+	unsigned int limite = NBRFANION*2+1;
 	
-	//détection de la fin de la trame
-	if( *cnt > (NBRFANION+1) && trame[*cnt-1] == FANION)
+	//Ranger les bits dans la trame afin d'obtenir une trame complète
+	if(*cnt < limite)
 	{
-	    *trame_complete =1;
+	    trame[*cnt] = (*RX << (*decalage-1));
 	}
+	
+	//(if)Pour éviter d'écrire à l'adresse précédente lorsqu'il n'y pas de synchronisation requie
+	if(*decalage != 1)
+	{
+	    trame[*cnt-1] = trame[*cnt-1] | (*RX >> 8-(*decalage-1)) & rf_decalage_masque(*decalage-1);
+	}
+	
+	//Incrémentation de la position dans la trame
+	*cnt= *cnt+1;
+	if(*cnt > limite)
+	{
+	    *trame_complete = 1;
+	    *cnt = 0;
+	}
+
     }
     else
     {
 	*decalage = rf_recherche_positif(RX);
 	if(*decalage != 0)
 	{
-	    trame[0] = (*RX << *decalage-1);
-	    ++cnt;
+	    trame[0] = (*RX << (*decalage-1));
+	    *cnt= *cnt+1;
 	}
     }
+    
+    //Remise à zéro du flag du registre de réception
+    rf_rx_flag = 0;
     
 }
 
@@ -99,7 +116,7 @@ void rf_detection_trame(char *RX, char *decalage, char *trame_complete, char *tr
 // In: 					octet de données de l'uart			    //
 // Out:					décalage du fanion = valeur retournée -1	    //
 //==========================================================================================//
-char rf_recherche_positif(char *RX)
+unsigned rf_recherche_positif(char *RX)
 {
     if((*RX & 0xE7) == 0xE7)
 	return 1;
@@ -121,9 +138,10 @@ char rf_recherche_positif(char *RX)
     return 0;
 }
 
-char rf_decalage_masque(char *decalage)
+unsigned rf_decalage_masque(unsigned decalage)
 {
-    switch(*decalage-1)
+
+    switch(decalage)
     {
 	case 1:
 	    return 0b00000001;
@@ -148,7 +166,7 @@ char rf_decalage_masque(char *decalage)
 	    break;
 	default:
 	    return 0;
-		break;
+	    break;
     }
 }
 
