@@ -27,12 +27,12 @@ Any
 &
 ## STIMULUSFILE
 (optional)
-ADC1BUF0
-Demand
-0000
+U2RXREG
+Message
+
 2
-misc\adc.txt
-Hex
+C:\Users\Sir Underground\Desktop\file_info.dat
+Pkt
 Yes
 (optional)
 --
