@@ -7,6 +7,7 @@ volatile int timer1 = 0;
 volatile unsigned int adc_channel = 0;
 volatile unsigned int adc_result[2] = {0,0};
 volatile unsigned rf_cnt = 0, rf_flag = 0, rf_rx_flag = 0, envoie =0, rf_delai_flag =0;
+volatile char rx = '0';
 #define REFRESH_RATE 9
 
 //////////////////////////////////////////////////////////////////////////////////////////////
@@ -34,7 +35,7 @@ void __attribute__ ((interrupt, no_auto_psv)) _U1TXInterrupt(void)
 //Uart2 Receive: RF
 void __attribute__ ((interrupt, no_auto_psv)) _U2RXInterrupt(void)
 {
-	char rx = '0', dump = '0';
+	char dump = '0';
 	
 	if(U2STAbits.FERR)
 	{	

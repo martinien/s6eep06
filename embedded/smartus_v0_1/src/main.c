@@ -48,6 +48,7 @@ _CONFIG2(IESO_OFF & SOSCSEL_LPSOSC & WUTSEL_FST & FNOSC_FRCPLL & FCKSM_CSDCMD & 
 extern volatile int nombre;	//Pour encodeur
 extern volatile unsigned int adc_result[];
 extern volatile unsigned rfdelai_flag, rf_rx_flag, rf_delai_flag, envoie;
+extern volatile char rx;
 //Images bitmap converties
 extern char test[];
 extern char Base1[], Base2[];
@@ -64,6 +65,10 @@ int main(void)
 	char tx = 0b00110101; //donnee de test de la couche application
 	
 	//Variables
+	char trameRX[NBRFANION+2];
+	char decalage = 0;
+	char trame_complete = 0;
+	char contexte_trame =0;		//Indique la position dans la réception de la trame
 	
 	
 	//Initial configuration
@@ -133,6 +138,11 @@ int main(void)
 			last_nombre = nombre;		
 		}
 		
+		//Donnée entrante
+		if(rf_rx_flag == 1 && trame_complete == 0)
+			rf_detection_trame(&rx, &decalage, &trame_complete, &trameRX, &contexte_trame);
+		
+		
 		#ifdef BORNE
 		//Protocole de liaison de données
 		//Envoie de donnée
@@ -140,22 +150,22 @@ int main(void)
 		{
 			envoie = rf_envoie(&tx);
 		}
-		//Attente de confirmation
-		if(envoie == 1)
-		{
-			//Lecture de la confirmation
-			if(rf_rx_flag == 1)
-			{
-				//envoie = rf_valider_confirmation();
-				rf_rx_flag == 0;
-			}
-			//Délai de réponse atteint
-			if(rf_delai_flag == 1)
-			{
-				rf_delai_flag == 0;
-				envoie = rf_envoie(&tx);
-			}
-		}
+		////Attente de confirmation
+		//if(envoie == 1)
+		//{
+		//	//Lecture de la confirmation
+		//	if(rf_rx_flag == 1)
+		//	{z
+		//		//envoie = rf_valider_confirmation();
+		//		rf_rx_flag == 0;
+		//	}
+		//	//Délai de réponse atteint
+		//	if(rf_delai_flag == 1)
+		//	{
+		//		rf_delai_flag == 0;
+		//		envoie = rf_envoie(&tx);
+		//	}
+		//}
 	
 		#endif
 		

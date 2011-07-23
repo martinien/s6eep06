@@ -104,4 +104,11 @@ void demo_numerisation(void);
 #define TRM_TX	1
 #define TRM_RX	0
 
+//Paramètres de la couche de liason de données
+#define FANION 0xE7
+#define NBRFANION 1
+#define ADRESSE 0xA0
+#define CONFIRMATION 0xAA
+#define ATTENTE_CONF 400	//milliseconde
+
 #endif
