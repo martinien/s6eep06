@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimulReseau_v1_0", "SimulReseau_v1_0\SimulReseau_v1_0.csproj", "{BFBBDC60-9E80-469B-A054-8F673D72570F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BFBBDC60-9E80-469B-A054-8F673D72570F}.Debug|x86.ActiveCfg = Debug|x86
+		{BFBBDC60-9E80-469B-A054-8F673D72570F}.Debug|x86.Build.0 = Debug|x86
+		{BFBBDC60-9E80-469B-A054-8F673D72570F}.Release|x86.ActiveCfg = Release|x86
+		{BFBBDC60-9E80-469B-A054-8F673D72570F}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
