@@ -6,7 +6,7 @@ volatile int buttonPress = 0;	//Pour encodeur
 volatile int timer1 = 0;
 volatile unsigned int adc_channel = 0;
 volatile unsigned int adc_result[2] = {0,0};
-volatile unsigned rf_cnt = 0, rf_flag = 0, rf_rx_flag = 0, envoie =0, rf_delai_flag =0;
+volatile unsigned int rf_cnt = 0, rf_flag = 0, rf_rx_flag = 0, envoie =0, rf_delai_flag =0;
 volatile char rx = '0';
 #define REFRESH_RATE 9
 
@@ -51,17 +51,20 @@ void __attribute__ ((interrupt, no_auto_psv)) _U2RXInterrupt(void)
 		//On effectue une action uniquement si RSSI est assez haut	
 		if(1)	//ToDo: RSSI
 		{	
-			U1TXREG = rx;				//Echo sur UART1 (USB)
-			
-			#ifdef BORNE
-			if((rx >= '0') && (rx <= '5'))
+			if(rx != 0xFF)	//Préambule//tOdO
 			{
-				#ifdef USE_GLCD
-				GLCD_GoTo(0,0);
-				GLCD_WriteChar(rx);		//Affiche sur le GLCD
+				U1TXREG = rx;				//Echo sur UART1 (USB)
+				
+				#ifdef AUTO
+				if((rx >= '0') && (rx <= '5'))
+				{
+					#ifdef USE_GLCD
+					GLCD_GoTo(0,0);
+					GLCD_WriteChar(rx);		//Affiche sur le GLCD
+					#endif
+				}
 				#endif
 			}
-			#endif
 		}
 	}
 	
@@ -91,14 +94,15 @@ void __attribute__ ((interrupt, no_auto_psv)) _T1Interrupt(void)
 	}
 	
 	//RF
-	if(envoie)
+//	if(envoie)				//ToDo
 	{
 		++rf_cnt;	
 	}
-	if(rf_cnt >= 39)	// ~400ms
+	if(rf_cnt >= 9)	// ~400ms
 	{
 		rf_cnt = 0;
-		rf_delai_flag = 1;
+		rf_delai_flag = 1;		//ToDo: ?
+		rf_flag = 1;
 	}	
 	
 	//Start and ADC conversion
