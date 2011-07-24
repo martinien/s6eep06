@@ -8,12 +8,19 @@ extern volatile unsigned rf_rx_flag;
 char rf_envoie(char *donnee8)
 {
 	char trame[NBRFANION+2];
+	unsigned int i;
 
     construire_trame_envoie(&trame[NBRFANION+2], donnee8);
     
     //Envoie de donnée
     radio_dir(TRM_TX);
-    puts_usart2(&trame[NBRFANION+2]);
+    for(i=0; i < NBRFANION+2; i++)
+    {
+	    while(busy_usart2());
+		U2TXREG = trame[i];
+    }
+    
+    //puts_usart2(&trame[NBRFANION+2]);
     
     //Retour en mode réception
     radio_dir(TRM_RX);
