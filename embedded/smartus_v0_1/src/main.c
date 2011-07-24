@@ -122,9 +122,9 @@ int main(void)
 			last_nombre = nombre;		
 		}
 		
-//		//Donnée entrante
-//		if(rf_rx_flag == 1 && trame_complete == 0)
-//			rf_detection_trame(&rx, &decalage, &trame_complete, &trameRX, &contexte_trame);
+		//Donnée entrante
+		if(rf_rx_flag == 1 && trame_complete == 0)
+			rf_detection_trame(&rx, &decalage, &trame_complete, &trameRX, &contexte_trame);
 		
 		
 		#ifdef BORNE
@@ -133,6 +133,7 @@ int main(void)
 		/*if(envoie == 0 && tx!= 0b00000000)
 		{
 			envoie = rf_envoie(&tx);
+
 		}*/
 		////Attente de confirmation
 		//if(envoie == 1)
@@ -168,6 +169,7 @@ int main(void)
 		if(buttonPress)
 		{
 			buttonPress = 0;
+			//envoie = rf_envoie(&tx);
 			send_trame();
 		}
 		
@@ -256,7 +258,7 @@ void send_trame(void)
 	
 	for(i = 0; i < 10; i++)
 	{
-		trame[i] = 0xFF;
+		trame[i] = 'a';
 	}
 	for(i = 0; i < 10; i++)
 	{
