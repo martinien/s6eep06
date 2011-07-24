@@ -18,3 +18,13 @@ C:\Users\Admin\Documents\My Dropbox\S6Projet\CodeReseau\CodeRep\SimulReseau_V2_0
 C:\Users\Admin\Documents\My Dropbox\S6Projet\CodeReseau\CodeRep\SimulReseau_V2_0\SimulReseau\SimulReseau\obj\x86\Debug\GenerateResource.read.1.tlog
 C:\Users\Admin\Documents\My Dropbox\S6Projet\CodeReseau\CodeRep\SimulReseau_V2_0\SimulReseau\SimulReseau\obj\x86\Debug\GenerateResource.write.1.tlog
 C:\Users\Admin\Documents\My Dropbox\S6Projet\CodeReseau\CodeRep\SimulReseau_V2_0\SimulReseau\SimulReseau\obj\x86\Debug\SimulReseau.Form1.resources
+C:\Users\Admin\Desktop\Projets6\pc\CodeReseau\CodeRep\SimulReseau_V2_0\SimulReseau\SimulReseau\bin\Debug\SimulReseau.exe
+C:\Users\Admin\Desktop\Projets6\pc\CodeReseau\CodeRep\SimulReseau_V2_0\SimulReseau\SimulReseau\bin\Debug\SimulReseau.pdb
+C:\Users\Admin\Desktop\Projets6\pc\CodeReseau\CodeRep\SimulReseau_V2_0\SimulReseau\SimulReseau\bin\Debug\SQLite.NET.dll
+C:\Users\Admin\Desktop\Projets6\pc\CodeReseau\CodeRep\SimulReseau_V2_0\SimulReseau\SimulReseau\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\Admin\Desktop\Projets6\pc\CodeReseau\CodeRep\SimulReseau_V2_0\SimulReseau\SimulReseau\obj\x86\Debug\SimulReseau.Form1.resources
+C:\Users\Admin\Desktop\Projets6\pc\CodeReseau\CodeRep\SimulReseau_V2_0\SimulReseau\SimulReseau\obj\x86\Debug\SimulReseau.Properties.Resources.resources
+C:\Users\Admin\Desktop\Projets6\pc\CodeReseau\CodeRep\SimulReseau_V2_0\SimulReseau\SimulReseau\obj\x86\Debug\GenerateResource.read.1.tlog
+C:\Users\Admin\Desktop\Projets6\pc\CodeReseau\CodeRep\SimulReseau_V2_0\SimulReseau\SimulReseau\obj\x86\Debug\GenerateResource.write.1.tlog
+C:\Users\Admin\Desktop\Projets6\pc\CodeReseau\CodeRep\SimulReseau_V2_0\SimulReseau\SimulReseau\obj\x86\Debug\SimulReseau.exe
+C:\Users\Admin\Desktop\Projets6\pc\CodeReseau\CodeRep\SimulReseau_V2_0\SimulReseau\SimulReseau\obj\x86\Debug\SimulReseau.pdb

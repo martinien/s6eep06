@@ -10,15 +10,17 @@ namespace SimulReseau
     public static class GlobalVar
     { 
         private static DataSet DS = new DataSet();
-        public static int stackLimit = 10;
-        public static int[,] receptions = new int[50, 3];
+        public static int stackLimit = 50;
+        public static int[,] receptionsState = new int[50, 3];
+        public static int[,] receptionsIO = new int[50, 3];
         public static int[] defCars = new int[17];
         public static int[] cars = new int[17];
         public static Double[] defCoeff = new Double[17];
         public static Double[] coeff = new Double[17];
         public static Double[] defRebate = new Double[17];
         public static Double[] rebate = new Double[17];
-        public static int receptionsPointer = 0;
+        public static int statePointer = 0;
+        public static int checkIOPointer = 0;
         public static bool start = false;
         public static bool pause = false;
         public static bool stop = false;

@@ -74,9 +74,11 @@ namespace SimulReseau
 
             if (message.Contains("ID") && message.Contains("NBBAT") && message.Contains("QUEUE"))
             {
-                if (GlobalVar.receptionsPointer + 1 == GlobalVar.stackLimit)
+                Debug.WriteLine("Received status transmission");
+
+                if (GlobalVar.statePointer + 1 == GlobalVar.stackLimit)
                 {
-                    GlobalVar.receptionsPointer = 0;
+                    GlobalVar.statePointer = 0;
                     /*Debug.WriteLine("");
                     Debug.WriteLine("Table overflow at: " + message);
                     Debug.WriteLine("");
@@ -84,33 +86,98 @@ namespace SimulReseau
                     Debug.WriteLine("");*/
                 }
 
-                int maxCount = message.Count(f => f == 'I');
+                /*int maxCount = message.Count(f => f == 'I');
                 for (int count = 1; count < maxCount; count++)
                 {
-                    int lastIDtag = message.LastIndexOf("ID");
+                    int lastIDtag = message.LastIndexOf("ID");//=========> This whole commented part used for multiple valid transmission acquisition (not working proprely)
                     string part = message.Substring(lastIDtag);
-                    message = message.Remove(lastIDtag);
+                    message = message.Remove(lastIDtag);*/
 
-                    if (part.Count() > 3)
+                    if (message.Count() > 3) //part instead of message
                     {
-                        GlobalVar.receptions[GlobalVar.receptionsPointer, 0] = Int32.Parse(part.Substring(3, 2));
+                       // Debug.WriteLine("ID: " + Int32.Parse(message.Substring(3, 2)));//part instead of message
+                        try
+                        {
+                            GlobalVar.receptionsState[GlobalVar.statePointer, 0] = Int32.Parse(message.Substring(3, 2));//part instead of message
+                        }
+                        catch
+                        {
+                            GlobalVar.receptionsState[GlobalVar.statePointer, 0] = 99;
+                        }
                     }
-                    if (part.Count() > 12)
+                    if (message.Count() > 12)//part instead of message
                     {
-                        GlobalVar.receptions[GlobalVar.receptionsPointer, 0] = Int32.Parse(part.Substring(12, 2));
+                       // Debug.WriteLine("NBBAT: " + Int32.Parse(message.Substring(12, 2)));//part instead of message
+                        try
+                        {
+                            GlobalVar.receptionsState[GlobalVar.statePointer, 1] = Int32.Parse(message.Substring(12, 2));//part instead of message
+                        }
+                        catch
+                        {
+                            GlobalVar.receptionsState[GlobalVar.statePointer, 1] = 99;
+                        }
                     }
-                    if (part.Count() > 21)
+                    if (message.Count() > 21)//part instead of message
                     {
-                        GlobalVar.receptions[GlobalVar.receptionsPointer, 0] = Int32.Parse(part.Substring(21, 2));
+                       // Debug.WriteLine("QUEUE: " + Int32.Parse(message.Substring(21, 2)));//part instead of message
+                        try
+                        {
+                            GlobalVar.receptionsState[GlobalVar.statePointer, 2] = Int32.Parse(message.Substring(21, 2));//part instead of message
+                        }
+                        catch
+                        {
+                            GlobalVar.receptionsState[GlobalVar.statePointer, 2] = 99;
+                        }
+                    }
+
+                    GlobalVar.statePointer = GlobalVar.statePointer + 1;
+               // }
+
+            }
+            else if (message.Contains("ID") && message.Contains("OUT") && message.Contains("IN"))
+            {
+                Debug.WriteLine("Received check-in/check-out transmission");
+
+                if (GlobalVar.checkIOPointer + 1 == GlobalVar.stackLimit)
+                {
+                    GlobalVar.checkIOPointer = 0;
+                }
+
+                if (message.Count() > 3)
+                {
+                    try
+                    {
+                        GlobalVar.receptionsIO[GlobalVar.checkIOPointer, 0] = Int32.Parse(message.Substring(3, 2));
+                    }
+                    catch
+                    {
+                        GlobalVar.receptionsIO[GlobalVar.checkIOPointer, 0] = 99;
+                    }
+                }
+                if (message.Count() > 12)
+                {
+                    try
+                    {
+                        GlobalVar.receptionsIO[GlobalVar.checkIOPointer, 1] = Int32.Parse(message.Substring(10, 4));
+                    }
+                    catch
+                    {
+                        GlobalVar.receptionsIO[GlobalVar.checkIOPointer, 1] = 99;
+                    }
+                }
+                if (message.Count() > 20)
+                {
+                    try
+                    {
+                        GlobalVar.receptionsIO[GlobalVar.checkIOPointer, 2] = Int32.Parse(message.Substring(18, 4));
+                    }
+                    catch
+                    {
+                        GlobalVar.receptionsIO[GlobalVar.checkIOPointer, 2] = 99;
                     }
                 }
 
-                GlobalVar.receptionsPointer = GlobalVar.receptionsPointer + 1;
-                //Debug.WriteLine("receptionsPointer= " + GlobalVar.receptionsPointer);
-            }
-            else
-            {
-                //Debug.WriteLine("last transmission received is invalid/n");
+                GlobalVar.checkIOPointer = GlobalVar.checkIOPointer + 1;
             }
          }
 
