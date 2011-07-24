@@ -1,0 +1,50 @@
+1) mettre les trois DLL dans C:\windows\system32\
+2) Ajouté comme référence dans le projet SQLITE.net.dll
+3) déclarer en début du windows form application principal: using Finisar.SQLite;
+
+4) déclarer des variables globale: 
+	private SQLiteConnection sql_con;
+        private SQLiteCommand sql_cmd;
+        private SQLiteDataAdapter DB;
+
+ 
+
+5) usage des query
+
+ private void SetConnection()
+        {
+            sql_con = new SQLiteConnection
+                ("Data Source=database.db;Version=3;New=False;Compress=True;");
+        }
+
+
+        private void ExecuteQuery(string txtQuery)
+        {
+            SetConnection();
+            sql_con.Open();
+            sql_cmd = sql_con.CreateCommand();
+            sql_cmd.CommandText = txtQuery;
+            sql_cmd.ExecuteNonQuery();
+            sql_con.Close();
+        }
+
+
+exemple d'ajout d'une variable C# dans une query 
+
+
+exemple pour récupérer des data de la database
+
+private void LoadSettings()
+        {
+            SetConnection();
+            sql_con.Open();
+            sql_cmd = sql_con.CreateCommand();
+            string CommandText = "select settingName, value from settings"; 
+            DB = new SQLiteDataAdapter(CommandText, sql_con);
+            DS.Reset();
+            DB.Fill(DS);
+            DT = DS.Tables[0];
+            sql_con.Close();
+            year = (String)DT.Rows[1][1];
+            competition = (String)DT.Rows[0][1];
+        }
