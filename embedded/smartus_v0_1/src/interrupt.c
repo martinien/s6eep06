@@ -56,8 +56,10 @@ void __attribute__ ((interrupt, no_auto_psv)) _U2RXInterrupt(void)
 			#ifdef BORNE
 			if((rx >= '0') && (rx <= '5'))
 			{
+				#ifdef USE_GLCD
 				GLCD_GoTo(0,0);
 				GLCD_WriteChar(rx);		//Affiche sur le GLCD
+				#endif
 			}
 			#endif
 		}

@@ -36,7 +36,6 @@ extern volatile unsigned int adc_result[];
 extern volatile unsigned rfdelai_flag, rf_rx_flag, rf_delai_flag, envoie;
 extern volatile char rx;
 //Images bitmap converties
-extern char test[];
 extern char Base1[], Base2[];
 
 //////////////////////////////////////////////////////////////////////////////////////////////
@@ -75,7 +74,9 @@ int main(void)
 	#endif
 
 	//Display welcome screen:	ToDo
+	#ifdef USE_GLCD
 	GLCD_Bitmap(Base1, 0, 0, 128, 64);
+	#endif
 	
 	//Main loop
 	while (1)
@@ -87,30 +88,33 @@ int main(void)
 			switch(nombre)
 			{
 				case 0:
+					#ifdef USE_GLCD
 					GLCD_ClearScreen();
 					GLCD_GoTo(0,0);
 					GLCD_WriteString(str);
 					GLCD_SetPixel(10, 20, 1);
+					#endif
 					break;
 				case 1:
-					GLCD_ClearScreen();
-					GLCD_GoTo(0,0);
-					GLCD_Bitmap(test, 0, 0, 128, 64);
-					break;
-				case 2:
+					#ifdef USE_GLCD
 					GLCD_ClearScreen();
 					GLCD_GoTo(0,0);
 					GLCD_Bitmap(Base1, 0, 0, 128, 64);
+					#endif
 					break;
-				case 3:
+				case 2:
+					#ifdef USE_GLCD
 					GLCD_ClearScreen();
 					GLCD_GoTo(0,0);
 					GLCD_Bitmap(Base2, 0, 0, 128, 64);
+					#endif
 					break;
 				default:
+					#ifdef USE_GLCD
 					GLCD_ClearScreen();
 					GLCD_GoTo(0,0);
 					GLCD_WriteChar(nombre + 48);
+					#endif
 					break;
 			}			
 			last_nombre = nombre;		
@@ -201,6 +205,21 @@ void config(void)
 	_INT1IF = 0;
 	_INT0IE = 1;
 	_INT1IE = 1;
+	
+	//Disable unwanted interrupts:
+	_U1TXIE = 0;
+	_U2TXIE = 0;
+	_SPI1IE = 0;
+	_SPI1IF = 0;
+	_T3IE = 0;
+	_T2IE = 0;
+	_OC2IE = 0;
+	_IC1IE = 0;
+	_OC1IE = 0;
+	_IC1IE = 0;
+	_U1ERIE = 0;
+	_U2ERIE = 0;
+	_PMPIE = 0;
 	
 	#ifdef USE_GLCD
 	//Init GLCD
