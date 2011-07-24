@@ -5,17 +5,6 @@
 //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 // => Gérer RSSI
 
-//Tests:
-//=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-//=> Flash LED: 			OK
-//=> Rotary encoder : 		OK
-//=> Serial port (PC) : 	OK
-//=> ADC 10bits : 			OK
-//=> Serial port (GPS) : 	OK
-//=> Serial port (LINX) :	OK
-//=> RF Communication :		OK	
-//=> GLCD :					OK
-
 //Config fuses
 //Refer to p24fj16ga004.h for the details
 _CONFIG1(JTAGEN_OFF & GCP_OFF & GWRP_OFF & BKBUG_ON & ICS_PGx1 & FWDTEN_OFF);
@@ -34,9 +23,6 @@ _CONFIG2(IESO_OFF & SOSCSEL_LPSOSC & WUTSEL_FST & FNOSC_FRCPLL & FCKSM_CSDCMD & 
 #ifdef GPS_FEEDTHROUGH
 #warning "GPS Feedthrough activated!"
 #endif
-
-
-
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 //                                                                                          //
@@ -67,15 +53,11 @@ int main(void)
 	//Variables
 	char trameRX[NBRFANION+2];
 	char trame_complete = 0;
-	unsigned decalage = 0, contexte_trame =0;		//Indique la position dans la réception de la trame
-	
+	unsigned decalage = 0, contexte_trame =0;		//Indique la position dans la réception de la trame	
 	
 	//Initial configuration
 	setup_oscillator();
 	config();
-	
-	
-
 	
 //	//Démo numérisation:
 //	while(1)
@@ -83,63 +65,60 @@ int main(void)
 //		demo_numerisation();
 //	}//Démo... commenter au final
 
-	////Test de communication radio:
-	//#ifdef BORNE
-	//radio_dir(TRM_RX);	//Module en réception
-	//#endif
-	//
-	//#ifdef AUTO
-	//radio_dir(TRM_TX);		//Module en émission
-	//#endif
+	//Test de communication radio:
+	#ifdef BORNE
+	radio_dir(TRM_RX);	//Module en réception
+	#endif
 	
-
+	#ifdef AUTO
+	radio_dir(TRM_TX);		//Module en émission
+	#endif
 
 	//Display welcome screen:	ToDo
-	//GLCD_BITMAP(BASE1, 0, 0, 128, 64);
+	GLCD_Bitmap(Base1, 0, 0, 128, 64);
 	
 	//Main loop
 	while (1)
 	{
 		
+		//Test: encodeur et GLCD
+		if(last_nombre != nombre)	//Si une transition a eu lieu
+		{
+			switch(nombre)
+			{
+				case 0:
+					GLCD_ClearScreen();
+					GLCD_GoTo(0,0);
+					GLCD_WriteString(str);
+					GLCD_SetPixel(10, 20, 1);
+					break;
+				case 1:
+					GLCD_ClearScreen();
+					GLCD_GoTo(0,0);
+					GLCD_Bitmap(test, 0, 0, 128, 64);
+					break;
+				case 2:
+					GLCD_ClearScreen();
+					GLCD_GoTo(0,0);
+					GLCD_Bitmap(Base1, 0, 0, 128, 64);
+					break;
+				case 3:
+					GLCD_ClearScreen();
+					GLCD_GoTo(0,0);
+					GLCD_Bitmap(Base2, 0, 0, 128, 64);
+					break;
+				default:
+					GLCD_ClearScreen();
+					GLCD_GoTo(0,0);
+					GLCD_WriteChar(nombre + 48);
+					break;
+			}			
+			last_nombre = nombre;		
+		}
 		
-		//Test: encodeur et GLCD******************************************************************à réactiver
-		//if(last_nombre != nombre)	//Si une transition a eu lieu
-		//{
-		//	switch(nombre)
-		//	{
-		//		case 0:
-		//			GLCD_ClearScreen();
-		//			GLCD_GoTo(0,0);
-		//			GLCD_WriteString(str);
-		//			GLCD_SetPixel(10, 20, 1);
-		//			break;
-		//		case 1:
-		//			GLCD_ClearScreen();
-		//			GLCD_GoTo(0,0);
-		//			GLCD_Bitmap(test, 0, 0, 128, 64);
-		//			break;
-		//		case 2:
-		//			GLCD_ClearScreen();
-		//			GLCD_GoTo(0,0);
-		//			GLCD_Bitmap(Base1, 0, 0, 128, 64);
-		//			break;
-		//		case 3:
-		//			GLCD_ClearScreen();
-		//			GLCD_GoTo(0,0);
-		//			GLCD_Bitmap(Base2, 0, 0, 128, 64);
-		//			break;
-		//		default:
-		//			GLCD_ClearScreen();
-		//			GLCD_GoTo(0,0);
-		//			GLCD_WriteChar(nombre + 48);
-		//			break;
-		//	}			
-		//	last_nombre = nombre;		
-		//}
-		
-		//Donnée entrante
-		if(rf_rx_flag == 1 && trame_complete == 0)
-			rf_detection_trame(&rx, &decalage, &trame_complete, &trameRX, &contexte_trame);
+//		//Donnée entrante
+//		if(rf_rx_flag == 1 && trame_complete == 0)
+//			rf_detection_trame(&rx, &decalage, &trame_complete, &trameRX, &contexte_trame);
 		
 		
 		#ifdef BORNE
@@ -164,27 +143,20 @@ int main(void)
 		//		rf_delai_flag == 0;
 		//		envoie = rf_envoie(&tx);
 		//	}
-		//}
-	
+		//}	
 		#endif
 		
-		//Flags
-
-		
-		
-		//if(rf_flag)
-		//{
-		//	rf_flag = 0;
-		//	
-		//	#ifdef AUTO
-		//	sprintf(str, "Value is : %i", nombre);
-		//	puts_usart2(str);
-		//	#endif
-		//	
-		//	//On envoie ici les requêtes:
-		//	//puts_usart2("Test plus");//À enlever
-		//	//Commentaire: le display est lent car cette fonction est très lente... 300bauds
-		//}
+		//Flags		
+//		if(rf_flag)
+//		{
+//			rf_flag = 0;
+//			
+//			#ifdef AUTO
+//			sprintf(str, "Value is : %i", nombre);
+//			puts_usart2(str);
+//			#endif
+//			//Commentaire: le display est lent car cette fonction est très lente... 300bauds
+//		}
 	}
     return 0;
 }
@@ -222,7 +194,7 @@ void config(void)
 	setup_usart1(); 		//PC/GPS
 	setup_usart2(); 		//Radio
 	setup_timer1();			//10ms timebase
-	//setup_adc();			//ADC
+	setup_adc();			//ADC
 	
 	//Encoder interrupts:
 	_INT0IF = 0;
@@ -232,9 +204,8 @@ void config(void)
 	
 	#ifdef USE_GLCD
 	//Init GLCD
-//	GLCD_Initalize();
-	//Delay10KTCYx(0);
-	//GLCD_ClearScreen();
+	GLCD_Initalize();
+	GLCD_ClearScreen();
 	#endif		
 }
 
