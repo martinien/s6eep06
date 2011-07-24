@@ -33,8 +33,10 @@ _CONFIG2(IESO_OFF & SOSCSEL_LPSOSC & WUTSEL_FST & FNOSC_FRCPLL & FCKSM_CSDCMD & 
 //interrupt.c
 extern volatile int nombre;	//Pour encodeur
 extern volatile unsigned int adc_result[];
+extern volatile unsigned int rf_flag;
 extern volatile unsigned rfdelai_flag, rf_rx_flag, rf_delai_flag, envoie;
 extern volatile char rx;
+extern volatile int buttonPress;	//Pour encodeur
 //Images bitmap converties
 extern char Base1[], Base2[];
 
@@ -46,7 +48,7 @@ extern char Base1[], Base2[];
 int main(void)
 {	//Test
 	int last_nombre = 0;
-	char str[] = "Test de String...";
+	char str[64] = "Test de String...";
 	char tx = 0b00110101; //donnee de test de la couche application
 	
 	//Variables
@@ -65,11 +67,11 @@ int main(void)
 //	}//Démo... commenter au final
 
 	//Test de communication radio:
-	#ifdef BORNE
-	radio_dir(TRM_RX);	//Module en réception
+	#ifdef AUTO
+	radio_dir(TRM_RX);		//Module en réception
 	#endif
 	
-	#ifdef AUTO
+	#ifdef BORNE
 	radio_dir(TRM_TX);		//Module en émission
 	#endif
 
@@ -151,16 +153,25 @@ int main(void)
 		#endif
 		
 		//Flags		
-//		if(rf_flag)
-//		{
-//			rf_flag = 0;
-//			
-//			#ifdef AUTO
-//			sprintf(str, "Value is : %i", nombre);
+		if(rf_flag)
+		{
+			rf_flag = 0;
+			
+			#ifdef BORNE
+//			sprintf(str, "ValueValue: %i\0",nombre);
 //			puts_usart2(str);
-//			#endif
-//			//Commentaire: le display est lent car cette fonction est très lente... 300bauds
-//		}
+//			send_trame();
+			#endif
+			//Commentaire: le display est lent car cette fonction est très lente... 300bauds
+		}
+		
+		if(buttonPress)
+		{
+			buttonPress = 0;
+			send_trame();
+		}
+		
+		
 	}
     return 0;
 }
@@ -236,4 +247,25 @@ void demo_numerisation(void)
 	sprintf(str, "ADC: %i\r", adc_result[1]);
 	puts_usart1((char *)str);
 	delay_us(10000);
+}
+
+void send_trame(void)
+{
+	char trame[20];
+	unsigned int i = 0;
+	
+	for(i = 0; i < 10; i++)
+	{
+		trame[i] = 0xFF;
+	}
+	for(i = 0; i < 10; i++)
+	{
+		trame[10+i] = '0'+i;
+	}
+	
+	for(i = 0; i < 20; i++)
+	{
+		while(busy_usart2());
+		U2TXREG = trame[i];
+	}
 }

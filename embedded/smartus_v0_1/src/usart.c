@@ -129,7 +129,7 @@ void setup_usart2(void)
 	U2STAbits.URXISEL = 0;	//Interrupt on any character
 	U2STAbits.ADDEN = 0;	//Address detect disabled
 	
-	U2BRG = 1110;			//300 = 3332 (from table), 1110 = 900
+	U2BRG = 300;			//300 = 3332 (from table), 1110 = 900
 
 	//Interrupts on reception only:
 	IFS1bits.U2RXIF = 0;
@@ -169,7 +169,7 @@ void gets_usart2(char *buffer, unsigned char len)
 	char i;    						// Length counter
 	unsigned char data;
 	
-	for(i=0;i<len;i++)  			// Only retrieve len characters
+	for(i=0;i<len;i++)  			// Only retreive len characters
 	{
 		while(!datardy_usart2());	// Wait for data to be received
 	
