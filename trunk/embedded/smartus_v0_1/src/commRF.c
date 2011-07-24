@@ -225,16 +225,21 @@ char rf_masque_de_test(unsigned decalage)
 
 //CRC******************************************************************************
 
-//char rf_crc(*trame)
+//char rf_crc(char *trame)
 //{
 //    char buffer[3];
+//    unsigned i = 0;
 //    
 //    //copie de la charge utile
 //    buffer[2] = trame[2];
-//    for()
+//
+//    for(i=0; i < 12; i++)
 //    {
+//	buffer[2] << i;
 //	buffer[2]^=0x98;
 //    }
+//    
+//    
 //    
 //}
 
