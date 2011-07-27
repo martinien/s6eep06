@@ -44,6 +44,9 @@ char uart_buf[128];
 void main(void)
 {	
 	unsigned char data0 = 0, data1 = 0, data2 = 0;
+	unsigned char NumBorne = 5, NbBatt = 56, Queue = 8;
+	unsigned char IdBattOut = 127, IdBattIn = 254;
+	
 	//Init
 	pre_config();
 	config();
@@ -73,15 +76,25 @@ void main(void)
 		data2 = (data0 + data1);
 		if(data2 > 99)
 			data2 = data0;
-			
-		//Émet un string sur le port série...
-		sprintf(uart_buf, "ID %02d NBBAT %02d QUEUE %02d", data0, data1, data2);
-	//	while(busy_usart1);
+//Old:			
+//		//Émet un string sur le port série...
+//		sprintf(uart_buf, "ID %02d NBBAT %02d QUEUE %02d", data0, data1, data2);
+//	//	while(busy_usart1);
+//		puts_usart1((char *)uart_buf);
+		
+		//Trame Séquence d’état de la borne
+		sprintf(uart_buf, " ID %02d NBBAT %02d QUEUE %02d ", NumBorne, NbBatt, Queue);
+		while(!busy_usart1);
 		puts_usart1((char *)uart_buf);
 		
-
-		
 		Delay10KTCYx(160);	//Attend 100ms
+
+		//Trame Séquence check-in/check-out
+		sprintf(uart_buf, " ID %02d OUT %02d IN %02d/ ", NumBorne, IdBattOut, IdBattIn);
+		while(!busy_usart1);
+		puts_usart1((char *)uart_buf);
+		
+		Delay10KTCYx(160);	//Attend 100ms				
 	}
 }
 
