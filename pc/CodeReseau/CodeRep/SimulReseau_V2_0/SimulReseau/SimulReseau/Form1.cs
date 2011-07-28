@@ -49,27 +49,21 @@ namespace SimulReseau
 
         private void serialPort1_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
-            if (serialPort1.BytesToRead >= 24)
+            string message = serialPort1.ReadExisting();
+            int a = message.Length;
+            serialPort1.DiscardInBuffer();
+
+           if (message.Length >= 24)
             {
-                this.Invoke(new EventHandler(ProcessTransmission));
+                ProcessTransmission(message);
             }
         }
 
-        private void ProcessTransmission(object s, EventArgs e)
+        void ProcessTransmission(string message)
         {
-            string message = "";
-
-            /*try
-            {*/
-            message = serialPort1.ReadExisting();
-
-            serialPort1.DiscardInBuffer();
-            /*Debug.WriteLine("");
-            Debug.WriteLine("Entry: " + message);
             Debug.WriteLine("");
-            Debug.WriteLine("ID?: " + message.Contains("ID"));
-            Debug.WriteLine("NBBAT? : " + message.Contains("NBBAT"));
-            Debug.WriteLine("QUEUE?: " + message.Contains("QUEUE"));*/
+            message = message.Substring(message.IndexOf("D")-1);
+            Debug.WriteLine("transmission: " + message);
             textBox1.Text = message;
 
             if (message.Contains("ID") && message.Contains("NBBAT") && message.Contains("QUEUE"))
@@ -79,60 +73,44 @@ namespace SimulReseau
                 if (GlobalVar.statePointer + 1 == GlobalVar.stackLimit)
                 {
                     GlobalVar.statePointer = 0;
-                    /*Debug.WriteLine("");
-                    Debug.WriteLine("Table overflow at: " + message);
-                    Debug.WriteLine("");
-                    Debug.WriteLine("Writing last message at pointer = 0");
-                    Debug.WriteLine("");*/
                 }
 
-                /*int maxCount = message.Count(f => f == 'I');
-                for (int count = 1; count < maxCount; count++)
+                if (message.Count() > 3)
                 {
-                    int lastIDtag = message.LastIndexOf("ID");//=========> This whole commented part used for multiple valid transmission acquisition (not working proprely)
-                    string part = message.Substring(lastIDtag);
-                    message = message.Remove(lastIDtag);*/
-
-                    if (message.Count() > 3) //part instead of message
+                    try
                     {
-                       // Debug.WriteLine("ID: " + Int32.Parse(message.Substring(3, 2)));//part instead of message
-                        try
-                        {
-                            GlobalVar.receptionsState[GlobalVar.statePointer, 0] = Int32.Parse(message.Substring(3, 2));//part instead of message
-                        }
-                        catch
-                        {
-                            GlobalVar.receptionsState[GlobalVar.statePointer, 0] = 99;
-                        }
+                        GlobalVar.receptionsState[GlobalVar.statePointer, 0] = Int32.Parse(message.Substring(3, 2));//part instead of message
                     }
-                    if (message.Count() > 12)//part instead of message
+                    catch
                     {
-                       // Debug.WriteLine("NBBAT: " + Int32.Parse(message.Substring(12, 2)));//part instead of message
-                        try
-                        {
-                            GlobalVar.receptionsState[GlobalVar.statePointer, 1] = Int32.Parse(message.Substring(12, 2));//part instead of message
-                        }
-                        catch
-                        {
-                            GlobalVar.receptionsState[GlobalVar.statePointer, 1] = 99;
-                        }
+                        GlobalVar.receptionsState[GlobalVar.statePointer, 0] = 99;
                     }
-                    if (message.Count() > 21)//part instead of message
+                }
+                if (message.Count() > 12)
+                {
+                    try
                     {
-                       // Debug.WriteLine("QUEUE: " + Int32.Parse(message.Substring(21, 2)));//part instead of message
-                        try
-                        {
-                            GlobalVar.receptionsState[GlobalVar.statePointer, 2] = Int32.Parse(message.Substring(21, 2));//part instead of message
-                        }
-                        catch
-                        {
-                            GlobalVar.receptionsState[GlobalVar.statePointer, 2] = 99;
-                        }
+                        GlobalVar.receptionsState[GlobalVar.statePointer, 1] = Int32.Parse(message.Substring(12, 2));//part instead of message
                     }
+                    catch
+                    {
+                        GlobalVar.receptionsState[GlobalVar.statePointer, 1] = 99;
+                    }
+                }
+                if (message.Count() > 21)
+                {
+                    try
+                    {
+                        GlobalVar.receptionsState[GlobalVar.statePointer, 2] = Int32.Parse(message.Substring(21, 2));//part instead of message
+                    }
+                    catch
+                    {
+                        GlobalVar.receptionsState[GlobalVar.statePointer, 2] = 99;
+                    }
+                }
 
-                    GlobalVar.statePointer = GlobalVar.statePointer + 1;
-               // }
-
+                Debug.WriteLine("ID: " + GlobalVar.receptionsState[GlobalVar.statePointer, 0] + " NBBAT: " + GlobalVar.receptionsState[GlobalVar.statePointer, 1] + " QUEUE: " + GlobalVar.receptionsState[GlobalVar.statePointer, 2]);
+                GlobalVar.statePointer = GlobalVar.statePointer + 1;
             }
             else if (message.Contains("ID") && message.Contains("OUT") && message.Contains("IN"))
             {
@@ -177,8 +155,12 @@ namespace SimulReseau
                     }
                 }
 
+                Debug.WriteLine("ID: " + GlobalVar.receptionsIO[GlobalVar.checkIOPointer, 0] + " OUT: " + GlobalVar.receptionsIO[GlobalVar.checkIOPointer, 1] + " IN: " + GlobalVar.receptionsIO[GlobalVar.checkIOPointer, 2]);
                 GlobalVar.checkIOPointer = GlobalVar.checkIOPointer + 1;
             }
+
+            else
+                serialPort1.DiscardInBuffer();
          }
 
         private void pictureBox1_Click(object sender, EventArgs e)
