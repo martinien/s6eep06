@@ -39,13 +39,20 @@ extern volatile char rx;
 extern volatile int buttonPress;	//Pour encodeur
 //Images bitmap converties
 extern char Base1[], Base2[];
+extern unsigned int adc_rssi[];
+extern unsigned int rssi_flag;
+
+unsigned int rssi = 0;
 
 //Test:
 char result = 0;
 unsigned char index = 0;
-unsigned char dirty_buf[10] = {0xF3, 0xF3, 0xF3, 0xF3, 0xF2, 0x52, 0x32, 0x20, 0x00,0x00};
-unsigned char clean_buf[10] = {0,0,0,0,0,0,0,0,0,0};
+unsigned char dirty_buf[16] = {0xF3, 0xF3, 0xF3, 0xF3, 0xF2, 0x52, 0x32, 0x20, 0x00,0x00};
+unsigned char clean_buf[16] = {0,0,0,0,0,0,0,0,0,0};
 unsigned char flag = 0x7E;
+
+//fifo.c
+extern unsigned char fifo[];
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 //                                                                                          //
@@ -66,6 +73,9 @@ int main(void)
 	//Initial configuration
 	setup_oscillator();
 	config();
+	
+	//Init fifo
+	fifo_init();
 	
 //	//Démo numérisation:
 //	while(1)
@@ -89,13 +99,13 @@ int main(void)
 	
 	
 	//Test
-	index = 0;
-	while(1)
-	{
-		result = get_offset(dirty_buf[index], dirty_buf[index + 1], flag);
-		clean_buffer(result, 10);
-		Nop();
-	}
+//	index = 0;
+//	while(1)
+//	{
+//		result = get_offset(dirty_buf[index], dirty_buf[index + 1], flag);
+//		clean_buffer(result, 10);
+//		Nop();
+//	}
 	
 	//Main loop
 	while (1)
@@ -175,6 +185,7 @@ int main(void)
 		{
 			rf_flag = 0;
 			
+
 			#ifdef BORNE
 //			sprintf(str, "ValueValue: %i\0",nombre);
 //			puts_usart2(str);
@@ -183,11 +194,25 @@ int main(void)
 			//Commentaire: le display est lent car cette fonction est très lente... 300bauds
 		}
 		
+		if(rssi_flag)
+		{
+			rssi_flag = 0;
+			//Filtre les données quand le buffer est plein
+			rssi = get_rssi();
+		}
+		
 		if(buttonPress)
 		{
 			buttonPress = 0;
 			//envoie = rf_envoie(&tx);
-			send_trame();
+			//send_trame();
+			
+			//Test:
+			result = get_offset(fifo[index], fifo[index + 1], flag);
+			if(result != 10)
+			{
+				clean_buffer(result, 16);
+			}
 		}
 		
 		
@@ -290,6 +315,10 @@ void send_trame(void)
 }
 
 //Retourne de combien de caractères on doit shifter à gauche
+//Une valeur de 10 indique "aucun match"
+
+//Bug connu: fausse détection si 0x00 suivi de 0xFF. Sera corrigé sous peu! - JFD
+
 char get_offset(unsigned char msb, unsigned char lsb, unsigned char ref)
 {
 	int i = 0;
@@ -315,9 +344,12 @@ char get_offset(unsigned char msb, unsigned char lsb, unsigned char ref)
 			return i;
 		#endif
 	}	
+	
+	//Aucun match!
+	return 10;
 }
 
-//Assume 2 buffers fixes, celui de réception et celui nettoyé
+//Assume 2 buffers fixes, celui de réception (fifo[]) et celui nettoyé
 //Décale les données et rempli le buffer clean
 void clean_buffer(unsigned char offset, char buf_length)
 {
@@ -326,10 +358,24 @@ void clean_buffer(unsigned char offset, char buf_length)
 	
 	for(i = 0; i < buf_length-1; i++)
 	{
-		temp1 = (dirty_buf[i] << 8) + dirty_buf[i+1];
+		temp1 = (fifo[i] << 8) + fifo[i+1];
 		temp1 = temp1 << offset;
 		temp1 = (temp1 & 0xFF00) >> 8;		
 		
 		clean_buf[i] = temp1;
 	}
 }
+
+unsigned int get_rssi(void)
+{
+	unsigned int i = 0;
+	unsigned long sum = 0;
+	
+	for(i = 0; i < AVG; i++)
+	{
+		sum += adc_rssi[i];
+	}
+	
+	return (sum >> 4);
+}
+

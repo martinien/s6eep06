@@ -8,7 +8,11 @@ volatile unsigned int adc_channel = 0;
 volatile unsigned int adc_result[2] = {0,0};
 volatile unsigned int rf_cnt = 0, rf_flag = 0, rf_rx_flag = 0, envoie =0, rf_delai_flag =0;
 volatile char rx = '0';
-#define REFRESH_RATE 9
+#define REFRESH_RATE 99
+
+unsigned int adc_rssi[AVG];
+unsigned int rssi_flag = 0;
+extern unsigned int rssi;
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 //                                                                                          //
@@ -49,22 +53,12 @@ void __attribute__ ((interrupt, no_auto_psv)) _U2RXInterrupt(void)
 		rf_rx_flag = 1;
 		
 		//On effectue une action uniquement si RSSI est assez haut	
-		if(1)	//ToDo: RSSI
-		{	
-			if(rx != 0xFF)	//Préambule//tOdO
-			{
-				U1TXREG = rx;				//Echo sur UART1 (USB)
-				
-				#ifdef AUTO
-				if((rx >= '0') && (rx <= '5'))
-				{
-					#ifdef USE_GLCD
-					GLCD_GoTo(0,0);
-					GLCD_WriteChar(rx);		//Affiche sur le GLCD
-					#endif
-				}
-				#endif
-			}
+		if(rssi >= 300)	//ToDo: Confirmer valeur RSSI
+		{
+			U1TXREG = rx;				//Echo sur UART1 (USB)
+			
+			//On ajoute au fifo
+			fifo_add(rx,0);
 		}
 	}
 	
@@ -98,7 +92,7 @@ void __attribute__ ((interrupt, no_auto_psv)) _T1Interrupt(void)
 	{
 		++rf_cnt;	
 	}
-	if(rf_cnt >= 9)	// ~400ms
+	if(rf_cnt >= 500)	// ~500ms
 	{
 		rf_cnt = 0;
 		rf_delai_flag = 1;		//ToDo: ?
@@ -146,7 +140,18 @@ void __attribute__ ((interrupt, no_auto_psv)) _INT1Interrupt(void)
 //ADC1
 void __attribute__ ((interrupt, no_auto_psv)) _ADC1Interrupt(void)
 {
+	static unsigned int index = 0;
+	
 	adc_result[adc_channel] = ADC1BUF0;
+	
+	if(adc_channel == ADC_RSSI)
+	{
+		index++;
+		if(index == AVG)
+			rssi_flag = 1;
+		index = index % AVG;
+		adc_rssi[index] = ADC1BUF0;
+	}
 	
 	_AD1IF = 0;	//Clear flag
 }
