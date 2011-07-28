@@ -40,6 +40,13 @@ extern volatile int buttonPress;	//Pour encodeur
 //Images bitmap converties
 extern char Base1[], Base2[];
 
+//Test:
+char result = 0;
+unsigned char index = 0;
+unsigned char dirty_buf[10] = {0xF3, 0xF3, 0xF3, 0xF3, 0xF2, 0x52, 0x32, 0x20, 0x00,0x00};
+unsigned char clean_buf[10] = {0,0,0,0,0,0,0,0,0,0};
+unsigned char flag = 0x7E;
+
 //////////////////////////////////////////////////////////////////////////////////////////////
 //                                                                                          //
 //                                        Main function                                     //
@@ -79,6 +86,16 @@ int main(void)
 	#ifdef USE_GLCD
 	GLCD_Bitmap(Base1, 0, 0, 128, 64);
 	#endif
+	
+	
+	//Test
+	index = 0;
+	while(1)
+	{
+		result = get_offset(dirty_buf[index], dirty_buf[index + 1], flag);
+		clean_buffer(result, 10);
+		Nop();
+	}
 	
 	//Main loop
 	while (1)
@@ -269,5 +286,50 @@ void send_trame(void)
 	{
 		while(busy_usart2());
 		U2TXREG = trame[i];
+	}
+}
+
+//Retourne de combien de caractères on doit shifter à gauche
+char get_offset(unsigned char msb, unsigned char lsb, unsigned char ref)
+{
+	int i = 0;
+	unsigned int value_16 = (msb << 8) + lsb;
+	unsigned int mask = (ref << 8);
+	#ifdef DEBUG_MPSIM
+	unsigned int temp1 = 0, temp2 = 0;
+	#endif
+	
+	if((value_16 & 0xFF00) == mask)
+		return 0;	//Pas d'offset
+	
+	for(i = 1; i < 8; ++i)
+	{
+		mask = mask >> 1;
+		#ifdef DEBUG_MPSIM
+		temp1 = (value_16 & mask);			
+		temp2 = (unsigned int)(ref << (8 - i));
+		if(temp1 == temp2)
+			return i;
+		#else
+		if((value_16 & mask) == (unsigned int)(ref << (8 - i))
+			return i;
+		#endif
+	}	
+}
+
+//Assume 2 buffers fixes, celui de réception et celui nettoyé
+//Décale les données et rempli le buffer clean
+void clean_buffer(unsigned char offset, char buf_length)
+{
+	unsigned int temp1 = 0;
+	int i = 0;
+	
+	for(i = 0; i < buf_length-1; i++)
+	{
+		temp1 = (dirty_buf[i] << 8) + dirty_buf[i+1];
+		temp1 = temp1 << offset;
+		temp1 = (temp1 & 0xFF00) >> 8;		
+		
+		clean_buf[i] = temp1;
 	}
 }

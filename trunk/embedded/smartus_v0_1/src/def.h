@@ -22,6 +22,8 @@
 //#define USE_GLCD 			//Le GLCD va avec l'auto
 //#define GPS_FEEDTHROUGH	//Le GPS est avec Auto
 
+#define DEBUG_MPSIM
+
 //////////////////////////////////////////////////////////////////////////////////////////////
 //                                                                                          //
 //                                  	Function prototypes                                 //
@@ -31,6 +33,8 @@
 void setup_oscillator(void);
 void config(void);
 void demo_numerisation(void);
+char get_offset(unsigned char msb, unsigned char lsb, unsigned char ref);
+void clean_buffer(unsigned char offset, char buf_length);
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 //                                                                                         //
