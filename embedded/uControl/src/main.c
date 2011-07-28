@@ -90,7 +90,7 @@ void main(void)
 		Delay10KTCYx(160);	//Attend 100ms
 
 		//Trame Séquence check-in/check-out
-		sprintf(uart_buf, " ID %02d OUT %02d IN %02d/ ", NumBorne, IdBattOut, IdBattIn);
+		sprintf(uart_buf, " ID %02d OUT %04d IN %04d/ ", NumBorne, IdBattOut, IdBattIn);
 		while(!busy_usart1);
 		puts_usart1((char *)uart_buf);
 		
