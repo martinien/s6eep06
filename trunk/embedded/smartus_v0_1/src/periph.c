@@ -88,7 +88,7 @@ void setup_timer1(void)
 	
 	//Period
 	TMR1 = 0x00;
-	PR1 = 0x4E20;			//10ms
+	PR1 = 0x07D0;			//1ms (4E20 = 10ms)
 	
 	//Interrupts
 	IPC0bits.T1IP = 1;		//Lowest priority

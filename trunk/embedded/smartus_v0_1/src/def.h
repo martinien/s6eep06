@@ -13,16 +13,18 @@
 #include "KS0108.h"
 #include "graphic.h"
 #include "commRF.h"
+#include "fifo.h"
 
 #define FCY 32000000
 
 //Configuration du module:
-#define BORNE				//Borne
-//#define AUTO				//Auto. Pour le moment, Auto = RX
-//#define USE_GLCD 			//Le GLCD va avec l'auto
+//#define BORNE				//Borne
+#define AUTO				//Auto. Pour le moment, Auto = RX
+#define USE_GLCD 			//Le GLCD va avec l'auto
 //#define GPS_FEEDTHROUGH	//Le GPS est avec Auto
 
 #define DEBUG_MPSIM
+
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 //                                                                                          //
@@ -35,6 +37,7 @@ void config(void);
 void demo_numerisation(void);
 char get_offset(unsigned char msb, unsigned char lsb, unsigned char ref);
 void clean_buffer(unsigned char offset, char buf_length);
+unsigned int get_rssi(void);
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 //                                                                                         //
@@ -44,6 +47,8 @@ void clean_buffer(unsigned char offset, char buf_length);
 
 #define ADC_RSSI 	0
 #define ADC_POT		1
+
+#define AVG 16
 
 //Pins:
 //======
