@@ -14,6 +14,7 @@ char rf_valider_confirmation(char *trame);
 unsigned rf_recherche_positif(char *RX);
 unsigned rf_decalage_masque(unsigned decalage);
 void rf_detection_trame(char *RX, unsigned *decalage, char *trame_complete, char *trame, unsigned *cnt);
+char rf_reponse_bonne_trame(unsigned decalage);
 char rf_masque_de_test(unsigned decalage);
 char rf_crc(char *trame);
 

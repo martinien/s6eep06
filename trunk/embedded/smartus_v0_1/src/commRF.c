@@ -10,7 +10,7 @@ char rf_envoie(char *donnee8)
 	char trame[NBRFANION+2];
 	unsigned int i;
 
-    construire_trame_envoie(&trame[NBRFANION+2], donnee8);
+    construire_trame_envoie(&trame, donnee8);
     
     //Envoie de donnée
     radio_dir(TRM_TX);
@@ -31,14 +31,14 @@ char rf_envoie(char *donnee8)
 
 void construire_trame_envoie(char *trame, char *donnee8)
 {
-int i =0;
-    for(i=0; i<NBRFANION ; i++)
+	int i =0;
+	for(i=0; i<NBRFANION ; i++)
 	{
 		trame[i] = FANION;
 	}
 
-    trame[i] = *donnee8;
-    trame[i+1] = FANION;
+	trame[i] = *donnee8;
+	trame[i+1] = FANION;
 }
 // Envoie de confirmation
 
@@ -64,16 +64,18 @@ char rf_valider_confirmation(char *trame)
 
 void rf_detection_trame(char *RX, unsigned *decalage, char *trame_complete, char *trame, unsigned *cnt)
 {
+    //Si un positif a été détecté
     if(*decalage != 0)
     {
-	
+	unsigned int i;
+	//Vérifier la possibilité d'avoir un faux positif
 	if(*cnt == 1 && *decalage != 1)
 	{
 	    //génère un masque de test pour détecter les fausses trame
 	    char masque = rf_masque_de_test(*decalage-1);
 	    char test = *RX & masque;
-	    
-	    if(test != masque)
+	    char bonne_reponse = rf_reponse_bonne_trame(*decalage-1);
+	    if(bonne_reponse != test)
 	    {
 		*cnt = 0;
 		*decalage = 0;
@@ -94,24 +96,39 @@ void rf_detection_trame(char *RX, unsigned *decalage, char *trame_complete, char
 	//(if)Pour éviter d'écrire à l'adresse précédente lorsqu'il n'y pas de synchronisation requie
 	if(*decalage != 1)
 	{
-	    trame[*cnt-1] = trame[*cnt-1] | (*RX >> 8-(*decalage-1)) & rf_decalage_masque(*decalage-1);
+	    trame[*cnt-1] = trame[*cnt-1] | ((*RX >> 8-(*decalage-1)) & rf_decalage_masque(*decalage-1));
 	}
 	
 	//Incrémentation de la position dans la trame
 	*cnt= *cnt+1;
+	
+	//Détecte la fin de la trame
+	char test = FANION;
 	if(*cnt > limite)
 	{
-	    *trame_complete = 1;
-	    *cnt = 0;
-	    *decalage = 0;
+		//Vérifie la présence d'un fanion de fermeture
+		if(trame[2] == test)
+		{
+			*trame_complete = 1;
+			*cnt = 0;
+			*decalage = 0;
+		}
+		//Lorsqu'un trame n'est pas complète
+		else
+		{
+			*cnt = 0;
+			*decalage = 0;
+		}
+	    
 	}
-
     }
     else
     {
+	//Recherche un décalage possible
 	*decalage = rf_recherche_positif(RX);
+	//Si oui, enregistre la trame et incrémente le compteur
 	if(*decalage != 0)
-	{
+	{		
 	    trame[0] = (*RX << (*decalage-1));
 	    *cnt= *cnt+1;
 	}
@@ -131,21 +148,21 @@ void rf_detection_trame(char *RX, unsigned *decalage, char *trame_complete, char
 
 unsigned rf_recherche_positif(char *RX)
 {
-    if((*RX & 0xE7) == 0xE7)
+    if((*RX & 0xFF) == 0xE7)
 	return 1;
-    if((*RX & 0x73) == 0x73)
+    if((*RX & 0x7F) == 0x3F)
 	return 2;
-    if((*RX & 0x39) == 0x39)
+    if((*RX & 0x3F) == 0x1F)
 	return 3;
-    if((*RX & 0x1C) == 0x1C)
+    if((*RX & 0x1F) == 0xF)
 	return 4;
-    if((*RX & 0xE) == 0xE)
+    if((*RX & 0xF) == 0x7)
 	return 5;
-    if((*RX & 0x7) == 0x7)
+    if((*RX & 0x7) == 0x3)
 	return 6;
-    if((*RX & 0x3) == 0x3)
+    if((*RX & 0x3) == 0x1)
 	return 7;
-    if((*RX & 0x1) == 0x1)
+    if((*RX & 0x1) == 0x0)
 	return 8;
 
     return 0;
@@ -200,8 +217,7 @@ unsigned rf_decalage_masque(unsigned decalage)
 //==========================================================================================//
 char rf_masque_de_test(unsigned decalage)
 {
-
-    switch(decalage)
+	switch(decalage)
     {
 	case 1:
 	    return 0b10000000;
@@ -213,16 +229,48 @@ char rf_masque_de_test(unsigned decalage)
 	    return 0b11100000;
 	    break;
 	case 4:
-	    return 0b01110000;
+	    return 0b11110000;
 	    break;
 	case 5:
-	    return 0b00111000;
+	    return 0b11111000;
 	    break;
 	case 6:
-	    return 0b10011100;
+	    return 0b11111100;
 	    break;
 	case 7:
-	    return 0b11001110;
+	    return 0b11111110;
+	    break;
+	default:
+	    return 0;
+	    break;
+    }
+}
+
+char rf_reponse_bonne_trame(unsigned decalage)
+{
+
+    switch(decalage)
+    {
+	case 1:
+	    return 0b00000000;
+	    break;
+	case 2:
+	    return 0b10000000;
+	    break;
+	case 3:
+	    return 0b11000000;
+	    break;
+	case 4:
+	    return 0b11100000;
+	    break;
+	case 5:
+	    return 0b11110000;
+	    break;
+	case 6:
+	    return 0b11111000;
+	    break;
+	case 7:
+	    return 0b11111100;
 	    break;
 	default:
 	    return 0;
