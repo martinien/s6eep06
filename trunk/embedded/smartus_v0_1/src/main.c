@@ -31,7 +31,7 @@ _CONFIG2(IESO_OFF & SOSCSEL_LPSOSC & WUTSEL_FST & FNOSC_FRCPLL & FCKSM_CSDCMD & 
 //////////////////////////////////////////////////////////////////////////////////////////////
 
 //interrupt.c
-extern volatile int nombre;	//Pour encodeur
+extern volatile int nombre;
 extern volatile unsigned int adc_result[];
 extern volatile unsigned int rf_flag;
 extern volatile unsigned rfdelai_flag, rf_rx_flag, rf_delai_flag, envoie;
@@ -66,9 +66,9 @@ int main(void)
 	char tx = 0b00110101; //donnee de test de la couche application
 	
 	//Variables
-	char trameRX[NBRFANION+2];
-	char trame_complete = 0;
-	unsigned decalage = 0, contexte_trame =0;		//Indique la position dans la réception de la trame	
+	char trame_complete = 0, trameRX[NBRFANION+2];
+	unsigned decalage = 0, contexte_trame =0;
+	unsigned int contexte_local = 0, i =0;
 	
 	//Initial configuration
 	setup_oscillator();
@@ -147,11 +147,23 @@ int main(void)
 					break;
 			}			
 			last_nombre = nombre;		
-		}
+		}	
 		
 		//Donnée entrante
 		if(rf_rx_flag == 1 && trame_complete == 0)
+		{
+
 			rf_detection_trame(&rx, &decalage, &trame_complete, &trameRX, &contexte_trame);
+			
+			//Test de réception synchronisé		//pascal
+			if(trame_complete == 1)
+			{
+				rf_rx_flag = 0;
+				trame_complete = 0;
+
+			}
+			
+		}
 		
 		
 		#ifdef BORNE
@@ -193,7 +205,8 @@ int main(void)
 			#endif
 			//Commentaire: le display est lent car cette fonction est très lente... 300bauds
 		}
-		
+
+		#ifdef BORNE
 		if(rssi_flag)
 		{
 			rssi_flag = 0;
@@ -214,6 +227,7 @@ int main(void)
 				clean_buffer(result, 16);
 			}
 		}
+		#endif
 		
 		
 	}
