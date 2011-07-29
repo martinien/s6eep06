@@ -23,8 +23,7 @@ extern unsigned int rssi;
 //Uart1 Receive: USB/GPS
 void __attribute__ ((interrupt, no_auto_psv)) _U1RXInterrupt(void)
 {
-	char rx = U1RXREG;	
-	
+	char rx = U1RXREG;
 	U1TXREG = rx;			//Echo
 	IFS0bits.U1RXIF = 0;	//Clear flag
 }
@@ -50,7 +49,11 @@ void __attribute__ ((interrupt, no_auto_psv)) _U2RXInterrupt(void)
 	{
 		//Sinon, on utilise la valeur
 		rx = U2RXREG;
-		rf_rx_flag = 1;
+		
+		
+		rf_rx_flag = 1;		//pascal
+		
+		
 		
 		//On effectue une action uniquement si RSSI est assez haut	
 		if(rssi >= 300)	//ToDo: Confirmer valeur RSSI
