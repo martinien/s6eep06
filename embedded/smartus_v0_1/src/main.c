@@ -54,7 +54,7 @@ unsigned char BATTSWITCH[] = "Batterie changée";
 unsigned char ADR1[] = "Adresse 1";
 unsigned char ADR2[] = "Adresse 2";
 unsigned char ADR3[] = "Adresse 3";
-unsigned char ADR1[] = "#";
+unsigned char CHOIX[] = "#";
 unsigned char batterie[] = "100";
 int ecran = 1;
 
