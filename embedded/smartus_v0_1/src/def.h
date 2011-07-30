@@ -18,9 +18,9 @@
 #define FCY 32000000
 
 //Configuration du module:
-//#define BORNE				//Borne
-#define AUTO				//Auto. Pour le moment, Auto = RX
-#define USE_GLCD 			//Le GLCD va avec l'auto
+#define BORNE				//Borne
+//#define AUTO				//Auto. Pour le moment, Auto = RX
+//#define USE_GLCD 			//Le GLCD va avec l'auto
 //#define GPS_FEEDTHROUGH	//Le GPS est avec Auto
 
 #define DEBUG_MPSIM
@@ -112,10 +112,10 @@ unsigned char get_flag(unsigned char flag);
 #define TRM_RX	0
 
 //Paramètres de la couche de liaison de données
-#define FANION 			0x7E
+#define FANION 			0xFF
 #define NBRFANION 		8
 #define NBRFF           8
-#define NBROCTET        9
+#define NBROCTET        1
 #define ADRESSE 		0xA0
 #define CONFIRMATION 	0xAA
 #define ATTENTE_CONF 	400		//millisecondes
