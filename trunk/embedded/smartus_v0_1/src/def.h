@@ -41,6 +41,7 @@ unsigned int get_rssi(void);
 unsigned char get_flag(unsigned char flag);
 void switchScreen(int);
 void switchBatt(void);
+void getBatt(void);
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 //                                                                                         //

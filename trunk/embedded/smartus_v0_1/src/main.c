@@ -55,7 +55,8 @@ unsigned char ADR1[] = "Adresse 1";
 unsigned char ADR2[] = "Adresse 2";
 unsigned char ADR3[] = "Adresse 3";
 unsigned char CHOIX[] = "#";
-unsigned char batterie = 100;
+unsigned char BATTERIE = 100;
+unsigned char SERIALBATTERIE = 1352;
 int ecran = 1;
 int toEcran1 = 0;
 unsigned char DISTANCE1 = 0;
@@ -138,6 +139,7 @@ int main(void)
 		//Test: encodeur et GLCD
 		if((last_nombre != nombre && ecran == 1) || toEcran1 == 1)	//Si une transition a eu lieu
 		{
+			getBatt();
 			toEcran1 = 0;
 			GLCD_ClearScreen();
 			GLCD_Bitmap(Base1, 0, 0, 128, 64);
@@ -158,7 +160,14 @@ int main(void)
 			GLCD_WriteString(ADRESSE3);
 			
 			GLCD_GoTo(38,5);
-			GLCD_WriteString(DIST);			
+			GLCD_WriteString(DIST);		
+
+			GLCD_GoTo(107,0);
+			GLCD_WriteString(SERIALBATTERIE);	
+			
+			GLCD_GoTo(80,0);
+			GLCD_WriteString(BATTERIE);	
+			
 			switch(nombre)
 			{
 				case 0:
@@ -264,7 +273,7 @@ int main(void)
 			buttonPress = 0;
 		}
 		
-		if(distanceActuel < DISTANCEBATT)
+		if(distanceActuel < DISTANCEBATT && BATTERIE < 50)
 		{
 			switchBatt();
 		}
@@ -477,6 +486,10 @@ void switchScreen(last_nombre)
 		GLCD_Bitmap(Base1, 0, 0, 128, 64);
 		GLCD_GoTo(0,5);
 		GLCD_WriteString(RESERVE);
+		GLCD_GoTo(107,0);
+		GLCD_WriteString(SERIALBATTERIE);
+		GLCD_GoTo(80,0);
+		GLCD_WriteString(BATTERIE);	
 		switch(borneChoisie)
 		{
 			case 0:
@@ -516,4 +529,11 @@ void switchBatt(void)
 	GLCD_ClearScreen();
 	GLCD_GoTo(38,3);
 	GLCD_WriteString(BATTSWITCH);
+	SERIALBATTERIE = SERIALBATTERIE++;			//Faire une fonction allant chercher le nouveau serial
 }
+
+void getBatt(void)
+{
+	BATTERIE = (adc_result[1]/10);
+}
+
