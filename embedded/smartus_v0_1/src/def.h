@@ -39,6 +39,8 @@ char get_offset(unsigned char msb, unsigned char lsb, unsigned char ref);
 void clean_buffer(unsigned char offset, char buf_length);
 unsigned int get_rssi(void);
 unsigned char get_flag(unsigned char flag);
+void switchScreen(int);
+void switchBatt(void);
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 //                                                                                         //

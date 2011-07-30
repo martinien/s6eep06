@@ -2,161 +2,135 @@
 MagicCookie={0b13fe8c-dfe0-40eb-8900-6712719559a7}
 Version=1.0
 [File000]
-Location=C:\Dropbox\Prog\s6ee\embedded\smartus_v0_1\bin\interrupt.o
+Location=C:\Program Files (x86)\Microchip\temp\interrupt.o
 Folder=Intermediary
 DeviceName=PIC24FJ16GA004
 LanguageToolSuiteID={479DDE59-4D56-455E-855E-FFF59A3DB57E}
 LanguageToolID={069BD372-6CA0-40D4-BF2F-5DC806D05083}
-LanguageToolLocation=C:\Program Files (x86)\Microchip\mplabc30\v3.30\bin\pic30-gcc.exe
-PPAD=$(BINDIR)|bin\||$(TMPDIR)|bin\||$(AINDIR)||$(INCDIR)|..;.||$(LIBDIR)||$(LKRDIR)||
+LanguageToolLocation=C:\Program Files (x86)\Microchip\mplabc30\v3.25\bin\pic30-gcc.exe
+PPAD=$(BINDIR)|C:\Program Files (x86)\Microchip\temp||$(TMPDIR)|C:\Program Files (x86)\Microchip\temp||$(AINDIR)||$(INCDIR)|C:\Program Files (x86)\Microchip\mplabc30\v3.25\include||$(LIBDIR)|C:\Program Files (x86)\Microchip\mplabc30\v3.25\lib||$(LKRDIR)||
 SOLK=<src>|src\interrupt.c|src\main.c|src\periph.c|src\usart.c|src\graphic.c|src\images.c|src\KS0108.c|src\KS0108-PIC24.c|src\commRF.c|src\fifo.c||<obj>||<lib>||<lkr>|p24FJ16GA004.gld||
 SuiteArgsString=
 ToolArgsString=-g -Wall
 TraceCmdString=
 DebugOptions=-D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1
 [File001]
-Location=C:\Dropbox\Prog\s6ee\embedded\smartus_v0_1\bin\main.o
+Location=C:\Program Files (x86)\Microchip\temp\main.o
 Folder=Intermediary
 DeviceName=PIC24FJ16GA004
 LanguageToolSuiteID={479DDE59-4D56-455E-855E-FFF59A3DB57E}
 LanguageToolID={069BD372-6CA0-40D4-BF2F-5DC806D05083}
-LanguageToolLocation=C:\Program Files (x86)\Microchip\mplabc30\v3.30\bin\pic30-gcc.exe
-PPAD=$(BINDIR)|bin\||$(TMPDIR)|bin\||$(AINDIR)||$(INCDIR)|..;.||$(LIBDIR)||$(LKRDIR)||
+LanguageToolLocation=C:\Program Files (x86)\Microchip\mplabc30\v3.25\bin\pic30-gcc.exe
+PPAD=$(BINDIR)|C:\Program Files (x86)\Microchip\temp||$(TMPDIR)|C:\Program Files (x86)\Microchip\temp||$(AINDIR)||$(INCDIR)|C:\Program Files (x86)\Microchip\mplabc30\v3.25\include||$(LIBDIR)|C:\Program Files (x86)\Microchip\mplabc30\v3.25\lib||$(LKRDIR)||
 SOLK=<src>|src\interrupt.c|src\main.c|src\periph.c|src\usart.c|src\graphic.c|src\images.c|src\KS0108.c|src\KS0108-PIC24.c|src\commRF.c|src\fifo.c||<obj>||<lib>||<lkr>|p24FJ16GA004.gld||
 SuiteArgsString=
 ToolArgsString=-g -Wall
 TraceCmdString=
 DebugOptions=-D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1
 [File002]
-Location=C:\Dropbox\Prog\s6ee\embedded\smartus_v0_1\bin\periph.o
+Location=C:\Program Files (x86)\Microchip\temp\periph.o
 Folder=Intermediary
 DeviceName=PIC24FJ16GA004
 LanguageToolSuiteID={479DDE59-4D56-455E-855E-FFF59A3DB57E}
 LanguageToolID={069BD372-6CA0-40D4-BF2F-5DC806D05083}
-LanguageToolLocation=C:\Program Files (x86)\Microchip\mplabc30\v3.30\bin\pic30-gcc.exe
-PPAD=$(BINDIR)|bin\||$(TMPDIR)|bin\||$(AINDIR)||$(INCDIR)|..;.||$(LIBDIR)||$(LKRDIR)||
+LanguageToolLocation=C:\Program Files (x86)\Microchip\mplabc30\v3.25\bin\pic30-gcc.exe
+PPAD=$(BINDIR)|C:\Program Files (x86)\Microchip\temp||$(TMPDIR)|C:\Program Files (x86)\Microchip\temp||$(AINDIR)||$(INCDIR)|C:\Program Files (x86)\Microchip\mplabc30\v3.25\include||$(LIBDIR)|C:\Program Files (x86)\Microchip\mplabc30\v3.25\lib||$(LKRDIR)||
 SOLK=<src>|src\interrupt.c|src\main.c|src\periph.c|src\usart.c|src\graphic.c|src\images.c|src\KS0108.c|src\KS0108-PIC24.c|src\commRF.c|src\fifo.c||<obj>||<lib>||<lkr>|p24FJ16GA004.gld||
 SuiteArgsString=
 ToolArgsString=-g -Wall
 TraceCmdString=
 DebugOptions=-D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1
 [File003]
-Location=C:\Dropbox\Prog\s6ee\embedded\smartus_v0_1\bin\usart.o
+Location=C:\Program Files (x86)\Microchip\temp\usart.o
 Folder=Intermediary
 DeviceName=PIC24FJ16GA004
 LanguageToolSuiteID={479DDE59-4D56-455E-855E-FFF59A3DB57E}
 LanguageToolID={069BD372-6CA0-40D4-BF2F-5DC806D05083}
-LanguageToolLocation=C:\Program Files (x86)\Microchip\mplabc30\v3.30\bin\pic30-gcc.exe
-PPAD=$(BINDIR)|bin\||$(TMPDIR)|bin\||$(AINDIR)||$(INCDIR)|..;.||$(LIBDIR)||$(LKRDIR)||
+LanguageToolLocation=C:\Program Files (x86)\Microchip\mplabc30\v3.25\bin\pic30-gcc.exe
+PPAD=$(BINDIR)|C:\Program Files (x86)\Microchip\temp||$(TMPDIR)|C:\Program Files (x86)\Microchip\temp||$(AINDIR)||$(INCDIR)|C:\Program Files (x86)\Microchip\mplabc30\v3.25\include||$(LIBDIR)|C:\Program Files (x86)\Microchip\mplabc30\v3.25\lib||$(LKRDIR)||
 SOLK=<src>|src\interrupt.c|src\main.c|src\periph.c|src\usart.c|src\graphic.c|src\images.c|src\KS0108.c|src\KS0108-PIC24.c|src\commRF.c|src\fifo.c||<obj>||<lib>||<lkr>|p24FJ16GA004.gld||
 SuiteArgsString=
 ToolArgsString=-g -Wall
 TraceCmdString=
 DebugOptions=-D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1
 [File004]
-Location=C:\Dropbox\Prog\s6ee\embedded\smartus_v0_1\bin\graphic.o
+Location=C:\Program Files (x86)\Microchip\temp\graphic.o
 Folder=Intermediary
 DeviceName=PIC24FJ16GA004
 LanguageToolSuiteID={479DDE59-4D56-455E-855E-FFF59A3DB57E}
 LanguageToolID={069BD372-6CA0-40D4-BF2F-5DC806D05083}
-LanguageToolLocation=C:\Program Files (x86)\Microchip\mplabc30\v3.30\bin\pic30-gcc.exe
-PPAD=$(BINDIR)|bin\||$(TMPDIR)|bin\||$(AINDIR)||$(INCDIR)|..;.||$(LIBDIR)||$(LKRDIR)||
+LanguageToolLocation=C:\Program Files (x86)\Microchip\mplabc30\v3.25\bin\pic30-gcc.exe
+PPAD=$(BINDIR)|C:\Program Files (x86)\Microchip\temp||$(TMPDIR)|C:\Program Files (x86)\Microchip\temp||$(AINDIR)||$(INCDIR)|C:\Program Files (x86)\Microchip\mplabc30\v3.25\include||$(LIBDIR)|C:\Program Files (x86)\Microchip\mplabc30\v3.25\lib||$(LKRDIR)||
 SOLK=<src>|src\interrupt.c|src\main.c|src\periph.c|src\usart.c|src\graphic.c|src\images.c|src\KS0108.c|src\KS0108-PIC24.c|src\commRF.c|src\fifo.c||<obj>||<lib>||<lkr>|p24FJ16GA004.gld||
 SuiteArgsString=
 ToolArgsString=-g -Wall
 TraceCmdString=
 DebugOptions=-D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1
 [File005]
-Location=C:\Dropbox\Prog\s6ee\embedded\smartus_v0_1\bin\images.o
+Location=C:\Program Files (x86)\Microchip\temp\images.o
 Folder=Intermediary
 DeviceName=PIC24FJ16GA004
 LanguageToolSuiteID={479DDE59-4D56-455E-855E-FFF59A3DB57E}
 LanguageToolID={069BD372-6CA0-40D4-BF2F-5DC806D05083}
-LanguageToolLocation=C:\Program Files (x86)\Microchip\mplabc30\v3.30\bin\pic30-gcc.exe
-PPAD=$(BINDIR)|bin\||$(TMPDIR)|bin\||$(AINDIR)||$(INCDIR)|..;.||$(LIBDIR)||$(LKRDIR)||
+LanguageToolLocation=C:\Program Files (x86)\Microchip\mplabc30\v3.25\bin\pic30-gcc.exe
+PPAD=$(BINDIR)|C:\Program Files (x86)\Microchip\temp||$(TMPDIR)|C:\Program Files (x86)\Microchip\temp||$(AINDIR)||$(INCDIR)|C:\Program Files (x86)\Microchip\mplabc30\v3.25\include||$(LIBDIR)|C:\Program Files (x86)\Microchip\mplabc30\v3.25\lib||$(LKRDIR)||
 SOLK=<src>|src\interrupt.c|src\main.c|src\periph.c|src\usart.c|src\graphic.c|src\images.c|src\KS0108.c|src\KS0108-PIC24.c|src\commRF.c|src\fifo.c||<obj>||<lib>||<lkr>|p24FJ16GA004.gld||
 SuiteArgsString=
 ToolArgsString=-g -Wall
 TraceCmdString=
 DebugOptions=-D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1
 [File006]
-Location=C:\Dropbox\Prog\s6ee\embedded\smartus_v0_1\bin\KS0108.o
+Location=C:\Program Files (x86)\Microchip\temp\KS0108.o
 Folder=Intermediary
 DeviceName=PIC24FJ16GA004
 LanguageToolSuiteID={479DDE59-4D56-455E-855E-FFF59A3DB57E}
 LanguageToolID={069BD372-6CA0-40D4-BF2F-5DC806D05083}
-LanguageToolLocation=C:\Program Files (x86)\Microchip\mplabc30\v3.30\bin\pic30-gcc.exe
-PPAD=$(BINDIR)|bin\||$(TMPDIR)|bin\||$(AINDIR)||$(INCDIR)|..;.||$(LIBDIR)||$(LKRDIR)||
+LanguageToolLocation=C:\Program Files (x86)\Microchip\mplabc30\v3.25\bin\pic30-gcc.exe
+PPAD=$(BINDIR)|C:\Program Files (x86)\Microchip\temp||$(TMPDIR)|C:\Program Files (x86)\Microchip\temp||$(AINDIR)||$(INCDIR)|C:\Program Files (x86)\Microchip\mplabc30\v3.25\include||$(LIBDIR)|C:\Program Files (x86)\Microchip\mplabc30\v3.25\lib||$(LKRDIR)||
 SOLK=<src>|src\interrupt.c|src\main.c|src\periph.c|src\usart.c|src\graphic.c|src\images.c|src\KS0108.c|src\KS0108-PIC24.c|src\commRF.c|src\fifo.c||<obj>||<lib>||<lkr>|p24FJ16GA004.gld||
 SuiteArgsString=
 ToolArgsString=-g -Wall
 TraceCmdString=
 DebugOptions=-D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1
 [File007]
-Location=C:\Dropbox\Prog\s6ee\embedded\smartus_v0_1\bin\KS0108-PIC24.o
+Location=C:\Program Files (x86)\Microchip\temp\KS0108-PIC24.o
 Folder=Intermediary
 DeviceName=PIC24FJ16GA004
 LanguageToolSuiteID={479DDE59-4D56-455E-855E-FFF59A3DB57E}
 LanguageToolID={069BD372-6CA0-40D4-BF2F-5DC806D05083}
-LanguageToolLocation=C:\Program Files (x86)\Microchip\mplabc30\v3.30\bin\pic30-gcc.exe
-PPAD=$(BINDIR)|bin\||$(TMPDIR)|bin\||$(AINDIR)||$(INCDIR)|..;.||$(LIBDIR)||$(LKRDIR)||
+LanguageToolLocation=C:\Program Files (x86)\Microchip\mplabc30\v3.25\bin\pic30-gcc.exe
+PPAD=$(BINDIR)|C:\Program Files (x86)\Microchip\temp||$(TMPDIR)|C:\Program Files (x86)\Microchip\temp||$(AINDIR)||$(INCDIR)|C:\Program Files (x86)\Microchip\mplabc30\v3.25\include||$(LIBDIR)|C:\Program Files (x86)\Microchip\mplabc30\v3.25\lib||$(LKRDIR)||
 SOLK=<src>|src\interrupt.c|src\main.c|src\periph.c|src\usart.c|src\graphic.c|src\images.c|src\KS0108.c|src\KS0108-PIC24.c|src\commRF.c|src\fifo.c||<obj>||<lib>||<lkr>|p24FJ16GA004.gld||
 SuiteArgsString=
 ToolArgsString=-g -Wall
 TraceCmdString=
 DebugOptions=-D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1
 [File008]
-Location=C:\Dropbox\Prog\s6ee\embedded\smartus_v0_1\bin\commRF.o
+Location=C:\Program Files (x86)\Microchip\temp\commRF.o
 Folder=Intermediary
 DeviceName=PIC24FJ16GA004
 LanguageToolSuiteID={479DDE59-4D56-455E-855E-FFF59A3DB57E}
 LanguageToolID={069BD372-6CA0-40D4-BF2F-5DC806D05083}
-LanguageToolLocation=C:\Program Files (x86)\Microchip\mplabc30\v3.30\bin\pic30-gcc.exe
-PPAD=$(BINDIR)|bin\||$(TMPDIR)|bin\||$(AINDIR)||$(INCDIR)|..;.||$(LIBDIR)||$(LKRDIR)||
+LanguageToolLocation=C:\Program Files (x86)\Microchip\mplabc30\v3.25\bin\pic30-gcc.exe
+PPAD=$(BINDIR)|C:\Program Files (x86)\Microchip\temp||$(TMPDIR)|C:\Program Files (x86)\Microchip\temp||$(AINDIR)||$(INCDIR)|C:\Program Files (x86)\Microchip\mplabc30\v3.25\include||$(LIBDIR)|C:\Program Files (x86)\Microchip\mplabc30\v3.25\lib||$(LKRDIR)||
 SOLK=<src>|src\interrupt.c|src\main.c|src\periph.c|src\usart.c|src\graphic.c|src\images.c|src\KS0108.c|src\KS0108-PIC24.c|src\commRF.c|src\fifo.c||<obj>||<lib>||<lkr>|p24FJ16GA004.gld||
 SuiteArgsString=
 ToolArgsString=-g -Wall
 TraceCmdString=
 DebugOptions=-D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1
 [File009]
-Location=C:\Dropbox\Prog\s6ee\embedded\smartus_v0_1\bin\fifo.o
+Location=C:\Program Files (x86)\Microchip\temp\fifo.o
 Folder=Intermediary
 DeviceName=PIC24FJ16GA004
 LanguageToolSuiteID={479DDE59-4D56-455E-855E-FFF59A3DB57E}
 LanguageToolID={069BD372-6CA0-40D4-BF2F-5DC806D05083}
-LanguageToolLocation=C:\Program Files (x86)\Microchip\mplabc30\v3.30\bin\pic30-gcc.exe
-PPAD=$(BINDIR)|bin\||$(TMPDIR)|bin\||$(AINDIR)||$(INCDIR)|..;.||$(LIBDIR)||$(LKRDIR)||
+LanguageToolLocation=C:\Program Files (x86)\Microchip\mplabc30\v3.25\bin\pic30-gcc.exe
+PPAD=$(BINDIR)|C:\Program Files (x86)\Microchip\temp||$(TMPDIR)|C:\Program Files (x86)\Microchip\temp||$(AINDIR)||$(INCDIR)|C:\Program Files (x86)\Microchip\mplabc30\v3.25\include||$(LIBDIR)|C:\Program Files (x86)\Microchip\mplabc30\v3.25\lib||$(LKRDIR)||
 SOLK=<src>|src\interrupt.c|src\main.c|src\periph.c|src\usart.c|src\graphic.c|src\images.c|src\KS0108.c|src\KS0108-PIC24.c|src\commRF.c|src\fifo.c||<obj>||<lib>||<lkr>|p24FJ16GA004.gld||
 SuiteArgsString=
 ToolArgsString=-g -Wall
 TraceCmdString=
 DebugOptions=-D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1
-[File010]
-Location=C:\Dropbox\Prog\s6ee\embedded\smartus_v0_1\bin\smartus_v01.cof
-Folder=Output
-DeviceName=PIC24FJ16GA004
-LanguageToolSuiteID={479DDE59-4D56-455E-855E-FFF59A3DB57E}
-LanguageToolID={433C3D55-811D-409D-A6BF-159CF9355B42}
-LanguageToolLocation=C:\Program Files (x86)\Microchip\mplabc30\v3.30\bin\pic30-ld.exe
-PPAD=$(BINDIR)|bin\||$(TMPDIR)|bin\||$(AINDIR)||$(INCDIR)|..;.||$(LIBDIR)||$(LKRDIR)||
-SOLK=<src>|src\interrupt.c|src\main.c|src\periph.c|src\usart.c|src\graphic.c|src\images.c|src\KS0108.c|src\KS0108-PIC24.c|src\commRF.c|src\fifo.c||<obj>||<lib>||<lkr>|p24FJ16GA004.gld||
-SuiteArgsString=
-ToolArgsString=-Map="$(BINDIR_)$(TARGETBASE).map" --report-mem -o"$(BINDIR_)$(TARGETBASE).$(TARGETSUFFIX)"
-TraceCmdString=
-DebugOptions=--defsym=__MPLAB_DEBUG=1 --defsym=__MPLAB_DEBUGGER_ICD3=1 --defsym=__ICD2RAM=1
-[File011]
-Location=C:\Dropbox\Prog\s6ee\embedded\smartus_v0_1\bin\smartus_v01.hex
-Folder=Output
-DeviceName=PIC24FJ16GA004
-LanguageToolSuiteID={479DDE59-4D56-455E-855E-FFF59A3DB57E}
-LanguageToolID={433C3D55-811D-409D-A6BF-159CF9355B42}
-LanguageToolLocation=C:\Program Files (x86)\Microchip\mplabc30\v3.30\bin\pic30-ld.exe
-PPAD=$(BINDIR)|bin\||$(TMPDIR)|bin\||$(AINDIR)||$(INCDIR)|..;.||$(LIBDIR)||$(LKRDIR)||
-SOLK=<src>|src\interrupt.c|src\main.c|src\periph.c|src\usart.c|src\graphic.c|src\images.c|src\KS0108.c|src\KS0108-PIC24.c|src\commRF.c|src\fifo.c||<obj>||<lib>||<lkr>|p24FJ16GA004.gld||
-SuiteArgsString=
-ToolArgsString=-Map="$(BINDIR_)$(TARGETBASE).map" --report-mem -o"$(BINDIR_)$(TARGETBASE).$(TARGETSUFFIX)"
-TraceCmdString=
-DebugOptions=--defsym=__MPLAB_DEBUG=1 --defsym=__MPLAB_DEBUGGER_ICD3=1 --defsym=__ICD2RAM=1
 [TOOL_LOC_STAMPS]
-tool_loc{069BD372-6CA0-40D4-BF2F-5DC806D05083}=C:\Program Files (x86)\Microchip\mplabc30\v3.30\bin\pic30-gcc.exe
-tool_loc{433C3D55-811D-409D-A6BF-159CF9355B42}=C:\Program Files (x86)\Microchip\mplabc30\v3.30\bin\pic30-ld.exe
+tool_loc{069BD372-6CA0-40D4-BF2F-5DC806D05083}=C:\Program Files (x86)\Microchip\mplabc30\v3.25\bin\pic30-gcc.exe
+tool_loc{433C3D55-811D-409D-A6BF-159CF9355B42}=C:\Program Files (x86)\Microchip\mplabc30\v3.25\bin\pic30-ld.exe
