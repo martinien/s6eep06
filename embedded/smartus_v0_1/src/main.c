@@ -50,6 +50,11 @@ int borneChoisie = 0;
 unsigned char ADRESSE1[] = "11, rue Galt, Sherb";
 unsigned char ADRESSE2[] = "26, rue Well, Sherb";
 unsigned char ADRESSE3[] = "99, rue Viet, Sherb";
+unsigned char BATTSWITCH[] = "Batterie changée";
+unsigned char ADR1[] = "Adresse 1";
+unsigned char ADR2[] = "Adresse 2";
+unsigned char ADR3[] = "Adresse 3";
+unsigned char ADR1[] = "#";
 unsigned char batterie[] = "100";
 int ecran = 1;
 
@@ -123,7 +128,7 @@ int main(void)
 	{
 		
 		//Test: encodeur et GLCD
-		if(last_nombre != nombre)	//Si une transition a eu lieu
+		if(last_nombre != nombre && ecran == 1)	//Si une transition a eu lieu
 		{
 			switch(nombre)
 			{
@@ -131,19 +136,42 @@ int main(void)
 					#ifdef USE_GLCD
 					GLCD_ClearScreen();
 					GLCD_Bitmap(Base1, 0, 0, 128, 64);
-
+					GLCD_GoTo(0,2);
+					GLCD_WriteString(ADR1);
+					GLCD_GoTo(0,3);
+					GLCD_WriteString(ADR2);
+					GLCD_GoTo(0,4);
+					GLCD_WriteString(ADR3);
+					GLCD_GoTo(30,2);
+					GLCD_WriteString(CHOIX);
 					#endif
 					break;
 				case 1:
 					#ifdef USE_GLCD
 					GLCD_ClearScreen();
 					GLCD_Bitmap(Base1, 0, 0, 128, 64);
+					GLCD_GoTo(0,2);
+					GLCD_WriteString(ADR1);
+					GLCD_GoTo(0,3);
+					GLCD_WriteString(ADR2);
+					GLCD_GoTo(0,4);
+					GLCD_WriteString(ADR3);
+					GLCD_GoTo(30,3);
+					GLCD_WriteString(CHOIX);
 					#endif
 					break;
 				case 2:
 					#ifdef USE_GLCD
 					GLCD_ClearScreen();
 					GLCD_Bitmap(Base1, 0, 0, 128, 64);
+					GLCD_GoTo(0,2);
+					GLCD_WriteString(ADR1);
+					GLCD_GoTo(0,3);
+					GLCD_WriteString(ADR2);
+					GLCD_GoTo(0,4);
+					GLCD_WriteString(ADR3);
+					GLCD_GoTo(30,4);
+					GLCD_WriteString(CHOIX);
 					#endif
 					break;
 				default:
@@ -456,4 +484,5 @@ void switchBatt(void)
 {
 	GLCD_ClearScreen();
 	GLCD_GoTo(0,0);
+	GLCD_WriteString(BATTSWITCH);
 }
