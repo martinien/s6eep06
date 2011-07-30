@@ -57,10 +57,13 @@ unsigned char ADR3[] = "Adresse 3";
 unsigned char CHOIX[] = "#";
 unsigned char batterie = 100;
 int ecran = 1;
+int toEcran1 = 0;
 unsigned char DISTANCE1 = 0;
 unsigned char DISTANCE2 = 0;
 unsigned char DISTANCE3 = 0;
 unsigned char DIST[] = "Distance";
+unsigned char RESERVE[] = "Réservé";
+unsigned char DISTANCEBATT = 10;		//distance minimum pour considérer la batterie changée
 
 //Test:
 char result = 0;
@@ -82,6 +85,7 @@ int main(void)
 	int last_nombre = 0;
 	char str[64] = "Test de String...";
 	char tx = 0b00110101; //donnee de test de la couche application
+	unsigned char distanceActuel = 0;
 	
 	//Variables
 	char trame_complete = 0, trameRX[NBRFANION+2];
@@ -132,16 +136,27 @@ int main(void)
 	{
 		
 		//Test: encodeur et GLCD
-		if(last_nombre != nombre && ecran == 1)	//Si une transition a eu lieu
+		if((last_nombre != nombre && ecran == 1) || toEcran1 == 1)	//Si une transition a eu lieu
 		{
+			toEcran1 = 0;
 			GLCD_ClearScreen();
 			GLCD_Bitmap(Base1, 0, 0, 128, 64);
+			
 			GLCD_GoTo(0,2);
 			GLCD_WriteString(ADR1);
+			GLCD_GoTo(38,2);
+			GLCD_WriteString(ADRESSE1);
+			
 			GLCD_GoTo(0,3);
 			GLCD_WriteString(ADR2);
+			GLCD_GoTo(38,3);
+			GLCD_WriteString(ADRESSE2);
+			
 			GLCD_GoTo(0,4);
 			GLCD_WriteString(ADR3);
+			GLCD_GoTo(38,4);
+			GLCD_WriteString(ADRESSE3);
+			
 			GLCD_GoTo(38,5);
 			GLCD_WriteString(DIST);			
 			switch(nombre)
@@ -151,7 +166,8 @@ int main(void)
 					GLCD_GoTo(30,2);
 					GLCD_WriteString(CHOIX);
 					GLCD_GoTo(38,7);
-					GLCD_WriteString(DISTANCE1);					
+					GLCD_WriteString(DISTANCE1);
+					distanceActual = DISTANCE1;
 					#endif
 					break;
 				case 1:
@@ -160,6 +176,7 @@ int main(void)
 					GLCD_WriteString(CHOIX);
 					GLCD_GoTo(38,7);
 					GLCD_WriteString(DISTANCE2);
+					distanceActual = DISTANCE2;
 					#endif
 					break;
 				case 2:
@@ -168,6 +185,7 @@ int main(void)
 					GLCD_WriteString(CHOIX);
 					GLCD_GoTo(38,7);
 					GLCD_WriteString(DISTANCE3);
+					distanceActual = DISTANCE3;
 					#endif
 					break;
 				default:
@@ -244,6 +262,11 @@ int main(void)
 		{
 			switchScreen(last_nombre);
 			buttonPress = 0;
+		}
+		
+		if(distanceActuel < DISTANCEBATT)
+		{
+			switchBatt();
 		}
 		
 		if(rssi_flag)
@@ -452,17 +475,27 @@ void switchScreen(last_nombre)
 		borneChoisie = last_nombre;
 		GLCD_ClearScreen();
 		GLCD_Bitmap(Base1, 0, 0, 128, 64);
-		GLCD_GoTo(0,11);
+		GLCD_GoTo(0,5);
+		GLCD_WriteString(RESERVE);
 		switch(borneChoisie)
 		{
 			case 0:
+				GLCD_GoTo(0,2);
+				GLCD_WriteString(ADR1);
+				GLCD_GoTo(38,2);
 				GLCD_WriteString(ADRESSE1);
 				break;
 			case 1:
+				GLCD_GoTo(0,3);
+				GLCD_WriteString(ADR2);
+				GLCD_GoTo(38,3);
 				GLCD_WriteString(ADRESSE2);
 				break;
 			case 2:
-				GLCD_WriteString(ADRESSE3);;
+				GLCD_GoTo(0,4);
+				GLCD_WriteString(ADR3);
+				GLCD_GoTo(38,4);
+				GLCD_WriteString(ADRESSE3);
 				break;
 			default:
 				break;
@@ -473,12 +506,14 @@ void switchScreen(last_nombre)
 		ecran = 1;
 		GLCD_ClearScreen();
 		GLCD_Bitmap(Base1, 0, 0, 128, 64);
+		nombre = 0;
+		toEcran1 = 1;
 	}
 }
 
 void switchBatt(void)
 {
 	GLCD_ClearScreen();
-	GLCD_GoTo(0,0);
+	GLCD_GoTo(38,3);
 	GLCD_WriteString(BATTSWITCH);
 }
