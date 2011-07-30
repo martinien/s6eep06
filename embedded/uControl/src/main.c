@@ -87,14 +87,16 @@ void main(void)
 		while(!busy_usart1);
 		puts_usart1((char *)uart_buf);
 		
-		Delay10KTCYx(160);	//Attend 100ms
+		Delay10KTCYx(0);	//Attend
+		Delay10KTCYx(0);
 
 		//Trame Séquence check-in/check-out
 		sprintf(uart_buf, " ID %02d OUT %04d IN %04d/ ", NumBorne, IdBattOut, IdBattIn);
 		while(!busy_usart1);
 		puts_usart1((char *)uart_buf);
 		
-		Delay10KTCYx(160);	//Attend 100ms				
+		Delay10KTCYx(0);	//Attend
+		Delay10KTCYx(0);			
 	}
 }
 
