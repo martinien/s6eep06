@@ -55,8 +55,12 @@ unsigned char ADR1[] = "Adresse 1";
 unsigned char ADR2[] = "Adresse 2";
 unsigned char ADR3[] = "Adresse 3";
 unsigned char CHOIX[] = "#";
-unsigned char batterie[] = "100";
+unsigned char batterie = 100;
 int ecran = 1;
+unsigned char DISTANCE1 = 0;
+unsigned char DISTANCE2 = 0;
+unsigned char DISTANCE3 = 0;
+unsigned char DIST[] = "Distance";
 
 //Test:
 char result = 0;
@@ -130,48 +134,40 @@ int main(void)
 		//Test: encodeur et GLCD
 		if(last_nombre != nombre && ecran == 1)	//Si une transition a eu lieu
 		{
+			GLCD_ClearScreen();
+			GLCD_Bitmap(Base1, 0, 0, 128, 64);
+			GLCD_GoTo(0,2);
+			GLCD_WriteString(ADR1);
+			GLCD_GoTo(0,3);
+			GLCD_WriteString(ADR2);
+			GLCD_GoTo(0,4);
+			GLCD_WriteString(ADR3);
+			GLCD_GoTo(38,5);
+			GLCD_WriteString(DIST);			
 			switch(nombre)
 			{
 				case 0:
 					#ifdef USE_GLCD
-					GLCD_ClearScreen();
-					GLCD_Bitmap(Base1, 0, 0, 128, 64);
-					GLCD_GoTo(0,2);
-					GLCD_WriteString(ADR1);
-					GLCD_GoTo(0,3);
-					GLCD_WriteString(ADR2);
-					GLCD_GoTo(0,4);
-					GLCD_WriteString(ADR3);
 					GLCD_GoTo(30,2);
 					GLCD_WriteString(CHOIX);
+					GLCD_GoTo(38,7);
+					GLCD_WriteString(DISTANCE1);					
 					#endif
 					break;
 				case 1:
 					#ifdef USE_GLCD
-					GLCD_ClearScreen();
-					GLCD_Bitmap(Base1, 0, 0, 128, 64);
-					GLCD_GoTo(0,2);
-					GLCD_WriteString(ADR1);
-					GLCD_GoTo(0,3);
-					GLCD_WriteString(ADR2);
-					GLCD_GoTo(0,4);
-					GLCD_WriteString(ADR3);
 					GLCD_GoTo(30,3);
 					GLCD_WriteString(CHOIX);
+					GLCD_GoTo(38,7);
+					GLCD_WriteString(DISTANCE2);
 					#endif
 					break;
 				case 2:
 					#ifdef USE_GLCD
-					GLCD_ClearScreen();
-					GLCD_Bitmap(Base1, 0, 0, 128, 64);
-					GLCD_GoTo(0,2);
-					GLCD_WriteString(ADR1);
-					GLCD_GoTo(0,3);
-					GLCD_WriteString(ADR2);
-					GLCD_GoTo(0,4);
-					GLCD_WriteString(ADR3);
 					GLCD_GoTo(30,4);
 					GLCD_WriteString(CHOIX);
+					GLCD_GoTo(38,7);
+					GLCD_WriteString(DISTANCE3);
 					#endif
 					break;
 				default:
