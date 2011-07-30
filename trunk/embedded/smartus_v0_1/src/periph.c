@@ -136,3 +136,20 @@ void delay_us(unsigned int t)
 		Nop();	
  	}  	
 }
+
+
+//CRC setup
+/*
+void setup_CRC(void)
+{
+	CRCCON1bits.CRCEN = 1;		//CRC engine enable
+
+	CRCCON1bits.LENDIAN = 0;	//Data word is shifted into the CRC, starting with the MSb (big endian)
+	CRCCON1bits.CRCISEL = 1;	//CRC Interrupt Selection bit
+	CRCCON2.DWIDTH = 0x7;		//Data Word Width Configuration bits
+	CRCCON2.PLEN = 0x3;		//Polynomial Length Configuration bits
+	
+}
+
+*/
+
