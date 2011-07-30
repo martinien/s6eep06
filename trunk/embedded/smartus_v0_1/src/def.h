@@ -114,8 +114,8 @@ unsigned char get_flag(unsigned char flag);
 //Paramètres de la couche de liaison de données
 #define FANION 			0x7E
 #define NBRFANION 		8
-#define NBRFF                   8
-#define NBROCTET                1
+#define NBRFF           8
+#define NBROCTET        9
 #define ADRESSE 		0xA0
 #define CONFIRMATION 	0xAA
 #define ATTENTE_CONF 	400		//millisecondes

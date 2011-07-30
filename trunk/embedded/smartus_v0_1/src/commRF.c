@@ -64,6 +64,9 @@ char rf_valider_confirmation(char *trame)
 
 void rf_detection_trame(char *RX, unsigned *decalage, char *trame_complete, char *trame, unsigned *cnt)
 {
+	//déclara
+	unsigned int i = 0;
+	
     //Si un positif a été détecté
     if(*decalage != 0)
     {
