@@ -5,11 +5,11 @@ device=PIC24FJ16GA004
 [PATH_INFO]
 BuildDirPolicy=BuildDirIsProjectDir
 dir_src=src\
-dir_bin=bin\
-dir_tmp=bin\
+dir_bin=C:\Program Files (x86)\Microchip\temp
+dir_tmp=C:\Program Files (x86)\Microchip\temp
 dir_sin=
-dir_inc=..;.
-dir_lib=
+dir_inc=C:\Program Files (x86)\Microchip\mplabc30\v3.25\include
+dir_lib=C:\Program Files (x86)\Microchip\mplabc30\v3.25\lib
 dir_lkr=
 [CAT_FILTERS]
 filter_src=*.s;*.c

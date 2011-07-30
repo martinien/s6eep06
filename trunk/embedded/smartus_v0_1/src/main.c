@@ -38,11 +38,20 @@ extern volatile unsigned rfdelai_flag, rf_rx_flag, rf_delai_flag, envoie;
 extern volatile char rx;
 extern volatile int buttonPress;	//Pour encodeur
 //Images bitmap converties
-extern char Base1[], Base2[];
+extern const unsigned char Base1 [];
+
 extern unsigned int adc_rssi[];
 extern unsigned int rssi_flag;
 
 unsigned int rssi = 0;
+
+//Borne
+int borneChoisie = 0;
+unsigned char ADRESSE1[] = "11, rue Galt, Sherb";
+unsigned char ADRESSE2[] = "26, rue Well, Sherb";
+unsigned char ADRESSE3[] = "99, rue Viet, Sherb";
+unsigned char batterie[] = "100";
+int ecran = 1;
 
 //Test:
 char result = 0;
@@ -121,37 +130,31 @@ int main(void)
 				case 0:
 					#ifdef USE_GLCD
 					GLCD_ClearScreen();
-					GLCD_GoTo(0,0);
-					GLCD_WriteString(str);
-					GLCD_SetPixel(10, 20, 1);
+					GLCD_Bitmap(Base1, 0, 0, 128, 64);
+
 					#endif
 					break;
 				case 1:
 					#ifdef USE_GLCD
 					GLCD_ClearScreen();
-					GLCD_GoTo(0,0);
 					GLCD_Bitmap(Base1, 0, 0, 128, 64);
 					#endif
 					break;
 				case 2:
 					#ifdef USE_GLCD
 					GLCD_ClearScreen();
-					GLCD_GoTo(0,0);
-					GLCD_Bitmap(Base2, 0, 0, 128, 64);
+					GLCD_Bitmap(Base1, 0, 0, 128, 64);
 					#endif
 					break;
 				default:
 					#ifdef USE_GLCD
 					GLCD_ClearScreen();
-					GLCD_GoTo(0,0);
-					GLCD_WriteChar(nombre + 48);
+					GLCD_Bitmap(Base1, 0, 0, 128, 64);
 					#endif
 					break;
 			}			
 			last_nombre = nombre;		
 		}	
-		
-		
 		
 		#ifdef BORNE
 		//Protocole de liaison de données
@@ -215,18 +218,9 @@ int main(void)
 		
 		if(buttonPress)
 		{
+			switchScreen(last_nombre);
 			buttonPress = 0;
-			//envoie = rf_envoie(&tx);
-			//send_trame();
-			
-			//Test:
-			result = get_flag(flag);
-			if(result != 10)
-			{
-				clean_buffer(result, 32);
-				Nop();
-			}
-		}	
+		}
 		
 		if(rssi_flag)
 		{
@@ -424,4 +418,42 @@ unsigned char get_flag(unsigned char flag)
 	}
 	
 	return off;
+}
+
+void switchScreen(last_nombre)
+{
+	if(ecran == 1)
+	{
+		ecran = 2;
+		borneChoisie = last_nombre;
+		GLCD_ClearScreen();
+		GLCD_Bitmap(Base1, 0, 0, 128, 64);
+		GLCD_GoTo(0,11);
+		switch(borneChoisie)
+		{
+			case 0:
+				GLCD_WriteString(ADRESSE1);
+				break;
+			case 1:
+				GLCD_WriteString(ADRESSE2);
+				break;
+			case 2:
+				GLCD_WriteString(ADRESSE3);;
+				break;
+			default:
+				break;
+		}
+	}
+	else if(ecran == 2)
+	{
+		ecran = 1;
+		GLCD_ClearScreen();
+		GLCD_Bitmap(Base1, 0, 0, 128, 64);
+	}
+}
+
+void switchBatt(void)
+{
+	GLCD_ClearScreen();
+	GLCD_GoTo(0,0);
 }
