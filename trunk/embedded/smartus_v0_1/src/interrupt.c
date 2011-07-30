@@ -39,6 +39,7 @@ void __attribute__ ((interrupt, no_auto_psv)) _U1TXInterrupt(void)
 void __attribute__ ((interrupt, no_auto_psv)) _U2RXInterrupt(void)
 {
 	char dump = '0';
+	static int valid = 0;
 	
 	if(U2STAbits.FERR)
 	{	
@@ -51,12 +52,19 @@ void __attribute__ ((interrupt, no_auto_psv)) _U2RXInterrupt(void)
 		rx = U2RXREG;
 		
 		
-		rf_rx_flag = 1;		//pascal
-		
+		rf_rx_flag = 1;		//pascal		
 		
 		
 		//On effectue une action uniquement si RSSI est assez haut	
 		if(rssi >= 300)	//ToDo: Confirmer valeur RSSI
+		{
+			valid = 11;
+		}
+		
+		if(valid > 0)
+			valid --;
+		
+		if(valid)
 		{
 			U1TXREG = rx;				//Echo sur UART1 (USB)
 			

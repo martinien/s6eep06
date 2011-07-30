@@ -48,7 +48,7 @@ unsigned int rssi = 0;
 char result = 0;
 unsigned char index = 0;
 unsigned char dirty_buf[16] = {0xF3, 0xF3, 0xF3, 0xF3, 0xF2, 0x52, 0x32, 0x20, 0x00,0x00};
-unsigned char clean_buf[16] = {0,0,0,0,0,0,0,0,0,0};
+unsigned char clean_buf[32] = {0,0,0,0,0,0,0,0,0,0};
 unsigned char flag = 0x7E;
 
 //fifo.c
@@ -102,8 +102,10 @@ int main(void)
 //	index = 0;
 //	while(1)
 //	{
-//		result = get_offset(dirty_buf[index], dirty_buf[index + 1], flag);
-//		clean_buffer(result, 10);
+//	//	result = get_offset(dirty_buf[index], dirty_buf[index + 1], flag);
+//		result = get_flag(flag);
+//		Nop();
+//		clean_buffer(result, 16);
 //		Nop();
 //	}
 	
@@ -150,20 +152,20 @@ int main(void)
 		}	
 		
 		//Donnée entrante
-		if(rf_rx_flag == 1 && trame_complete == 0)
-		{
-
-			rf_detection_trame(&rx, &decalage, &trame_complete, &trameRX, &contexte_trame);
-			
-			//Test de réception synchronisé		//pascal
-			if(trame_complete == 1)
-			{
-				rf_rx_flag = 0;
-				trame_complete = 0;
-
-			}
-			
-		}
+//		if(rf_rx_flag == 1 && trame_complete == 0)
+//		{
+//
+//			rf_detection_trame(&rx, &decalage, &trame_complete, &trameRX, &contexte_trame);
+//			
+//			//Test de réception synchronisé		//pascal
+//			if(trame_complete == 1)
+//			{
+//				rf_rx_flag = 0;
+//				trame_complete = 0;
+//
+//			}
+//			
+//		}
 		
 		
 		#ifdef BORNE
@@ -199,20 +201,16 @@ int main(void)
 			
 
 			#ifdef BORNE
-//			sprintf(str, "ValueValue: %i\0",nombre);
-//			puts_usart2(str);
-//			send_trame();
+
 			#endif
-			//Commentaire: le display est lent car cette fonction est très lente... 300bauds
+
 		}
 
 		#ifdef BORNE
-		if(rssi_flag)
-		{
-			rssi_flag = 0;
-			//Filtre les données quand le buffer est plein
-			rssi = get_rssi();
-		}
+		//Pascal...
+		#endif
+		
+		#ifdef AUTO
 		
 		if(buttonPress)
 		{
@@ -221,14 +219,22 @@ int main(void)
 			//send_trame();
 			
 			//Test:
-			result = get_offset(fifo[index], fifo[index + 1], flag);
+			result = get_flag(flag);
 			if(result != 10)
 			{
-				clean_buffer(result, 16);
+				clean_buffer(result, 32);
+				Nop();
 			}
-		}
-		#endif
+		}	
 		
+		if(rssi_flag)
+		{
+			rssi_flag = 0;
+			//Filtre les données quand le buffer est plein
+			rssi = get_rssi();
+		}
+		
+		#endif	
 		
 	}
     return 0;
@@ -342,6 +348,9 @@ char get_offset(unsigned char msb, unsigned char lsb, unsigned char ref)
 	unsigned int temp1 = 0, temp2 = 0;
 	#endif
 	
+	if((msb == 0xFF) || (lsb == 0xFF))
+		return 10;	//Impossible que ce soit bon
+	
 	if((value_16 & 0xFF00) == mask)
 		return 0;	//Pas d'offset
 	
@@ -352,7 +361,13 @@ char get_offset(unsigned char msb, unsigned char lsb, unsigned char ref)
 		temp1 = (value_16 & mask);			
 		temp2 = (unsigned int)(ref << (8 - i));
 		if(temp1 == temp2)
-			return i;
+		{
+//			if((i == 7) && (value_16 == 0xFF))
+//				return 10;
+//			else
+				return i;
+		}
+
 		#else
 		if((value_16 & mask) == (unsigned int)(ref << (8 - i))
 			return i;
@@ -371,7 +386,9 @@ void clean_buffer(unsigned char offset, char buf_length)
 	int i = 0;
 	
 	for(i = 0; i < buf_length-1; i++)
+	//for(i = buf_length-1; i > 0; i--)
 	{
+		//ToDo: Optimiser
 		temp1 = (fifo[i] << 8) + fifo[i+1];
 		temp1 = temp1 << offset;
 		temp1 = (temp1 & 0xFF00) >> 8;		
@@ -393,3 +410,17 @@ unsigned int get_rssi(void)
 	return (sum >> 4);
 }
 
+unsigned char get_flag(unsigned char flag)
+{
+	int i = 0;
+	char off;
+	
+	for(i = 0; i < (FIFO_LENGTH-2); i++)
+	{
+		off = get_offset(fifo[i], fifo[i+1], flag);
+		if(off != 10)
+			break;
+	}
+	
+	return off;
+}

@@ -136,7 +136,7 @@ void setup_usart2(void)
 	IFS1bits.U2TXIF = 0;
 	IEC1bits.U2TXIE = 0;
 	IEC1bits.U2RXIE = 1;
-	IPC7bits.U2RXIP = 4;	//Priority of 4 (0 = disabled, 7 = max)
+	IPC7bits.U2RXIP = 7;	//Priority of 4 (0 = disabled, 7 = max)
 	
 	U2MODEbits.UARTEN = 1;	//Enable UART2
 	U2STAbits.UTXEN = 1;	//TX Enabled
