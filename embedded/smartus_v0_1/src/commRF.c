@@ -14,10 +14,23 @@ char rf_envoie(char *donnee8)
     
     //Envoie de donnée
     radio_dir(TRM_TX);
-    for(i=0; i < NBRFANION+2; i++)
+	
+	delay_us(500);
+
+	__asm__ volatile ("disi #0x3FFF"); //disable interrupts
+
+    for(i=0; i < NBRFANION+10; i++)
     {
 	    while(busy_usart2());
-		U2TXREG = trame[i];
+		U2TXREG = trame[i] & 0xFF;
+    }
+
+	__asm__ volatile ("disi #0x000"); //Enable interrupts
+
+    for(i=0; i < NBRFANION+10; i++)
+    {
+	    while(busy_usart1());
+		U1TXREG = trame[i] & 0xFF;
     }
     
     //puts_usart2(&trame[NBRFANION+2]);
@@ -32,6 +45,7 @@ char rf_envoie(char *donnee8)
 void construire_trame_envoie(char *trame, char *donnee8)
 {
 	int i =0;
+	char test = 0x31;
 	for(i=0; i<NBRFANION ; i++)
 	{
 		trame[i] = FANION;
