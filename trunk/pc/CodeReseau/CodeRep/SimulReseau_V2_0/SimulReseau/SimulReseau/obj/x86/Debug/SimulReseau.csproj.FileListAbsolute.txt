@@ -28,3 +28,13 @@ C:\Users\Admin\Desktop\Projets6\pc\CodeReseau\CodeRep\SimulReseau_V2_0\SimulRese
 C:\Users\Admin\Desktop\Projets6\pc\CodeReseau\CodeRep\SimulReseau_V2_0\SimulReseau\SimulReseau\obj\x86\Debug\GenerateResource.write.1.tlog
 C:\Users\Admin\Desktop\Projets6\pc\CodeReseau\CodeRep\SimulReseau_V2_0\SimulReseau\SimulReseau\obj\x86\Debug\SimulReseau.exe
 C:\Users\Admin\Desktop\Projets6\pc\CodeReseau\CodeRep\SimulReseau_V2_0\SimulReseau\SimulReseau\obj\x86\Debug\SimulReseau.pdb
+Q:\pc\pc\CodeReseau\CodeRep\SimulReseau_V2_0\SimulReseau\SimulReseau\obj\x86\Debug\SimulReseau.exe
+Q:\pc\pc\CodeReseau\CodeRep\SimulReseau_V2_0\SimulReseau\SimulReseau\obj\x86\Debug\SimulReseau.pdb
+Q:\pc\pc\CodeReseau\CodeRep\SimulReseau_V2_0\SimulReseau\SimulReseau\bin\Debug\SimulReseau.exe
+Q:\pc\pc\CodeReseau\CodeRep\SimulReseau_V2_0\SimulReseau\SimulReseau\bin\Debug\SimulReseau.pdb
+Q:\pc\pc\CodeReseau\CodeRep\SimulReseau_V2_0\SimulReseau\SimulReseau\bin\Debug\SQLite.NET.dll
+Q:\pc\pc\CodeReseau\CodeRep\SimulReseau_V2_0\SimulReseau\SimulReseau\obj\x86\Debug\ResolveAssemblyReference.cache
+Q:\pc\pc\CodeReseau\CodeRep\SimulReseau_V2_0\SimulReseau\SimulReseau\obj\x86\Debug\SimulReseau.Form1.resources
+Q:\pc\pc\CodeReseau\CodeRep\SimulReseau_V2_0\SimulReseau\SimulReseau\obj\x86\Debug\SimulReseau.Properties.Resources.resources
+Q:\pc\pc\CodeReseau\CodeRep\SimulReseau_V2_0\SimulReseau\SimulReseau\obj\x86\Debug\GenerateResource.read.1.tlog
+Q:\pc\pc\CodeReseau\CodeRep\SimulReseau_V2_0\SimulReseau\SimulReseau\obj\x86\Debug\GenerateResource.write.1.tlog

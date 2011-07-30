@@ -60,6 +60,7 @@ namespace SimulReseau
                 GlobalVar.defCoeff[i] = Convert.ToInt32(DT.Rows[i][1]);
                 GlobalVar.defRebate[i] = Convert.ToInt32(DT.Rows[i][2]);
             }
+            sql_con.Close();
         }
 
        static public void compute()

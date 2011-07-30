@@ -129,20 +129,18 @@
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.carPage = new System.Windows.Forms.TabPage();
-            this.bornePage = new System.Windows.Forms.TabPage();
-            this.borneGridView = new System.Windows.Forms.DataGridView();
-            this.batPage = new System.Windows.Forms.TabPage();
-            this.statPage = new System.Windows.Forms.TabPage();
-            this.textBox1 = new System.Windows.Forms.TextBox();
             this.serialPort1 = new System.IO.Ports.SerialPort(this.components);
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.borneGridView = new System.Windows.Forms.DataGridView();
+            this.bornePage = new System.Windows.Forms.TabPage();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             this.menuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.cartePage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            this.bornePage.SuspendLayout();
+            this.carPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.borneGridView)).BeginInit();
-            this.statPage.SuspendLayout();
+            this.bornePage.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -160,13 +158,13 @@
             this.fichierToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.quitterToolStripMenuItem});
             this.fichierToolStripMenuItem.Name = "fichierToolStripMenuItem";
-            this.fichierToolStripMenuItem.Size = new System.Drawing.Size(54, 20);
+            this.fichierToolStripMenuItem.Size = new System.Drawing.Size(50, 20);
             this.fichierToolStripMenuItem.Text = "Fichier";
             // 
             // quitterToolStripMenuItem
             // 
             this.quitterToolStripMenuItem.Name = "quitterToolStripMenuItem";
-            this.quitterToolStripMenuItem.Size = new System.Drawing.Size(111, 22);
+            this.quitterToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
             this.quitterToolStripMenuItem.Text = "Quitter";
             this.quitterToolStripMenuItem.Click += new System.EventHandler(this.quitterToolStripMenuItem_Click);
             // 
@@ -175,8 +173,6 @@
             this.tabControl1.Controls.Add(this.cartePage);
             this.tabControl1.Controls.Add(this.carPage);
             this.tabControl1.Controls.Add(this.bornePage);
-            this.tabControl1.Controls.Add(this.batPage);
-            this.tabControl1.Controls.Add(this.statPage);
             this.tabControl1.Location = new System.Drawing.Point(12, 27);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
@@ -185,6 +181,7 @@
             // 
             // cartePage
             // 
+            this.cartePage.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.cartePage.Controls.Add(this.label21);
             this.cartePage.Controls.Add(this.label22);
             this.cartePage.Controls.Add(this.label23);
@@ -283,7 +280,6 @@
             this.cartePage.Size = new System.Drawing.Size(1246, 682);
             this.cartePage.TabIndex = 4;
             this.cartePage.Text = "Carte du réseau";
-            this.cartePage.UseVisualStyleBackColor = true;
             // 
             // label21
             // 
@@ -722,32 +718,35 @@
             // 
             // button3
             // 
+            this.button3.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.button3.Location = new System.Drawing.Point(695, 461);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(64, 45);
             this.button3.TabIndex = 57;
             this.button3.Text = "Arrêt";
-            this.button3.UseVisualStyleBackColor = true;
+            this.button3.UseVisualStyleBackColor = false;
             this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
             // button2
             // 
+            this.button2.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.button2.Location = new System.Drawing.Point(625, 461);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(64, 45);
             this.button2.TabIndex = 56;
             this.button2.Text = "Pause";
-            this.button2.UseVisualStyleBackColor = true;
+            this.button2.UseVisualStyleBackColor = false;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // button1
             // 
+            this.button1.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.button1.Location = new System.Drawing.Point(555, 461);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(64, 45);
             this.button1.TabIndex = 55;
             this.button1.Text = "Démarrer";
-            this.button1.UseVisualStyleBackColor = true;
+            this.button1.UseVisualStyleBackColor = false;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // textBox19
@@ -1034,64 +1033,19 @@
             // 
             // carPage
             // 
+            this.carPage.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.carPage.Controls.Add(this.textBox1);
             this.carPage.Location = new System.Drawing.Point(4, 22);
             this.carPage.Name = "carPage";
             this.carPage.Padding = new System.Windows.Forms.Padding(3);
             this.carPage.Size = new System.Drawing.Size(1246, 682);
             this.carPage.TabIndex = 0;
             this.carPage.Text = "Borne Réelle";
-            this.carPage.UseVisualStyleBackColor = true;
-            // 
-            // bornePage
-            // 
-            this.bornePage.Controls.Add(this.borneGridView);
-            this.bornePage.Location = new System.Drawing.Point(4, 22);
-            this.bornePage.Name = "bornePage";
-            this.bornePage.Padding = new System.Windows.Forms.Padding(3);
-            this.bornePage.Size = new System.Drawing.Size(1246, 682);
-            this.bornePage.TabIndex = 1;
-            this.bornePage.Text = "Borne";
-            this.bornePage.UseVisualStyleBackColor = true;
-            // 
-            // borneGridView
-            // 
-            this.borneGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.borneGridView.Location = new System.Drawing.Point(3, 3);
-            this.borneGridView.Name = "borneGridView";
-            this.borneGridView.Size = new System.Drawing.Size(812, 405);
-            this.borneGridView.TabIndex = 2;
-            // 
-            // batPage
-            // 
-            this.batPage.Location = new System.Drawing.Point(4, 22);
-            this.batPage.Name = "batPage";
-            this.batPage.Size = new System.Drawing.Size(1246, 682);
-            this.batPage.TabIndex = 2;
-            this.batPage.Text = "Batterie";
-            this.batPage.UseVisualStyleBackColor = true;
-            // 
-            // statPage
-            // 
-            this.statPage.Controls.Add(this.textBox1);
-            this.statPage.Location = new System.Drawing.Point(4, 22);
-            this.statPage.Name = "statPage";
-            this.statPage.Size = new System.Drawing.Size(1246, 682);
-            this.statPage.TabIndex = 3;
-            this.statPage.Text = "Statisique";
-            this.statPage.UseVisualStyleBackColor = true;
-            // 
-            // textBox1
-            // 
-            this.textBox1.Location = new System.Drawing.Point(140, 93);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(395, 218);
-            this.textBox1.TabIndex = 1;
             // 
             // serialPort1
             // 
             this.serialPort1.BaudRate = 19200;
-            this.serialPort1.PortName = "COM3";
+            this.serialPort1.PortName = "COM2";
             this.serialPort1.ReadTimeout = 15;
             this.serialPort1.ReceivedBytesThreshold = 24;
             this.serialPort1.DataReceived += new System.IO.Ports.SerialDataReceivedEventHandler(this.serialPort1_DataReceived);
@@ -1101,6 +1055,32 @@
             this.timer1.Enabled = true;
             this.timer1.Interval = 1000;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
+            // borneGridView
+            // 
+            this.borneGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.borneGridView.Location = new System.Drawing.Point(3, 3);
+            this.borneGridView.Name = "borneGridView";
+            this.borneGridView.Size = new System.Drawing.Size(1237, 674);
+            this.borneGridView.TabIndex = 2;
+            // 
+            // bornePage
+            // 
+            this.bornePage.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.bornePage.Controls.Add(this.borneGridView);
+            this.bornePage.Location = new System.Drawing.Point(4, 22);
+            this.bornePage.Name = "bornePage";
+            this.bornePage.Padding = new System.Windows.Forms.Padding(3);
+            this.bornePage.Size = new System.Drawing.Size(1246, 682);
+            this.bornePage.TabIndex = 1;
+            this.bornePage.Text = "Borne";
+            // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(299, 187);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(100, 20);
+            this.textBox1.TabIndex = 0;
             // 
             // Form1
             // 
@@ -1119,10 +1099,10 @@
             this.cartePage.ResumeLayout(false);
             this.cartePage.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            this.bornePage.ResumeLayout(false);
+            this.carPage.ResumeLayout(false);
+            this.carPage.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.borneGridView)).EndInit();
-            this.statPage.ResumeLayout(false);
-            this.statPage.PerformLayout();
+            this.bornePage.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1134,13 +1114,8 @@
         private System.Windows.Forms.ToolStripMenuItem fichierToolStripMenuItem;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage carPage;
-        private System.Windows.Forms.TabPage bornePage;
-        private System.Windows.Forms.TabPage batPage;
-        private System.Windows.Forms.TabPage statPage;
         private System.Windows.Forms.ToolStripMenuItem quitterToolStripMenuItem;
         private System.IO.Ports.SerialPort serialPort1;
-        private System.Windows.Forms.DataGridView borneGridView;
-        private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.TabPage cartePage;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Timer timer1;
@@ -1236,6 +1211,9 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.TabPage bornePage;
+        private System.Windows.Forms.DataGridView borneGridView;
+        private System.Windows.Forms.TextBox textBox1;
     }
 }
 
