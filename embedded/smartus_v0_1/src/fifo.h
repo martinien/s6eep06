@@ -1,7 +1,7 @@
 #ifndef INC_FIFO_H
 #define INC_FIFO_H
 
-#define FIFO_LENGTH	16
+#define FIFO_LENGTH	32
 
 /////////////////////////////////////////////////////////////////////////////
 //                                                                         //
