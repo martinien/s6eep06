@@ -151,21 +151,6 @@ int main(void)
 			last_nombre = nombre;		
 		}	
 		
-		//Donnée entrante
-//		if(rf_rx_flag == 1 && trame_complete == 0)
-//		{
-//
-//			rf_detection_trame(&rx, &decalage, &trame_complete, &trameRX, &contexte_trame);
-//			
-//			//Test de réception synchronisé		//pascal
-//			if(trame_complete == 1)
-//			{
-//				rf_rx_flag = 0;
-//				trame_complete = 0;
-//
-//			}
-//			
-//		}
 		
 		
 		#ifdef BORNE
@@ -194,11 +179,27 @@ int main(void)
 		//}	
 		#endif
 		
-		//Flags		
-		if(rf_flag)
+		//Flags - Données entrantes	
+		if(rf_flag)//&& trame_complete == 0)
 		{
-			rf_flag = 0;
+//			rf_flag = 0;
+//			
+//			rf_detection_trame(&rx, &decalage, &trame_complete, &trameRX, &contexte_trame);
+//			
+//			//Test de réception synchronisé		//pascal
+//			if(trame_complete == 1)
+//			{
+//				rf_rx_flag = 0;
+//				trame_complete = 0;
+//
+//			}
 			
+			result = get_flag(flag);
+			if(result != 10)
+			{
+				clean_buffer(result, 32);
+				Nop();				
+			}
 
 			#ifdef BORNE
 
