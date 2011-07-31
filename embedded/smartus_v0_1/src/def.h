@@ -4,6 +4,7 @@
 #include <p24fj16GA004.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <math.h>
 #include <uart.h>
 #include <timer.h>
 #include <adc.h>
@@ -18,8 +19,8 @@
 #define FCY 32000000
 
 //Configuration du module:
-#define BORNE				//Borne
-//#define AUTO				//Auto. Pour le moment, Auto = RX
+//#define BORNE				//Borne
+#define AUTO				//Auto. Pour le moment, Auto = RX
 #define USE_GLCD 			//Le GLCD va avec l'auto
 //#define GPS_FEEDTHROUGH	//Le GPS est avec Auto
 
