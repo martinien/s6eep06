@@ -66,7 +66,7 @@ extern volatile unsigned char DISTANCE2;
 extern volatile unsigned char DISTANCE3;
 unsigned char DIST[] = "Distance";
 unsigned char RESERVE[] = "Reserve";
-unsigned char DISTANCEBATT = 10;		//distance minimum pour considérer la batterie changée
+unsigned char DISTANCEBATT = 0;	//distance minimum pour considérer la batterie changée
 
 //Test:
 char result = 0;
@@ -100,15 +100,7 @@ int main(void)
 	
 	//Init fifo
 	fifo_init();
-
-	//Test de communication radio:
-	#ifdef AUTO
 	radio_dir(TRM_RX);		//Module en réception
-	#endif
-	
-	#ifdef BORNE
-	radio_dir(TRM_TX);		//Module en émission
-	#endif
 
 	//Display welcome screen:	ToDo
 	#ifdef USE_GLCD
@@ -218,6 +210,9 @@ int main(void)
 		if(trame_a_envoye == 1)
 		{
 			envoie = rf_envoie(trameTX, clean_buf);
+			
+			if(envoie == 1)
+				trame_a_envoye = 0;
 		}
 		
 		//Flags - Données entrantes	
@@ -273,7 +268,6 @@ int main(void)
 		}
 		#endif
 		
-		#ifdef AUTO
 		
 		if(rssi_flag)
 		{
@@ -281,8 +275,6 @@ int main(void)
 			//Filtre les données quand le buffer est plein
 			rssi = get_rssi();
 		}
-		
-		#endif	
 		
 	}
     return 0;
@@ -351,97 +343,7 @@ void config(void)
 	#endif		
 }
 
-//Retourne de combien de caractères on doit shifter à gauche
-//Une valeur de 10 indique "aucun match"
 
-//Bug connu: fausse détection si 0x00 suivi de 0xFF. Sera corrigé sous peu! - JFD
-
-char get_offset(unsigned char msb, unsigned char lsb, unsigned char ref)
-{
-	int i = 0;
-	unsigned int value_16 = (msb << 8) + lsb;
-	unsigned int mask = (ref << 8);
-	#ifdef DEBUG_MPSIM
-	unsigned int temp1 = 0, temp2 = 0;
-	#endif
-	
-	if((msb == 0xFF) || (lsb == 0xFF))
-		return 10;	//Impossible que ce soit bon
-	
-	if((value_16 & 0xFF00) == mask)
-		return 0;	//Pas d'offset
-	
-	for(i = 1; i < 8; ++i)
-	{
-		mask = mask >> 1;
-		#ifdef DEBUG_MPSIM
-		temp1 = (value_16 & mask);			
-		temp2 = (unsigned int)(ref << (8 - i));
-		if(temp1 == temp2)
-		{
-//			if((i == 7) && (value_16 == 0xFF))
-//				return 10;
-//			else
-				return i;
-		}
-
-		#else
-		if((value_16 & mask) == (unsigned int)(ref << (8 - i))
-			return i;
-		#endif
-	}	
-	
-	//Aucun match!
-	return 10;
-}
-
-//Assume 2 buffers fixes, celui de réception (fifo[]) et celui nettoyé
-//Décale les données et rempli le buffer clean
-void clean_buffer(unsigned char offset, char buf_length)
-{
-	unsigned int temp1 = 0;
-	int i = 0;
-	
-	for(i = 0; i < buf_length-1; i++)
-	//for(i = buf_length-1; i > 0; i--)
-	{
-		//ToDo: Optimiser
-		temp1 = (fifo[i] << 8) + fifo[i+1];
-		temp1 = temp1 << offset;
-		temp1 = (temp1 & 0xFF00) >> 8;		
-		
-		clean_buf[i] = temp1;
-		fifo[i] = 0x00;
-	}
-}
-
-unsigned int get_rssi(void)
-{
-	unsigned int i = 0;
-	unsigned long sum = 0;
-	
-	for(i = 0; i < AVG; i++)
-	{
-		sum += adc_rssi[i];
-	}
-	
-	return (sum >> 4);
-}
-
-unsigned char get_flag(unsigned char flag)
-{
-	int i = 0;
-	char off;
-	
-	for(i = 0; i < (FIFO_LENGTH-2); i++)
-	{
-		off = get_offset(fifo[i], fifo[i+1], flag);
-		if(off != 10)
-			break;
-	}
-	
-	return off;
-}
 
 void switchScreen(last_nombre)
 {

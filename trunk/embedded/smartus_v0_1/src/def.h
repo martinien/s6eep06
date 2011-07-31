@@ -21,12 +21,12 @@
 #define FCY 32000000
 
 //Configuration du module:
-//#define BORNE				//Borne
-#define AUTO				//Auto. Pour le moment, Auto = RX
-#define USE_GLCD 			//Le GLCD va avec l'auto
-#define GPS_FEEDTHROUGH	//Le GPS est avec Auto
-
-#define DEBUG_MPSIM
+#define BORNE				//Borne
+//#define AUTO				//Auto. Pour le moment, Auto = RX
+//#define USE_GLCD 			//Le GLCD va avec l'auto
+//#define GPS_FEEDTHROUGH	        //Le GPS est avec Auto
+#define DEBUG_RF                        //Renvoi le trame en écho à la console
+//#define DEBUG_MPSIM
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////
@@ -124,7 +124,11 @@ void getBatt(void);
 #define NBROCTET            8
 #define ADRESSE 	    0xA0
 #define CONFIRMATION 	    0xAA
-#define ATT_CONF_NBR_500 	4		//Nbr de 500 milliseconde d'Attente avant récpetion de confirmation
+#define ATT_CONF_NBR_500    15		//Nbr de 500 milliseconde d'Attente avant récpetion de confirmation
+#define NBR_ESSAIE          5           //Nbr d'essaie de renvoie de trame
 
+//Délai matériel
 
+#define TEMP_SWITCH_RX_TO_TX    500
+#define TEMP_SWITCH_TX_TO_RX    180
 #endif
