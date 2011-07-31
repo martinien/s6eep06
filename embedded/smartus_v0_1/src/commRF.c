@@ -3,11 +3,14 @@
 
 //variables
 extern volatile unsigned rf_rx_flag;
+extern volatile unsigned rf_delai_flag;
 
 //Transmission**********************************************************************
-char rf_envoie(char *donnee8)
+char rf_envoie(char *donnee8, char *tampon)
 {
-	char trame[NBRFANION+2];
+	char trame[NBRFF+NBRFANION*2+NBROCTET];
+	char trame_de_confirmation[NBROCTET] ;
+	unsigned char result =10;
 	unsigned int i;
 
     construire_trame_envoie(&trame, donnee8);
@@ -19,7 +22,7 @@ char rf_envoie(char *donnee8)
 
 	__asm__ volatile ("disi #0x3FFF"); //disable interrupts
 
-    for(i=0; i < NBRFANION+10; i++)
+    for(i=0; i < NBRFF+NBRFANION*2+NBROCTET; i++)
     {
 	    while(busy_usart2());
 		U2TXREG = trame[i] & 0xFF;
@@ -27,7 +30,7 @@ char rf_envoie(char *donnee8)
 
 	__asm__ volatile ("disi #0x000"); //Enable interrupts
 
-    for(i=0; i < NBRFANION+10; i++)
+    for(i=0; i < NBRFF+NBRFANION*2+NBROCTET; i++)
     {
 	    while(busy_usart1());
 		U1TXREG = trame[i] & 0xFF;
@@ -37,284 +40,133 @@ char rf_envoie(char *donnee8)
     
     //Retour en mode réception
     radio_dir(TRM_RX);
+    delay_us(180);
     
-       
+    result = 10;
+    rf_delai_flag = 0;
+    i=0;
+    
+    //Attente de confirmation  //Trouver une méthode de compter le temps
+    //Recherche d'une trame de confirmation
+//    while(result == 10 && i < ATT_CONF_NBR_500)
+//    {
+//	result = get_flag(flag);
+//	
+//	if( rf_delai_flag == 1)
+//	{
+//		i =i+1;
+//	}
+//    }
+//    
+//    if(result != 10)
+//    {
+//	//Lire trame et confirmer la réception
+//	rf_extraction(tampon, donnee)
+//    }
+    
+    
     return 1;
 }
 
 void construire_trame_envoie(char *trame, char *donnee8)
 {
 	int i =0;
-	char test = 0x31;
-	for(i=0; i<NBRFANION ; i++)
+	
+	//Octets de réveil
+	for(i=0; i<NBRFF ; i++)
+	{
+		trame[i] = 0xFF;
+	}
+	
+	//Fanion
+	for(i; i < NBRFF+NBRFANION; i++)
 	{
 		trame[i] = FANION;
 	}
-
-	trame[i] = *donnee8;
-	trame[i+1] = FANION;
+	
+	//Ajout des données utiles à la couche application
+	for(i; i < NBRFF+NBRFANION+NBROCTET; i++)
+	{
+		trame[i] = donnee8[i-(NBRFF+NBRFANION)];
+	}
+	
+	trame[i] = FANION;
 }
 // Envoie de confirmation
 
 //Réception************************************************************************
 
 //Validation de la trame de confirmation
-/*
-char rf_valider_confirmation(char *trame)
+char rf_gerer_RX(char *tampon, char *donnee)
 {
-    //CRC
-    
-    //Validation
-    if(trame[NBRFANION] == CONFIRMATION)
-		return 0;
-    return 1;
+	unsigned int i = 0, trame_valide = 0;
+	char donnee_confirmation[NBROCTET];
+	char trame[NBRFF+NBRFANION*2+NBROCTET];
+	
+	//Recherche des données
+	trame_valide = rf_extraction(tampon, donnee);
+	
+	
+	//CRC
+	//À faire
+	
+	
+	if(trame_valide)
+	{
+		//envoie de la confirmation
+		for(i=0; i < NBROCTET; i++)
+		{
+			donnee_confirmation[i] = CONFIRMATION;
+		}
+		
+		construire_trame_envoie(&trame, &donnee_confirmation);
+		
+		__asm__ volatile ("disi #0x3FFF"); //disable interrupts
+		
+		for(i=0; i < NBRFF+NBRFANION*2+NBROCTET; i++)
+		{
+			while(busy_usart2());
+			    U2TXREG = trame[i] & 0xFF;
+		}
+		
+		__asm__ volatile ("disi #0x000"); //Enable interrupts
+		
+		return 1;
+	}
+	return 0;
 }
 
-//==========================================================================================================================================================================//
-// rf_detection_trame
-// Description: Synchroniser une trame reçu avec un tableau de char			    					    					    //
-// In: 					octet reçu, decalage détecté, drapeau signalant que la trame est complète, l'adresse de la trame, un compteur			    //
-// Out:					décalage du fanion = valeur retournée -1	    										    //
-//==========================================================================================================================================================================//
-
-void rf_detection_trame(char *RX, unsigned *decalage, char *trame_complete, char *trame, unsigned *cnt)
+char rf_extraction(char *tampon, char *donnee)
 {
-	//déclara
-	unsigned int i = 0;
+	unsigned int i = 0, j = 0, detecte = 0;
 	
-    //Si un positif a été détecté
-    if(*decalage != 0)
-    {
-	unsigned int i;
-	//Vérifier la possibilité d'avoir un faux positif
-	if(*cnt == 1 && *decalage != 1)
-	{
-	    //génère un masque de test pour détecter les fausses trame
-	    char masque = rf_masque_de_test(*decalage-1);
-	    char test = *RX & masque;
-	    char bonne_reponse = rf_reponse_bonne_trame(*decalage-1);
-	    if(bonne_reponse != test)
-	    {
-		*cnt = 0;
-		*decalage = 0;
-		rf_rx_flag = 0;
-		return 0;
-	    }
-	}
-	
-	
-	unsigned int limite = NBRFANION*2+1;
-	
-	//Ranger les bits dans la trame afin d'obtenir une trame complète
-	if(*cnt < limite)
-	{
-	    trame[*cnt] = (*RX << (*decalage-1));
-	}
-	
-	//(if)Pour éviter d'écrire à l'adresse précédente lorsqu'il n'y pas de synchronisation requie
-	if(*decalage != 1)
-	{
-	    trame[*cnt-1] = trame[*cnt-1] | ((*RX >> 8-(*decalage-1)) & rf_decalage_masque(*decalage-1));
-	}
-	
-	//Incrémentation de la position dans la trame
-	*cnt= *cnt+1;
-	
-	//Détecte la fin de la trame
-	char test = FANION;
-	if(*cnt > limite)
-	{
-		//Vérifie la présence d'un fanion de fermeture
-		if(trame[2] == test)
+	for(i =0; i < (FIFO_LENGTH-NBROCTET); i++)
+	{	
+		if(detecte == 0)
 		{
-			*trame_complete = 1;
-			*cnt = 0;
-			*decalage = 0;
+			if(tampon[i] == FANION)
+			{
+				detecte = 1;
+			}
 		}
-		//Lorsqu'un trame n'est pas complète
 		else
 		{
-			*cnt = 0;
-			*decalage = 0;
+			if( j < NBROCTET)
+			{
+				donnee[j] = tampon[i];
+				j = j+1;
+			}
+			else
+			{
+				//Trame complète -faire sortir de la boucle for
+				i = FIFO_LENGTH-NBROCTET;
+				return 1;
+			}
 		}
-	    
 	}
-    }
-    else
-    {
-	//Recherche un décalage possible
-	*decalage = rf_recherche_positif(RX);
-	//Si oui, enregistre la trame et incrémente le compteur
-	if(*decalage != 0)
-	{		
-	    trame[0] = (*RX << (*decalage-1));
-	    *cnt= *cnt+1;
-	}
-    }
-    
-    //Remise à zéro du flag du registre de réception
-    rf_rx_flag = 0;
-    
+	return 0;
 }
 
-//==========================================================================================================================================================================//
-// rf_recherche_positif																			    //
-// Description: Recherche la possibilité d'avoir un fanion ou une partie			    					    				    //
-// In: 					octet de données de l'uart			    										    //
-// Out:					écalage du fanion = valeur retournée -1	    										    	    //
-//==========================================================================================================================================================================//
-
-unsigned rf_recherche_positif(char *RX)
-{
-    if((*RX & 0xFF) == 0xE7)
-	return 1;
-    if((*RX & 0x7F) == 0x3F)
-	return 2;
-    if((*RX & 0x3F) == 0x1F)
-	return 3;
-    if((*RX & 0x1F) == 0xF)
-	return 4;
-    if((*RX & 0xF) == 0x7)
-	return 5;
-    if((*RX & 0x7) == 0x3)
-	return 6;
-    if((*RX & 0x3) == 0x1)
-	return 7;
-    if((*RX & 0x1) == 0x0)
-	return 8;
-
-    return 0;
-}
-
-//===============================================================================================================//
-// rf_decalage_masque									     			 //
-// Description: Génère un masque pour les opérations binaires sur la trame en fct du décalage  			 //
-// Short description:	Define inputs and outputs					    			 //
-// In: 					nbr de bit de décalage				    			 //
-// Out:					masque binaire de un octet			    			 //
-//===============================================================================================================//
-
-unsigned rf_decalage_masque(unsigned decalage)
-{
-
-    switch(decalage)
-    {
-	case 1:
-	    return 0b00000001;
-	    break;
-	case 2:
-	    return 0b00000011;
-	    break;
-	case 3:
-	    return 0b00000111;
-	    break;
-	case 4:
-	    return 0b00001111;
-	    break;
-	case 5:
-	    return 0b00011111;
-	    break;
-	case 6:
-	    return 0b00111111;
-	    break;
-	case 7:
-	    return 0b01111111;
-	    break;
-	default:
-	    return 0;
-	    break;
-    }
-}
-
-
-//==========================================================================================//
-// Function: Génère un masque pour détecter les fausses trames  fct du décalage 	    //
-// Short description:	Define inputs and outputs					    //
-// In: 					nbr de bit de décalage				    //
-// Out:					masque binaire de un octet			    //
-//==========================================================================================//
-char rf_masque_de_test(unsigned decalage)
-{
-	switch(decalage)
-    {
-	case 1:
-	    return 0b10000000;
-	    break;
-	case 2:
-	    return 0b11000000;
-	    break;
-	case 3:
-	    return 0b11100000;
-	    break;
-	case 4:
-	    return 0b11110000;
-	    break;
-	case 5:
-	    return 0b11111000;
-	    break;
-	case 6:
-	    return 0b11111100;
-	    break;
-	case 7:
-	    return 0b11111110;
-	    break;
-	default:
-	    return 0;
-	    break;
-    }
-}
-
-char rf_reponse_bonne_trame(unsigned decalage)
-{
-
-    switch(decalage)
-    {
-	case 1:
-	    return 0b00000000;
-	    break;
-	case 2:
-	    return 0b10000000;
-	    break;
-	case 3:
-	    return 0b11000000;
-	    break;
-	case 4:
-	    return 0b11100000;
-	    break;
-	case 5:
-	    return 0b11110000;
-	    break;
-	case 6:
-	    return 0b11111000;
-	    break;
-	case 7:
-	    return 0b11111100;
-	    break;
-	default:
-	    return 0;
-	    break;
-    }
-}
-*/
-//CRC******************************************************************************
-
-//char rf_crc(char *trame)
-//{
-//    char buffer[3];
-//    unsigned i = 0;
-//    
-//    //copie de la charge utile
-//    buffer[2] = trame[2];
-//
-//    for(i=0; i < 12; i++)
-//    {
-//	buffer[2] << i;
-//	buffer[2]^=0x98;
-//    }
-//    
-//    
-//    
-//}
 
 
 

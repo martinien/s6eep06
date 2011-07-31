@@ -34,7 +34,7 @@ _CONFIG2(IESO_OFF & SOSCSEL_LPSOSC & WUTSEL_FST & FNOSC_FRCPLL & FCKSM_CSDCMD & 
 extern volatile int nombre;
 extern volatile unsigned int adc_result[];
 extern volatile unsigned int rf_flag;
-extern volatile unsigned rfdelai_flag, rf_rx_flag, rf_delai_flag, envoie;
+extern volatile unsigned rf_delai_flag, rf_rx_flag, rf_delai_flag, envoie;
 extern volatile char rx;
 extern volatile int buttonPress;	//Pour encodeur
 //Images bitmap converties
@@ -87,11 +87,10 @@ int main(void)
 {	//Test
 	int last_nombre = 4;
 	char str[64] = "Test de String...";
-	char tx = 0b00110101; //donnee de test de la couche application
 	unsigned char distanceActuel = 0;
 	
 	//Variables
-	char trame_complete = 0, trameRX[NBRFANION+2];
+	char trame_a_envoye = 0, trame_complete = 0, trameRX[NBROCTET], trameTX[NBROCTET];
 	unsigned decalage = 0, contexte_trame =0;
 	unsigned int contexte_local = 0, i =0;
 	
@@ -101,12 +100,6 @@ int main(void)
 	
 	//Init fifo
 	fifo_init();
-	
-//	//Démo numérisation:
-//	while(1)
-//	{
-//		demo_numerisation();
-//	}//Démo... commenter au final
 
 	//Test de communication radio:
 	#ifdef AUTO
@@ -221,68 +214,43 @@ int main(void)
 			last_nombre = nombre;		
 		}	
 		
-		#ifdef BORNE
-		//Protocole de liaison de données
-		//Envoie de donnée
-		/*if(envoie == 0 && tx!= 0b00000000)
+		//Données sortantes
+		if(trame_a_envoye == 1)
 		{
-			envoie = rf_envoie(&tx);
-
-		}*/
-		////Attente de confirmation
-		//if(envoie == 1)
-		//{
-		//	//Lecture de la confirmation
-		//	if(rf_rx_flag == 1)
-		//	{z
-		//		//envoie = rf_valider_confirmation();
-		//		rf_rx_flag == 0;
-		//	}
-		//	//Délai de réponse atteint
-		//	if(rf_delai_flag == 1)
-		//	{
-		//		rf_delai_flag == 0;
-		//		envoie = rf_envoie(&tx);
-		//	}
-		//}	
-		#endif
+			envoie = rf_envoie(trameTX, clean_buf);
+		}
 		
 		//Flags - Données entrantes	
-		if(rf_flag)//&& trame_complete == 0)
+		if(rf_flag == 1)//&& trame_complete == 0)
 		{
-//			rf_flag = 0;
-//			
-//			rf_detection_trame(&rx, &decalage, &trame_complete, &trameRX, &contexte_trame);
-//			
-//			//Test de réception synchronisé		//pascal
-//			if(trame_complete == 1)
-//			{
-//				rf_rx_flag = 0;
-//				trame_complete = 0;
-//
-//			}
 			
 			result = get_flag(flag);
 			if(result != 10)
 			{
 				clean_buffer(result, 32);
-				Nop();				
+
+				//Extraction des octets vers la couche application
+				trame_complete = rf_gerer_RX(clean_buf, trameRX);			
 			}
+			
+			//Remise à zéro de la détection
+			rf_flag = 0;
+			result = 10;
 
-			#ifdef BORNE
-
-			#endif
-
+			
 		}
-
-		#ifdef USE_GLCD
-
+		
+		#ifdef GPS_FEEDTHROUGH
 		//TestGPS
 	
 		float LA = 45.3793;
 		float LoA= -71.9239;
 		
 		assignDist(LA,LoA);
+		
+		#endif
+
+		#ifdef USE_GLCD
 		
 		if(buttonPress)
 		{
@@ -297,7 +265,12 @@ int main(void)
 		#endif
 
 		#ifdef BORNE
-		//Pascal...
+		if(buttonPress)
+		{
+			buttonPress = 0;
+			char donnee_test[NBROCTET] = {0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37};
+			envoie = rf_envoie(&donnee_test, clean_buf);
+		}
 		#endif
 		
 		#ifdef AUTO
@@ -378,37 +351,6 @@ void config(void)
 	#endif		
 }
 
-//Démo projet
-void demo_numerisation(void)
-{
-	char str[10];
-	
-	sprintf(str, "ADC: %i\r", adc_result[1]);
-	puts_usart1((char *)str);
-	delay_us(10000);
-}
-
-void send_trame(void)
-{
-	char trame[20];
-	unsigned int i = 0;
-	
-	for(i = 0; i < 10; i++)
-	{
-		trame[i] = 'a';
-	}
-	for(i = 0; i < 10; i++)
-	{
-		trame[10+i] = '0'+i;
-	}
-	
-	for(i = 0; i < 20; i++)
-	{
-		while(busy_usart2());
-		U2TXREG = trame[i];
-	}
-}
-
 //Retourne de combien de caractères on doit shifter à gauche
 //Une valeur de 10 indique "aucun match"
 
@@ -469,6 +411,7 @@ void clean_buffer(unsigned char offset, char buf_length)
 		temp1 = (temp1 & 0xFF00) >> 8;		
 		
 		clean_buf[i] = temp1;
+		fifo[i] = 0x00;
 	}
 }
 
