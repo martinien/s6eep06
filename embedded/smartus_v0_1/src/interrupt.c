@@ -54,8 +54,6 @@ void __attribute__ ((interrupt, no_auto_psv)) _U2RXInterrupt(void)
 		
 		rf_rx_flag = 1;		//pascal		
 		
-		
-		#ifdef AUTO
 		//On effectue une action uniquement si RSSI est assez haut	
 		if(rssi >= 300)	//ToDo: Confirmer valeur RSSI
 		{
@@ -74,7 +72,6 @@ void __attribute__ ((interrupt, no_auto_psv)) _U2RXInterrupt(void)
 			//On ajoute au fifo
 			fifo_add(rx,0);
 		}
-		#endif
 	}
 	
 	IFS1bits.U2RXIF = 0;	//Clear flag
