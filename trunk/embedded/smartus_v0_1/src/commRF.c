@@ -59,6 +59,7 @@ void construire_trame_envoie(char *trame, char *donnee8)
 //Réception************************************************************************
 
 //Validation de la trame de confirmation
+/*
 char rf_valider_confirmation(char *trame)
 {
     //CRC
@@ -294,7 +295,7 @@ char rf_reponse_bonne_trame(unsigned decalage)
 	    break;
     }
 }
-
+*/
 //CRC******************************************************************************
 
 //char rf_crc(char *trame)

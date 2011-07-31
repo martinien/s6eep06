@@ -61,9 +61,9 @@ unsigned char BATTERIE = 100;
 unsigned char SERIALBATTERIE = 12;
 int ecran = 1;
 int toEcran1 = 0;
-unsigned char DISTANCE1 = 100;
-unsigned char DISTANCE2 = 100;
-unsigned char DISTANCE3 = 100;
+extern volatile unsigned char DISTANCE1;
+extern volatile unsigned char DISTANCE2;
+extern volatile unsigned char DISTANCE3;
 unsigned char DIST[] = "Distance";
 unsigned char RESERVE[] = "Reserve";
 unsigned char DISTANCEBATT = 10;		//distance minimum pour considérer la batterie changée
@@ -277,6 +277,13 @@ int main(void)
 
 		#ifdef USE_GLCD
 
+		//TestGPS
+	
+		float LA = 45.3793;
+		float LoA= -71.9239;
+		
+		assignDist(LA,LoA);
+		
 		if(buttonPress)
 		{
 			switchScreen(last_nombre);
