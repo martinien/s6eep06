@@ -47,23 +47,25 @@ unsigned int rssi = 0;
 
 //Borne
 int borneChoisie = 0;
-unsigned char ADRESSE1[] = "11, rue Galt, Sherb";
-unsigned char ADRESSE2[] = "26, rue Well, Sherb";
-unsigned char ADRESSE3[] = "99, rue Viet, Sherb";
-unsigned char BATTSWITCH[] = "Batterie changée";
-unsigned char ADR1[] = "Adresse 1";
-unsigned char ADR2[] = "Adresse 2";
-unsigned char ADR3[] = "Adresse 3";
-unsigned char CHOIX[] = "#";
+unsigned char ADRESSE1[] = "11, rue Galt";
+unsigned char ADRESSE2[] = "26, rue Well";
+unsigned char ADRESSE3[] = "99, rue Viet";
+unsigned char BATTSWITCH[] = "Batterie changee";
+unsigned char ADR1A[] = "Adr1#  11, rue Galt";
+unsigned char ADR2A[] = "Adr2#  26, rue Well";
+unsigned char ADR3A[] = "Adr3#  99, rue Viet";
+unsigned char ADR1[] = "Adr1   11, rue Galt";
+unsigned char ADR2[] = "Adr2   26, rue Well";
+unsigned char ADR3[] = "Adr3   99, rue Viet";
 unsigned char BATTERIE = 100;
-unsigned char SERIALBATTERIE = 1352;
+unsigned char SERIALBATTERIE = 12;
 int ecran = 1;
 int toEcran1 = 0;
-unsigned char DISTANCE1 = 0;
-unsigned char DISTANCE2 = 0;
-unsigned char DISTANCE3 = 0;
+unsigned char DISTANCE1 = 100;
+unsigned char DISTANCE2 = 100;
+unsigned char DISTANCE3 = 100;
 unsigned char DIST[] = "Distance";
-unsigned char RESERVE[] = "Réservé";
+unsigned char RESERVE[] = "Reserve";
 unsigned char DISTANCEBATT = 10;		//distance minimum pour considérer la batterie changée
 
 //Test:
@@ -83,7 +85,7 @@ extern unsigned char fifo[];
 //////////////////////////////////////////////////////////////////////////////////////////////
 int main(void)
 {	//Test
-	int last_nombre = 0;
+	int last_nombre = 4;
 	char str[64] = "Test de String...";
 	char tx = 0b00110101; //donnee de test de la couche application
 	unsigned char distanceActuel = 0;
@@ -143,7 +145,7 @@ int main(void)
 			toEcran1 = 0;
 			GLCD_ClearScreen();
 			GLCD_Bitmap(Base1, 0, 0, 128, 64);
-			
+			/*
 			GLCD_GoTo(0,2);
 			GLCD_WriteString(ADR1);
 			GLCD_GoTo(38,2);
@@ -158,10 +160,10 @@ int main(void)
 			GLCD_WriteString(ADR3);
 			GLCD_GoTo(38,4);
 			GLCD_WriteString(ADRESSE3);
-			
+
 			GLCD_GoTo(38,5);
 			GLCD_WriteString(DIST);		
-
+			*/
 			GLCD_GoTo(107,0);
 			GLCD_WriteString(SERIALBATTERIE);	
 			
@@ -172,29 +174,41 @@ int main(void)
 			{
 				case 0:
 					#ifdef USE_GLCD
-					GLCD_GoTo(30,2);
-					GLCD_WriteString(CHOIX);
+					GLCD_GoTo(0,2);
+					GLCD_WriteString(ADR1A);
+					GLCD_GoTo(0,3);
+					GLCD_WriteString(ADR2);
+					GLCD_GoTo(0,4);
+					GLCD_WriteString(ADR3);
 					GLCD_GoTo(38,7);
 					GLCD_WriteString(DISTANCE1);
-					distanceActual = DISTANCE1;
+					distanceActuel = DISTANCE1;
 					#endif
 					break;
 				case 1:
 					#ifdef USE_GLCD
-					GLCD_GoTo(30,3);
-					GLCD_WriteString(CHOIX);
+					GLCD_GoTo(0,2);
+					GLCD_WriteString(ADR1);
+					GLCD_GoTo(0,3);
+					GLCD_WriteString(ADR2A);
+					GLCD_GoTo(0,4);
+					GLCD_WriteString(ADR3);
 					GLCD_GoTo(38,7);
 					GLCD_WriteString(DISTANCE2);
-					distanceActual = DISTANCE2;
+					distanceActuel = DISTANCE2;
 					#endif
 					break;
 				case 2:
 					#ifdef USE_GLCD
-					GLCD_GoTo(30,4);
-					GLCD_WriteString(CHOIX);
+					GLCD_GoTo(0,2);
+					GLCD_WriteString(ADR1);
+					GLCD_GoTo(0,3);
+					GLCD_WriteString(ADR2);
+					GLCD_GoTo(0,4);
+					GLCD_WriteString(ADR3A);
 					GLCD_GoTo(38,7);
 					GLCD_WriteString(DISTANCE3);
-					distanceActual = DISTANCE3;
+					distanceActuel = DISTANCE3;
 					#endif
 					break;
 				default:
@@ -261,12 +275,8 @@ int main(void)
 
 		}
 
-		#ifdef BORNE
-		//Pascal...
-		#endif
-		
-		#ifdef AUTO
-		
+		#ifdef USE_GLCD
+
 		if(buttonPress)
 		{
 			switchScreen(last_nombre);
@@ -277,6 +287,13 @@ int main(void)
 		{
 			switchBatt();
 		}
+		#endif
+
+		#ifdef BORNE
+		//Pascal...
+		#endif
+		
+		#ifdef AUTO
 		
 		if(rssi_flag)
 		{
@@ -495,20 +512,20 @@ void switchScreen(last_nombre)
 			case 0:
 				GLCD_GoTo(0,2);
 				GLCD_WriteString(ADR1);
-				GLCD_GoTo(38,2);
-				GLCD_WriteString(ADRESSE1);
+				GLCD_GoTo(0,7);
+				GLCD_WriteString(DISTANCE1);
 				break;
 			case 1:
 				GLCD_GoTo(0,3);
 				GLCD_WriteString(ADR2);
-				GLCD_GoTo(38,3);
-				GLCD_WriteString(ADRESSE2);
+				GLCD_GoTo(38,7);
+				GLCD_WriteString(DISTANCE2);
 				break;
 			case 2:
 				GLCD_GoTo(0,4);
 				GLCD_WriteString(ADR3);
-				GLCD_GoTo(38,4);
-				GLCD_WriteString(ADRESSE3);
+				GLCD_GoTo(38,7);
+				GLCD_WriteString(DISTANCE3);
 				break;
 			default:
 				break;
@@ -527,7 +544,7 @@ void switchScreen(last_nombre)
 void switchBatt(void)
 {
 	GLCD_ClearScreen();
-	GLCD_GoTo(38,3);
+	GLCD_GoTo(0,3);
 	GLCD_WriteString(BATTSWITCH);
 	SERIALBATTERIE = SERIALBATTERIE++;			//Faire une fonction allant chercher le nouveau serial
 }
