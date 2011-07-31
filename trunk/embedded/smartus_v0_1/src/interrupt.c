@@ -24,10 +24,7 @@ extern unsigned int rssi;
 void __attribute__ ((interrupt, no_auto_psv)) _U1RXInterrupt(void)
 {
 	char rx = U1RXREG;
-	
-	
-	
-	//U1TXREG = rx;			//Echo
+	U1TXREG = rx;			//Echo
 	IFS0bits.U1RXIF = 0;	//Clear flag
 }
 
@@ -66,7 +63,9 @@ void __attribute__ ((interrupt, no_auto_psv)) _U2RXInterrupt(void)
 		}
 		
 		if(valid > 0)
+		{
 			valid --;
+		}
 		
 		if(valid)
 		{

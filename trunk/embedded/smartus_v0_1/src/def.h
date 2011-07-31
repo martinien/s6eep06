@@ -15,6 +15,8 @@
 #include "graphic.h"
 #include "commRF.h"
 #include "fifo.h"
+#include "GPS.h"
+
 
 #define FCY 32000000
 
@@ -22,7 +24,7 @@
 //#define BORNE				//Borne
 #define AUTO				//Auto. Pour le moment, Auto = RX
 #define USE_GLCD 			//Le GLCD va avec l'auto
-//#define GPS_FEEDTHROUGH	//Le GPS est avec Auto
+#define GPS_FEEDTHROUGH	//Le GPS est avec Auto
 
 #define DEBUG_MPSIM
 
@@ -116,12 +118,13 @@ void getBatt(void);
 #define TRM_RX	0
 
 //Paramètres de la couche de liaison de données
-#define FANION 			0xFF
-#define NBRFANION 		8
-#define NBRFF           8
-#define NBROCTET        1
-#define ADRESSE 		0xA0
-#define CONFIRMATION 	0xAA
-#define ATTENTE_CONF 	400		//millisecondes
+#define FANION 	            0x7E
+#define NBRFANION           1
+#define NBRFF               8
+#define NBROCTET            8
+#define ADRESSE 	    0xA0
+#define CONFIRMATION 	    0xAA
+#define ATT_CONF_NBR_500 	4		//Nbr de 500 milliseconde d'Attente avant récpetion de confirmation
+
 
 #endif
