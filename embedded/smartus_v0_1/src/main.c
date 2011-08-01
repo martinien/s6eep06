@@ -61,7 +61,7 @@ char SERIALBATTERIE = 12;
 unsigned int BORNERESERVE = 3;
 int ecran = 1;
 extern volatile int toEcran1;
-char DISTANCE;
+int DISTANCE;
 char DIST[] = "Distance";
 char RESERVE[] = "Reserve";
 char DISTANCEBATT = 0;	//distance minimum pour considérer la batterie changée
@@ -80,14 +80,15 @@ unsigned int  EtatAuto = 0, BORNECONFIRME = 0;
 
 #endif
 //GPS
-extern volatile unsigned char DISTANCE1[6];
-extern volatile unsigned char DISTANCE2[6];
-extern volatile unsigned char DISTANCE3[6];
+extern char DISTANCE1[];
+extern char DISTANCE2[];
+extern char DISTANCE3[];
 extern char gpsstr[];
 char gps[50];
 extern float LaA;
 extern float LoA;
 int a;
+extern int D1,D2,D3;
 
 //Test:
 char result = 0;
@@ -171,7 +172,7 @@ int main(void)
 				{
 					case 0:
 						#ifdef USE_GLCD
-						DISTANCE = *DISTANCE1;
+						DISTANCE = D1;
 						GLCD_GoTo(0,2);
 						GLCD_WriteString(ADR1A);
 					if(!toEcran1)
@@ -185,7 +186,7 @@ int main(void)
 						break;
 					case 1:
 						#ifdef USE_GLCD
-						DISTANCE = *DISTANCE2;
+						DISTANCE = D2;
 						GLCD_GoTo(0,3);
 						GLCD_WriteString(ADR2A);
 					if(!toEcran1)
@@ -199,7 +200,7 @@ int main(void)
 						break;
 					case 2:
 						#ifdef USE_GLCD
-						DISTANCE = *DISTANCE3;
+						DISTANCE = D3;
 					if(!toEcran1)
 					{
 						GLCD_GoTo(0,2);
@@ -219,9 +220,7 @@ int main(void)
 						break;
 				}
 			#ifdef USE_GLCD
-			sprintf(str,"%d",DISTANCE);
-			GLCD_GoTo(44,7);
-			GLCD_WriteString(str);
+			
 			GLCD_GoTo(90,7);
 			GLCD_WriteString(METER);
 			distanceActuel = DISTANCE;	
@@ -229,13 +228,13 @@ int main(void)
 			last_nombre = nombre;
 			if(confirm==2)
 			{
-				if(*DISTANCE1<DISTANCEPROCHE){
+				if(D1<DISTANCEPROCHE){
 					borneProche(0);	
 				}
-				else if(*DISTANCE2<DISTANCEPROCHE){
+				else if(D2<DISTANCEPROCHE){
 					borneProche(1);
 				}
-				else if(*DISTANCE3<DISTANCEPROCHE){
+				else if(D3<DISTANCEPROCHE){
 					borneProche(2);
 				}
 				if(confirm==1)
@@ -268,8 +267,13 @@ int main(void)
 			//Actualise la batterie
 			#ifdef USE_GLCD
 			getBatt();
-			sprintf(str,"%d",BATTERIE);			
+			sprintf(str,"%03i",BATTERIE);			
 			GLCD_GoTo(80,0);
+			
+			DISTANCE = D1;
+			GLCD_WriteString(str);
+			sprintf(str,"%i",DISTANCE);
+			GLCD_GoTo(40,7);
 			GLCD_WriteString(str);
 			#endif
 
@@ -291,12 +295,18 @@ int main(void)
 		
 		#ifdef GPS_FEEDTHROUGH
 		//TestGPS
+		#ifdef DEBUG_MPSIM
+			gps_flag =1;  //REMOVE
+		#endif
 		
 		if(gps_flag)
 		{
 			gps_flag = 0;
 			//Filtre les données quand le buffer est plein
 			
+			#ifdef DEBUG_MPSIM
+				(gpsstr[3]='R'); //REMOVE
+			#endif
 			
 			if((gpsstr[3]=='R'))
 			{
@@ -305,17 +315,36 @@ int main(void)
 					gps[a] = gpsstr[a]; //Buffer de travail
 				}
 			//	puts_usart1(gpsstr);
+				//gps[] = "$GPRMC,174254.000,V,4522.75800,N,07155.43400,W";
+				#ifdef DEBUG_MPSIM
+					gps[20]='4';
+					gps[21]='5';
+					gps[22]='2';
+					gps[23]='2';
+					gps[25]='7';
+					gps[26]='5';
+					gps[27]='8';
+					
+					gps[33]='0';
+					gps[34]='7';
+					gps[35]='1';
+					gps[36]='5';
+					gps[37]='5';
+					gps[39]='4';
+					gps[40]='3';
+					gps[41]='4';
+					gps[45]='W';
+				#endif
 				convStr();
 				
+				//LaA = 45.3793;
+				//LoA= -71.9239;
+				
+				assignDist(LaA,LoA);				
 			}
 		}
-
-		float LaA = 45.3793;
-		float LoA= -71.9239;
-		
-		assignDist(LaA,LoA);
-		
 		#endif
+
 
 		#ifdef USE_GLCD
 		/*
@@ -331,14 +360,19 @@ int main(void)
 		}
 		#endif
 
-		#ifdef BORNE
+		
 		if(buttonPress)
 		{
+			#ifdef BORNE
 			buttonPress = 0;
 			char donnee_test[NBROCTET] = {0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37};
 			envoie = rf_envoie(&donnee_test, clean_buf);
+			#endif
+			#ifdef AUTO
+			puts_usart1(gps);
+			#endif
 		}
-		#endif
+		
 		
 		
 		if(rssi_flag)

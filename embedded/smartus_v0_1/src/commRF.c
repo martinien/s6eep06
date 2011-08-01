@@ -270,8 +270,7 @@ char get_offset(unsigned char msb, unsigned char lsb, unsigned char ref)
 				return i;
 		}
 
-		else
-		if((value_16 & mask) == (unsigned int)(ref << (8 - i))
+		else if((value_16 & mask) == (unsigned int)(ref << (8 - i)))
 			return i;
 		#endif
 	}	
