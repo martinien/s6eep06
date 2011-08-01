@@ -10,6 +10,7 @@ volatile unsigned int rf_cnt = 0, rf_flag = 0, rf_rx_flag = 0, envoie =0, rf_del
 volatile char rx = '0';
 char gpsstr[50];
 #define REFRESH_RATE 99
+volatile int toEcran1 = 0;
 
 unsigned int adc_rssi[AVG];
 unsigned int rssi_flag = 0;
@@ -151,6 +152,8 @@ void __attribute__ ((interrupt, no_auto_psv)) _INT0Interrupt(void)
 //INT1 : Encoder A (rotation)
 void __attribute__ ((interrupt, no_auto_psv)) _INT1Interrupt(void)
 {
+if(!toEcran1)
+{
     if(ENC_SWB == 0)	//Rotation horaire
 		++nombre;
     else				//Rotation anti-horaire
@@ -160,7 +163,7 @@ void __attribute__ ((interrupt, no_auto_psv)) _INT1Interrupt(void)
 		nombre = 0;
 	if(nombre < 0)
 		nombre = 2;	
-	
+}
 	_INT1IF = 0;	//Clear flag
 }
 

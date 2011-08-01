@@ -49,22 +49,19 @@ unsigned int rssi = 0;
 char str[8];
 
 //Borne
-int borneChoisie = 0;
-char ADRESSE1[] = "11, ";
-char ADRESSE2[] = "26, StudioX";
-char ADRESSE3[] = "99, Coin Viet";
+int borneChoisie = 3;
 char BATTSWITCH[] = "Batterie changee";
-char ADR1A[] = "Adr1#  11, PotAuFeu";
-char ADR2A[] = "Adr2#  26, StudioX";
-char ADR3A[] = "Adr3#  99, rue Viet";
-char ADR1[] = "Adr1   11, PotAuFeu";
-char ADR2[] = "Adr2   26, StudioX";
-char ADR3[] = "Adr3   99, Coin Viet";
+char ADR1A[] = "Adr1#  11, Pot Au Feu";
+char ADR2A[] = "Adr2#  26, Studio Sex";
+char ADR3A[] = "Adr3#  99, Coin Viet ";
+char ADR1[] = "Adr1   11, Pot Au Feu";
+char ADR2[] = "Adr2   26, Studio Sex";
+char ADR3[] = "Adr3   99, Coin Viet ";
 char BATTERIE = 100;
 char SERIALBATTERIE = 12;
 unsigned int BORNERESERVE = 0;
 int ecran = 1;
-int toEcran1 = 0;
+extern volatile int toEcran1;
 char DISTANCE;
 char DIST[] = "Distance";
 char RESERVE[] = "Reserve";
@@ -136,18 +133,21 @@ int main(void)
 	{
 		
 		//Test: encodeur et GLCD
-		if((last_nombre != nombre && ecran == 1) || toEcran1 == 1 || buttonPress)	//Si une transition a eu lieu
+		if((last_nombre != nombre) || buttonPress)	//Si une transition a eu lieu
 		{
 			getBatt();
-			toEcran1 = 0;
 			GLCD_ClearScreen();
 			GLCD_Bitmap((char*)Base1, 0, 0, 128, 64);
-			if(buttonPress)
+			if(buttonPress && !toEcran1)
 			{
+				borneChoisie = 3;
 				BORNERESERVE = nombre;
-				GLCD_GoTo(30,5);
+				GLCD_GoTo(0,5);
 				GLCD_WriteString(RESERVE);
+				toEcran1 = 1;
 			}
+			else if(buttonPress && toEcran1)
+				toEcran1 = 0;
 			sprintf(str,"%d",SERIALBATTERIE);
 			GLCD_GoTo(107,0);
 			GLCD_WriteString(str);
@@ -155,59 +155,60 @@ int main(void)
 			sprintf(str,"%d",BATTERIE);			
 			GLCD_GoTo(80,0);
 			GLCD_WriteString(str);
-
-			switch(nombre)
-			{
-				case 0:
-					#ifdef USE_GLCD
-					DISTANCE = DISTANCE1;
-					GLCD_GoTo(0,2);
-					GLCD_WriteString(ADR1A);
-				if(!buttonPress)
+			
+				switch(nombre)
 				{
-					GLCD_GoTo(0,3);
-					GLCD_WriteString(ADR2);
-					GLCD_GoTo(0,4);
-					GLCD_WriteString(ADR3);
+					case 0:
+						#ifdef USE_GLCD
+						DISTANCE = DISTANCE1;
+						GLCD_GoTo(0,2);
+						GLCD_WriteString(ADR1A);
+					if(!toEcran1)
+					{
+						GLCD_GoTo(0,3);
+						GLCD_WriteString(ADR2);
+						GLCD_GoTo(0,4);
+						GLCD_WriteString(ADR3);
+					}
+						#endif
+						break;
+					case 1:
+						#ifdef USE_GLCD
+						DISTANCE = DISTANCE2;
+						GLCD_GoTo(0,3);
+						GLCD_WriteString(ADR2A);
+					if(!toEcran1)
+					{
+						GLCD_GoTo(0,2);
+						GLCD_WriteString(ADR1);
+						GLCD_GoTo(0,4);
+						GLCD_WriteString(ADR3);
+					}
+						#endif
+						break;
+					case 2:
+						#ifdef USE_GLCD
+						DISTANCE = DISTANCE3;
+					if(!toEcran1)
+					{
+						GLCD_GoTo(0,2);
+						GLCD_WriteString(ADR1);
+						GLCD_GoTo(0,3);
+						GLCD_WriteString(ADR2);
+					}
+						GLCD_GoTo(0,4);
+						GLCD_WriteString(ADR3A);
+						#endif
+						break;
+					default:
+						#ifdef USE_GLCD
+						GLCD_ClearScreen();
+						GLCD_Bitmap((char*)Base1, 0, 0, 128, 64);
+						#endif
+						break;
 				}
-					#endif
-					break;
-				case 1:
-					#ifdef USE_GLCD
-					DISTANCE = DISTANCE2;
-					GLCD_GoTo(0,3);
-					GLCD_WriteString(ADR2A);
-				if(!buttonPress)
-				{
-					GLCD_GoTo(0,2);
-					GLCD_WriteString(ADR1);
-					GLCD_GoTo(0,4);
-					GLCD_WriteString(ADR3);
-				}
-					#endif
-					break;
-				case 2:
-					#ifdef USE_GLCD
-					DISTANCE = DISTANCE3;
-				if(!buttonPress)
-				{
-					GLCD_GoTo(0,2);
-					GLCD_WriteString(ADR1);
-					GLCD_GoTo(0,3);
-					GLCD_WriteString(ADR2);
-				}
-					GLCD_GoTo(0,4);
-					GLCD_WriteString(ADR3A);
-					#endif
-					break;
-				default:
-					#ifdef USE_GLCD
-					GLCD_ClearScreen();
-					GLCD_Bitmap((char*)Base1, 0, 0, 128, 64);
-					#endif
-					break;
-			}
-			sprintf(str,"%d",DISTANCE);	
+			sprintf(str,"%d",DISTANCE);
+			GLCD_GoTo(80,7);
 			GLCD_WriteString(str);
 			distanceActuel = DISTANCE;	
 			buttonPress = 0;		
@@ -429,6 +430,7 @@ void switchBatt(void)
 	GLCD_GoTo(0,3);
 	GLCD_WriteString(BATTSWITCH);
 	SERIALBATTERIE++;			//Faire une fonction allant chercher le nouveau serial
+	borneChoisie = 3;
 }
 
 void getBatt(void)
