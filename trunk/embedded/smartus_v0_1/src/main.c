@@ -67,6 +67,16 @@ char DIST[] = "Distance";
 char RESERVE[] = "Reserve";
 char DISTANCEBATT = 0;	//distance minimum pour considérer la batterie changée
 
+#ifdef BORNE
+//Donnée de la borne initiale
+unsigned char NumBorne = 2, NbBatt = 5, Queue = 0, batterieId[5] = {1, 2, 7, 12, 16}, IdBattOut, IdBattIn;
+#endif
+	
+#ifdef AUTO
+unsigned char batterieId[] = "06", NumBorneReserve = 0;
+unsigned int  EtatAuto = 0, BORNECONFIRME = 0;
+
+#endif
 //GPS
 extern volatile unsigned char DISTANCE1[6];
 extern volatile unsigned char DISTANCE2[6];
@@ -98,10 +108,8 @@ int main(void)
 	char str[64] = "Test de String...";
 	unsigned char distanceActuel = 0;
 	
-	//Variables
+	//Variables protocole de liaison de donnée
 	char trame_a_envoye = 0, trame_complete = 0, trameRX[NBROCTET], trameTX[NBROCTET];
-	unsigned decalage = 0, contexte_trame =0;
-	unsigned int contexte_local = 0, i =0;
 	
 	//Initial configuration
 	setup_oscillator();
@@ -218,7 +226,7 @@ int main(void)
 		//Données sortantes
 		if(trame_a_envoye == 1)
 		{
-			envoie = rf_envoie(trameTX, clean_buf);
+			envoie = rf_envoie(trameTX, (char *)clean_buf);
 			
 			if(envoie == 1)
 				trame_a_envoye = 0;
@@ -234,15 +242,15 @@ int main(void)
 				clean_buffer(result, 32);
 
 				//Extraction des octets vers la couche application
-				trame_complete = rf_gerer_RX(clean_buf, trameRX);			
+				trame_complete = rf_gerer_RX((char *)clean_buf, trameRX);			
 			}
 			
 			//Remise à zéro de la détection
 			rf_flag = 0;
 			result = 10;
-
-			
 		}
+		
+		//
 		
 		#ifdef GPS_FEEDTHROUGH
 		//TestGPS
@@ -437,4 +445,42 @@ void getBatt(void)
 {
 	BATTERIE = (adc_result[1]>>3);
 }
+
+#ifdef AUTO
+//void routine_auto(char *flag_TX, char *flag_RX, char *data_a_envoie, char *data_recu)
+//{
+//	//Si utilisateur a fait une demande de réservation et que la borne doit être informé
+//	if(BORNERESERVE != 3 && BORNECONFIRME == 3 && EtatAuto == 0)
+//	{
+//		sprintf(*data_envoie, "B%02iEEEEE", BORNERESERVE);
+//		*flag_TX = 1;
+//		EtatAuto = 1;
+//	}
+//	
+//	//Si la borne confirme
+//	if(EtatAuto == 1 && *flag_TX == 0)
+//	{
+//		BORNECONFIRME = BORNERESERVE;
+//		EtatAuto == 2;
+//	}
+//	
+//	//Si l'utilisateur retire la réservation
+//	if(BORNERESERVE == 3 && EtatAuto == 2)
+//	{
+//		sprintf(*data_envoie, "C%02iEEEEEE", BORNECONFIRME);
+//		*flag_TX = 1;
+//		EtatAuto = 3;
+//	}
+//	
+//	//Réception de la confirmation de la réservation annulé
+//	if(EtatAuto == 3 && *flag_TX == 0)
+//	{
+//		BORNECONFIRME = 0;
+//		EtatAuto = 0;
+//	}
+//	
+//	//Si on fait l'échange de batterie
+//	if()
+//}
+#endif
 
