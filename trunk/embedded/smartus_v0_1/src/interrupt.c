@@ -29,7 +29,7 @@ void __attribute__ ((interrupt, no_auto_psv)) _U1RXInterrupt(void)
 	char rx = U1RXREG;
 	//U1TXREG = rx;			//Echo
 	IFS0bits.U1RXIF = 0;	//Clear flag
-	if (rx =='$')
+	if ((rx =='$') && (gps_flag ==0))
 	{i = 0;}
 	else
 	{

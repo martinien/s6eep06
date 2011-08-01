@@ -65,9 +65,6 @@ char SERIALBATTERIE = 12;
 unsigned int BORNERESERVE = 0;
 int ecran = 1;
 int toEcran1 = 0;
-extern volatile unsigned char DISTANCE1;
-extern volatile unsigned char DISTANCE2;
-extern volatile unsigned char DISTANCE3;
 char DISTANCE;
 char DIST[] = "Distance";
 char RESERVE[] = "Reserve";
@@ -78,8 +75,10 @@ extern volatile unsigned char DISTANCE1[6];
 extern volatile unsigned char DISTANCE2[6];
 extern volatile unsigned char DISTANCE3[6];
 extern char gpsstr[];
+char gps[50];
 extern float LaA;
 extern float LoA;
+int a;
 
 //Test:
 char result = 0;
@@ -252,19 +251,22 @@ int main(void)
 			gps_flag = 0;
 			//Filtre les données quand le buffer est plein
 			
+			
 			if((gpsstr[3]=='R'))
 			{
+				for(a =0;a<47;a++)
+				{
+					gps[a] = gpsstr[a]; //Buffer de travail
+				}
 			//	puts_usart1(gpsstr);
 				convStr();
 				
 			}
 		}
-	
-		float LA = 45.3793;
+
 		float LaA = 45.3793;
 		float LoA= -71.9239;
 		
-		assignDist(LA,LoA);
 		assignDist(LaA,LoA);
 		
 		#endif
