@@ -42,6 +42,7 @@ extern const unsigned char Base1 [];
 
 extern unsigned int adc_rssi[];
 extern unsigned int rssi_flag;
+extern unsigned int gps_flag;
 
 unsigned int rssi = 0;
 
@@ -71,6 +72,14 @@ char DISTANCE;
 char DIST[] = "Distance";
 char RESERVE[] = "Reserve";
 char DISTANCEBATT = 0;	//distance minimum pour considérer la batterie changée
+
+//GPS
+extern volatile unsigned char DISTANCE1[6];
+extern volatile unsigned char DISTANCE2[6];
+extern volatile unsigned char DISTANCE3[6];
+extern char gpsstr[];
+extern float LaA;
+extern float LoA;
 
 //Test:
 char result = 0;
@@ -237,11 +246,26 @@ int main(void)
 		
 		#ifdef GPS_FEEDTHROUGH
 		//TestGPS
+		
+		if(gps_flag)
+		{
+			gps_flag = 0;
+			//Filtre les données quand le buffer est plein
+			
+			if((gpsstr[3]=='R'))
+			{
+			//	puts_usart1(gpsstr);
+				convStr();
+				
+			}
+		}
 	
 		float LA = 45.3793;
+		float LaA = 45.3793;
 		float LoA= -71.9239;
 		
 		assignDist(LA,LoA);
+		assignDist(LaA,LoA);
 		
 		#endif
 

@@ -9,9 +9,9 @@
 /////////////////////////////////////////////////////////////////////////////
 
 int getDist(float,float, float, float);
-int convStrLat(char);
-int convStrLon(char);
+void convStr(void);
 void assignDist(float,float);
+
 
 #endif
 

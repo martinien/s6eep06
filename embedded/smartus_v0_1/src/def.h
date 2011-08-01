@@ -23,9 +23,9 @@
 //Configuration du module:
 //#define BORNE				//Borne
 #define AUTO				//Auto. Pour le moment, Auto = RX
-#define USE_GLCD 			//Le GLCD va avec l'auto
-//#define GPS_FEEDTHROUGH	        //Le GPS est avec Auto
-#define DEBUG_RF                        //Renvoi le trame en écho à la console
+//#define USE_GLCD 			//Le GLCD va avec l'auto
+#define GPS_FEEDTHROUGH	        //Le GPS est avec Auto
+//#define DEBUG_RF                        //Renvoi le trame en écho à la console
 //#define DEBUG_MPSIM
 
 
