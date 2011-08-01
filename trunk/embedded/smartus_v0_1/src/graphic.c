@@ -152,4 +152,3 @@ void GLCD_Line(unsigned int X1,unsigned int Y1,unsigned int X2,unsigned int Y2)
 	}
 }
 */
-
