@@ -48,7 +48,7 @@ void GLCD_GoTo(unsigned char x, unsigned char y)
 	for(i = 0; i < KS0108_SCREEN_WIDTH/64; i++)
   	{
 	  	GLCD_WriteCommand(DISPLAY_SET_Y | y,i);
-  		GLCD_WriteCommand(DISPLAY_SET_X | 0,i);
+  		GLCD_WriteCommand(DISPLAY_SET_X | x,i);
   		
   		GLCD_WriteCommand(DISPLAY_START_LINE | 0,i);
  	}
