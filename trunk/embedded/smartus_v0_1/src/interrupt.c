@@ -8,10 +8,12 @@ volatile unsigned int adc_channel = 0;
 volatile unsigned int adc_result[2] = {0,0};
 volatile unsigned int rf_cnt = 0, rf_flag = 0, rf_rx_flag = 0, envoie =0, rf_delai_flag =0;
 volatile char rx = '0';
+char gpsstr[50];
 #define REFRESH_RATE 99
 
 unsigned int adc_rssi[AVG];
 unsigned int rssi_flag = 0;
+unsigned int gps_flag = 0;
 extern unsigned int rssi;
 
 //////////////////////////////////////////////////////////////////////////////////////////////
@@ -23,9 +25,23 @@ extern unsigned int rssi;
 //Uart1 Receive: USB/GPS
 void __attribute__ ((interrupt, no_auto_psv)) _U1RXInterrupt(void)
 {
+	static int i=0;
 	char rx = U1RXREG;
-	U1TXREG = rx;			//Echo
+	//U1TXREG = rx;			//Echo
 	IFS0bits.U1RXIF = 0;	//Clear flag
+	if (rx =='$')
+	{i = 0;}
+	else
+	{
+		if(i<50)
+			i++;
+	}
+	gpsstr[i] = rx;
+	
+	if((gpsstr[3]=='R') && (i>=46))
+	{
+		gps_flag =1;
+	}
 }
 
 //Uart1 Emit
