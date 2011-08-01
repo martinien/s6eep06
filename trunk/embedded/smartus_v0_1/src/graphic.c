@@ -23,7 +23,7 @@
 extern void GLCD_SetPixel(unsigned char x, unsigned char y, unsigned char color);
 
 const unsigned char color = 1;
-
+/*
 //Dessine un rectangle
 void GLCD_Rectangle(unsigned char x, unsigned char y, unsigned char b, unsigned char a)
 {
@@ -42,7 +42,6 @@ void GLCD_Rectangle(unsigned char x, unsigned char y, unsigned char b, unsigned 
 	}
 }
 
-/*
 //Devrait dessiner un cercle, mais fait plutôt des losanges... à travailler!
 void GLCD_Circle(unsigned char cx, unsigned char cy ,unsigned char radius)
 {
