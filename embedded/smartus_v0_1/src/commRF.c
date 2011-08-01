@@ -18,10 +18,9 @@ char rf_envoie(char *donnee8, char *tampon)
     char trame[NBRFF+NBRFANION*2+NBROCTET];
 	char trame_de_confirmation[NBROCTET] ;
 	unsigned char result =10;
-	unsigned char confirmation = 0;
 	unsigned int i, j, cnt =0;
 
-	construire_trame_envoie(&trame, donnee8);
+	construire_trame_envoie(trame, donnee8);
 	
     while(cnt < NBR_ESSAIE)
     {
@@ -86,7 +85,7 @@ char rf_envoie(char *donnee8, char *tampon)
 		rssi =0;
 		clean_buffer(result, 32);
 	    //Lire trame et confirmer la réception
-	    rf_extraction(clean_buf, &trame_de_confirmation);
+	    rf_extraction((char *)clean_buf, trame_de_confirmation);
 	    
 	    char test = CONFIRMATION;
 	    for(i =0; i < NBROCTET; i++)
@@ -97,17 +96,15 @@ char rf_envoie(char *donnee8, char *tampon)
 			{
 				donnee8[j] = 0;
 			}
-			return 1;
+		Nop();
+		return 1;
 		}
 	    }
 	    
 	}
 	cnt = cnt+1;
     }
-    
-    
-    
-    
+	return 0;  
 }
 
 void construire_trame_envoie(char *trame, char *donnee8)
@@ -121,13 +118,13 @@ void construire_trame_envoie(char *trame, char *donnee8)
 	}
 	
 	//Fanion
-	for(i; i < NBRFF+NBRFANION; i++)
+	for(i; i < (NBRFF+NBRFANION); i++)
 	{
 		trame[i] = FANION;
 	}
 	
 	//Ajout des données utiles à la couche application
-	for(i; i < NBRFF+NBRFANION+NBROCTET; i++)
+	for(i; i < (NBRFF+NBRFANION+NBROCTET); i++)
 	{
 		trame[i] = donnee8[i-(NBRFF+NBRFANION)];
 	}
@@ -161,7 +158,7 @@ char rf_gerer_RX(char *tampon, char *donnee)
 			donnee_confirmation[i] = CONFIRMATION;
 		}
 		
-		construire_trame_envoie(&trame, &donnee_confirmation);
+		construire_trame_envoie(trame, donnee_confirmation);
 
 		radio_dir(TRM_TX);
 	

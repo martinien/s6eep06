@@ -40,20 +40,18 @@ int getDist(float LatA,float LonA, float LatB, float LonB)
 }
 
 void assignDist(float LatA, float LonA)
-{
-	int n;
-	
+{	
 	int D1 = getDist(LatA,LonA,LatAdd1,LonAdd1);
 	
-	n=sprintf (DISTANCE1, "%d", D1);
+	sprintf (DISTANCE1, "%d", D1);
 	
 	int D2 = getDist(LatA,LonA,LatAdd2,LonAdd2);
 	
-	n=sprintf (DISTANCE2, "%d", D2);
+	sprintf (DISTANCE2, "%d", D2);
 	
 	int D3 = getDist(LatA,LonA,LatAdd3,LonAdd3);
 	
-	n=sprintf (DISTANCE3, "%d", D3);
+	sprintf (DISTANCE3, "%d", D3);
 	
 }
 
