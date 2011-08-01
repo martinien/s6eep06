@@ -269,8 +269,13 @@ int main(void)
 			getBatt();
 			sprintf(str,"%03i",BATTERIE);			
 			GLCD_GoTo(80,0);
+			if(nombre==0)
+			{DISTANCE = D1;}
+			else if(nombre==1)
+			{DISTANCE = D2;}
+			else if(nombre==2)
+			{DISTANCE = D3;}
 			
-			DISTANCE = D1;
 			GLCD_WriteString(str);
 			sprintf(str,"%i",DISTANCE);
 			GLCD_GoTo(40,7);
