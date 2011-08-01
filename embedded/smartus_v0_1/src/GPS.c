@@ -11,7 +11,7 @@ float LatAdd2 = 45.4003;
 float LonAdd2 = -71.8899;
 float LatAdd3 = 45.3863;
 float LonAdd3 = -71.9110;
-extern char gpsstr[];
+extern char gps[];
 
 const int EARTH_RADIUS = 6731;
 const float FACT = 3.14159/180;
@@ -60,8 +60,8 @@ void assignDist(float LatA, float LonA)
 void convStr(void)
 {
 	//LaA = (48-gpsstr[20]);							//+(48-gpsstr[21]);
-	puts_usart1(gpsstr);
-	LaA = (48-(char)gpsstr[21]);
+	puts_usart1(gps);
+	LaA = ((char)gps[21]-48);
 }
 
 
