@@ -46,6 +46,8 @@ void switchScreen(int);
 void switchBatt(void);
 void getBatt(void);
 void borneProche(int sug);
+void routine_borne(char *flag_TX, char *flag_RX, char *data_a_envoie, char *data_recu);
+void routine_auto(char *flag_TX, char *flag_RX, char *data_a_envoie, char *data_recu);
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 //                                                                                         //

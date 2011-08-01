@@ -71,14 +71,15 @@ int confirm=2;
 
 #ifdef BORNE
 //Donnée de la borne initiale
-unsigned char NumBorne = 2, NbBatt = 5, Queue = 0, batterieId[5] = {1, 2, 7, 12, 16}, IdBattOut, IdBattIn;
+unsigned char NumBorne = 2, NbBatt = 0x05, IdBattOut, IdBattIn, batterieId[5] = {1, 2, 7, 12, 16};
+unsigned int  EtatBorne = 0, Queue = 0, batterie_a_reprendre =0;
 #endif
 	
 #ifdef AUTO
-unsigned char batterieId[] = "06", NumBorneReserve = 0;
-unsigned int  EtatAuto = 0, BORNECONFIRME = 0;
+unsigned int  EtatAuto = 0, BORNECONFIRME = 0, batterieId = 6;
 
 #endif
+
 //GPS
 extern char DISTANCE1[];
 extern char DISTANCE2[];
@@ -125,6 +126,10 @@ int main(void)
 	//Display welcome screen:	ToDo
 	#ifdef USE_GLCD
 	GLCD_Bitmap((char*)Base1, 0, 0, 128, 64);
+	#endif
+	
+	#ifdef AUTO
+	routine_auto(&trame_a_envoye, &trame_complete, trameTX, trameRX);
 	#endif
 	
 	
@@ -524,42 +529,163 @@ void getBatt(void)
 }
 
 #ifdef AUTO
-//void routine_auto(char *flag_TX, char *flag_RX, char *data_a_envoie, char *data_recu)
-//{
-//	//Si utilisateur a fait une demande de réservation et que la borne doit être informé
-//	if(BORNERESERVE != 3 && BORNECONFIRME == 3 && EtatAuto == 0)
-//	{
-//		sprintf(*data_envoie, "B%02iEEEEE", BORNERESERVE);
-//		*flag_TX = 1;
-//		EtatAuto = 1;
-//	}
-//	
-//	//Si la borne confirme
-//	if(EtatAuto == 1 && *flag_TX == 0)
-//	{
-//		BORNECONFIRME = BORNERESERVE;
-//		EtatAuto == 2;
-//	}
-//	
-//	//Si l'utilisateur retire la réservation
-//	if(BORNERESERVE == 3 && EtatAuto == 2)
-//	{
-//		sprintf(*data_envoie, "C%02iEEEEEE", BORNECONFIRME);
-//		*flag_TX = 1;
-//		EtatAuto = 3;
-//	}
-//	
-//	//Réception de la confirmation de la réservation annulé
-//	if(EtatAuto == 3 && *flag_TX == 0)
-//	{
-//		BORNECONFIRME = 0;
-//		EtatAuto = 0;
-//	}
-//	
-//	//Si on fait l'échange de batterie
-//	if()
-//}
+void routine_auto(char *flag_TX, char *flag_RX, char *data_a_envoie, char *data_recu)
+{
+	unsigned int temp;
+	
+	//Si utilisateur a fait une demande de réservation et que la borne doit être informé
+	if(BORNERESERVE != 3 && BORNECONFIRME == 3 && EtatAuto == 0 && *flag_TX == 0)
+	{
+		//Envoie de la demande de réservation
+		sprintf(data_a_envoie, "B%02iEEEEE", BORNERESERVE);
+		*flag_TX = 1;
+		EtatAuto = 1;
+	}
+	
+	//Si la borne confirme
+	if(EtatAuto == 1 && *flag_TX == 0)
+	{
+		BORNECONFIRME = BORNERESERVE;
+		EtatAuto = 2;
+	}
+	
+	//Si l'utilisateur retire la réservation
+	if(BORNERESERVE == 3 && EtatAuto == 2 && *flag_TX == 0)
+	{
+		//Envoie de la demande d'annulation
+		sprintf(data_a_envoie, "C%02iEEEEE", BORNECONFIRME);
+		*flag_TX = 1;
+		EtatAuto = 3;
+	}
+	
+	//Réception de la confirmation de la réservation annulé
+	if(EtatAuto == 3 && *flag_TX == 0)
+	{
+		BORNECONFIRME = 0;
+		EtatAuto = 0;
+	}
+	
+	//Si on fait l'échange de batterie
+	if(BORNERESERVE == 4 && *flag_TX == 0)
+	{
+		//Signifie à la borne le changement de batterie
+		sprintf(data_a_envoie, "D%02i%02iEEEE", BORNECONFIRME, batterieId);
+		*flag_TX = 1;
+		EtatAuto = 4;
+	}
+	
+	//Confirmation du changement, attente de l'id de la nouvelle batterie
+	if(EtatAuto == 4 && *flag_TX == 0)
+	{
+		EtatAuto = 5;
+	}
+	
+	//Réception du nouvelle Id de la batterie, retour au mode par défault
+	if(EtatAuto == 5 && *flag_RX == 1)
+	{		
+		if(data_recu[4] != "0")
+		{
+			temp = atoi(data_recu[1]);
+			temp = temp + atoi(data_recu[5]);
+			batterieId = temp;
+			
+		}
+		else
+		{
+			batterieId = atoi(data_recu[5]);
+		}
+		
+		EtatAuto = 0;
+		*flag_RX = 0;
+	}
+	
+}
 #endif
+
+#ifdef BORNE
+void routine_borne(char *flag_TX, char *flag_RX, char *data_a_envoie, char *data_recu)
+{
+	unsigned int temp;
+	//Réception de donnée 
+	if(flag_RX == 1)
+	{
+		//Demande de réservation
+		if(data_recu[0] == "B" && EtatBorne == 0)
+		{
+			Queue = Queue+1;
+			*flag_RX = 0;
+		}
+		//Demande d'annulation de réservation
+		if(data_recu[0] == "C" && EtatBorne == 0)
+		{
+			//Protection de retournement
+			if(Queue > 0)
+			{
+				Queue = Queue-1;
+			}
+			*flag_RX = 0;
+		}
+		//L'auto signifie le changement de batterie
+		if(data_recu[0] == "D" && EtatBorne == 0)
+		{
+			//Sauvegarde du numéro de la batterie remis à la borne dans une variable temporaire
+			if(data_recu[1] != "0")
+			{
+				temp = atoi(data_recu[1]);
+				temp = temp + atoi(data_recu[2]);
+				batterie_a_reprendre = temp;
+				
+			}
+			else
+			{
+				batterie_a_reprendre = atoi(data_recu[1]);
+			}
+			*flag_RX = 0;
+			EtatBorne = 1;
+		}
+	}
+	
+	//Envoie de l'id de la nouvelle batterie de l'auto
+	if(EtatBorne == 1 && *flag_TX ==0)
+	{
+		
+		sprintf(*data_envoie, "D%02i%02dEEEE", BORNECONFIRME, batterieId[0]);
+		*flag_TX == 1;
+		EtatBorne == 2;
+	}
+	
+	//Attente de confirmation de l'auto à propos de l'id de la nouvelle batterie
+	if(EtatBorne == 2 && *flag_TX ==0)
+	{
+		//Faire le switch de batterie et l'envoyer à marcoux*** todo
+		//Sauvegarde de la batterie nouvelle stocker
+		temp = batterieId[0];
+		batterieId[0] = batterie_a_reprendre;
+		EtatBorne == 0;
+	}
+}
+#endif
+
+//char convINTTOHEXCHAR(unsigned int *VALEUR)
+//{
+//	switch(BORNERESERVE)
+//	{
+//		case 0:
+//			return 0x00;
+//			break;
+//		case 1:
+//			return 0x01;
+//			break;
+//		case 2:
+//			return 0x02;
+//			break;
+//		case 3:
+//			return 0x03;
+//			break;
+//		case 4:
+//		
+//		}
+//}
 
 #ifdef USE_GLCD
 void borneProche(int sug)
