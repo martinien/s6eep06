@@ -45,25 +45,29 @@ extern unsigned int rssi_flag;
 
 unsigned int rssi = 0;
 
+char str[8];
+
 //Borne
 int borneChoisie = 0;
-unsigned char ADRESSE1[] = "11, rue Galt";
-unsigned char ADRESSE2[] = "26, rue Well";
-unsigned char ADRESSE3[] = "99, rue Viet";
+unsigned char ADRESSE1[] = "11, ";
+unsigned char ADRESSE2[] = "26, StudioX";
+unsigned char ADRESSE3[] = "99, Coin Viet";
 unsigned char BATTSWITCH[] = "Batterie changee";
-unsigned char ADR1A[] = "Adr1#  11, rue Galt";
-unsigned char ADR2A[] = "Adr2#  26, rue Well";
+unsigned char ADR1A[] = "Adr1#  11, PotAuFeu";
+unsigned char ADR2A[] = "Adr2#  26, StudioX";
 unsigned char ADR3A[] = "Adr3#  99, rue Viet";
-unsigned char ADR1[] = "Adr1   11, rue Galt";
-unsigned char ADR2[] = "Adr2   26, rue Well";
-unsigned char ADR3[] = "Adr3   99, rue Viet";
+unsigned char ADR1[] = "Adr1   11, PotAuFeu";
+unsigned char ADR2[] = "Adr2   26, StudioX";
+unsigned char ADR3[] = "Adr3   99, Coin Viet";
 unsigned char BATTERIE = 100;
 unsigned char SERIALBATTERIE = 12;
+unsigned int BORNERESERVE = 0;
 int ecran = 1;
 int toEcran1 = 0;
 extern volatile unsigned char DISTANCE1;
 extern volatile unsigned char DISTANCE2;
 extern volatile unsigned char DISTANCE3;
+unsigned char DISTANCE;
 unsigned char DIST[] = "Distance";
 unsigned char RESERVE[] = "Reserve";
 unsigned char DISTANCEBATT = 0;	//distance minimum pour considérer la batterie changée
@@ -124,76 +128,74 @@ int main(void)
 	{
 		
 		//Test: encodeur et GLCD
-		if((last_nombre != nombre && ecran == 1) || toEcran1 == 1)	//Si une transition a eu lieu
+		if((last_nombre != nombre && ecran == 1) || toEcran1 == 1 || buttonPress)	//Si une transition a eu lieu
 		{
 			getBatt();
 			toEcran1 = 0;
 			GLCD_ClearScreen();
 			GLCD_Bitmap(Base1, 0, 0, 128, 64);
-			/*
-			GLCD_GoTo(0,2);
-			GLCD_WriteString(ADR1);
-			GLCD_GoTo(38,2);
-			GLCD_WriteString(ADRESSE1);
-			
-			GLCD_GoTo(0,3);
-			GLCD_WriteString(ADR2);
-			GLCD_GoTo(38,3);
-			GLCD_WriteString(ADRESSE2);
-			
-			GLCD_GoTo(0,4);
-			GLCD_WriteString(ADR3);
-			GLCD_GoTo(38,4);
-			GLCD_WriteString(ADRESSE3);
-
-			GLCD_GoTo(38,5);
-			GLCD_WriteString(DIST);		
-			*/
+			if(buttonPress)
+			{
+				BORNERESERVE = nombre;
+				GLCD_GoTo(30,5);
+				GLCD_WriteString(RESERVE);
+			}
+			sprintf(str,"%d",SERIALBATTERIE);
 			GLCD_GoTo(107,0);
-			GLCD_WriteString(SERIALBATTERIE);	
-			
+			GLCD_WriteString(str);	
+			sprintf(str,"%d",BATTERIE);			
 			GLCD_GoTo(80,0);
-			GLCD_WriteString(BATTERIE);	
-			
+			GLCD_WriteString(str);
+
+			if(nombre==0)
+				DISTANCE = DISTANCE1;
+			else if(nombre==1)
+				DISTANCE = DISTANCE2;
+			else if(nombre==2)
+				DISTANCE = DISTANCE3;
+
+			sprintf(str,"%d",DISTANCE);	
+			GLCD_WriteString(str);
+			distanceActuel = DISTANCE;
 			switch(nombre)
 			{
 				case 0:
 					#ifdef USE_GLCD
 					GLCD_GoTo(0,2);
 					GLCD_WriteString(ADR1A);
+				if(!buttonPress)
+				{
 					GLCD_GoTo(0,3);
 					GLCD_WriteString(ADR2);
 					GLCD_GoTo(0,4);
 					GLCD_WriteString(ADR3);
-					GLCD_GoTo(38,7);
-					GLCD_WriteString(DISTANCE1);
-					distanceActuel = DISTANCE1;
+				}
 					#endif
 					break;
 				case 1:
 					#ifdef USE_GLCD
-					GLCD_GoTo(0,2);
-					GLCD_WriteString(ADR1);
 					GLCD_GoTo(0,3);
 					GLCD_WriteString(ADR2A);
+				if(!buttonPress)
+				{
+					GLCD_GoTo(0,2);
+					GLCD_WriteString(ADR1);
 					GLCD_GoTo(0,4);
 					GLCD_WriteString(ADR3);
-					GLCD_GoTo(38,7);
-					GLCD_WriteString(DISTANCE2);
-					distanceActuel = DISTANCE2;
+				}
 					#endif
 					break;
 				case 2:
 					#ifdef USE_GLCD
+				if(!buttonPress)
+				{
 					GLCD_GoTo(0,2);
 					GLCD_WriteString(ADR1);
 					GLCD_GoTo(0,3);
 					GLCD_WriteString(ADR2);
+				}
 					GLCD_GoTo(0,4);
 					GLCD_WriteString(ADR3A);
-					GLCD_GoTo(38,7);
-					GLCD_WriteString(DISTANCE3);
-					distanceActuel = DISTANCE3;
 					#endif
 					break;
 				default:
@@ -202,7 +204,8 @@ int main(void)
 					GLCD_Bitmap(Base1, 0, 0, 128, 64);
 					#endif
 					break;
-			}			
+			}	
+			buttonPress = 0;		
 			last_nombre = nombre;		
 		}	
 		
@@ -246,14 +249,14 @@ int main(void)
 		#endif
 
 		#ifdef USE_GLCD
-		
+		/*
 		if(buttonPress)
 		{
 			switchScreen(last_nombre);
 			buttonPress = 0;
 		}
-		
-		if(distanceActuel < DISTANCEBATT && BATTERIE < 50)
+		*/
+		if(distanceActuel < DISTANCEBATT && BATTERIE < 50 && ecran ==2)
 		{
 			switchBatt();
 		}
@@ -344,7 +347,7 @@ void config(void)
 }
 
 
-
+/*
 void switchScreen(last_nombre)
 {
 	if(ecran == 1)
@@ -353,10 +356,11 @@ void switchScreen(last_nombre)
 		borneChoisie = last_nombre;
 		GLCD_ClearScreen();
 		GLCD_Bitmap(Base1, 0, 0, 128, 64);
-		GLCD_GoTo(0,5);
-		GLCD_WriteString(RESERVE);
+
+		sprintf(str,"%d",SERIALBATTERIE);
 		GLCD_GoTo(107,0);
 		GLCD_WriteString(SERIALBATTERIE);
+		sprintf(str,"%d",BATTERIE);
 		GLCD_GoTo(80,0);
 		GLCD_WriteString(BATTERIE);	
 		switch(borneChoisie)
@@ -364,20 +368,23 @@ void switchScreen(last_nombre)
 			case 0:
 				GLCD_GoTo(0,2);
 				GLCD_WriteString(ADR1);
+				sprintf(str,"%d",DISTANCE1);
 				GLCD_GoTo(0,7);
-				GLCD_WriteString(DISTANCE1);
+				GLCD_WriteString(str);
 				break;
 			case 1:
 				GLCD_GoTo(0,3);
 				GLCD_WriteString(ADR2);
+				sprintf(str,"%d",DISTANCE2);
 				GLCD_GoTo(38,7);
-				GLCD_WriteString(DISTANCE2);
+				GLCD_WriteString(str);
 				break;
 			case 2:
 				GLCD_GoTo(0,4);
 				GLCD_WriteString(ADR3);
+				sprintf(str,"%d",DISTANCE3);
 				GLCD_GoTo(38,7);
-				GLCD_WriteString(DISTANCE3);
+				GLCD_WriteString(str);
 				break;
 			default:
 				break;
@@ -392,7 +399,7 @@ void switchScreen(last_nombre)
 		toEcran1 = 1;
 	}
 }
-
+*/
 void switchBatt(void)
 {
 	GLCD_ClearScreen();
@@ -403,6 +410,6 @@ void switchBatt(void)
 
 void getBatt(void)
 {
-	BATTERIE = (adc_result[1]/10);
+	BATTERIE = (adc_result[1]/10.24);
 }
 
