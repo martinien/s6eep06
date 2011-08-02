@@ -617,9 +617,8 @@ void routine_borne(char *flag_TX, char *flag_RX, char *data_a_envoie, char *data
 		//Demande de réservation
 		if(data_recu[0] == 'B' && EtatBorne == 0)
 		{
-			char uart_buf[];
+			char uart_buf[NBROCTET_USART1];
 			sprintf(uart_buf, " ID %02d NBBAT %02d QUEUE %02d ", NumBorne, NbBatt, Queue);
-			while(!busy_usart1);
 			puts_usart1((char *)uart_buf);
 
 			Queue = Queue+1;
@@ -629,9 +628,8 @@ void routine_borne(char *flag_TX, char *flag_RX, char *data_a_envoie, char *data
 		if(data_recu[0] == 'C' && EtatBorne == 0)
 		{
 			
-			char uart_buf[];
+			char uart_buf[NBROCTET_USART1];
 			sprintf(uart_buf, " ID %02d NBBAT %02d QUEUE %02d ", NumBorne, NbBatt, Queue);
-			while(!busy_usart1);
 			puts_usart1((char *)uart_buf);
 			
 			//Protection de retournement
