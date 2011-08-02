@@ -84,7 +84,9 @@ void __attribute__ ((interrupt, no_auto_psv)) _U2RXInterrupt(void)
 		
 		if(valid)
 		{
+			#ifdef DEBUG_RF
 			U1TXREG = rx;				//Echo sur UART1 (USB)
+			#endif
 			
 			//On ajoute au fifo
 			fifo_add(rx,0);
