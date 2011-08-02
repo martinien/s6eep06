@@ -66,7 +66,7 @@ char DIST[] = "Distance";
 char RESERVE[] = "Reserve";
 char DISTANCEBATT = 0;	//distance minimum pour considérer la batterie changée
 char METER[] = "metres";
-char DISTANCEPROCHE = 100;
+char DISTANCEPROCHE = 0; //Mettre normalement à 100
 int confirm=2;
 
 #ifdef BORNE
@@ -76,7 +76,7 @@ unsigned int  EtatBorne = 0, Queue = 0, batterie_a_reprendre =0;
 #endif
 	
 #ifdef AUTO
-unsigned int  EtatAuto = 0, BORNECONFIRME = 0, batterieId = 6;
+unsigned int  EtatAuto = 0, BORNECONFIRME = 3, batterieId = 6;
 
 #endif
 
@@ -128,14 +128,7 @@ int main(void)
 	GLCD_Bitmap((char*)Base1, 0, 0, 128, 64);
 	#endif
 	
-	#ifdef AUTO
-	routine_auto(&trame_a_envoye, &trame_complete, trameTX, trameRX);
-	#endif
 
-	#ifdef BORNE
-	routine_borne(&trame_a_envoye, &trame_complete, trameTX, trameRX);
-	#endif
-	
 	//Test
 //	index = 0;
 //	while(1)
@@ -150,6 +143,15 @@ int main(void)
 	//Main loop
 	while (1)
 	{
+
+		#ifdef AUTO
+		routine_auto(&trame_a_envoye, &trame_complete, trameTX, trameRX);
+		#endif
+
+		#ifdef BORNE
+		routine_borne(&trame_a_envoye, &trame_complete, trameTX, trameRX);
+		#endif
+	
 		
 		//Test: encodeur et GLCD
 		if((last_nombre != nombre) || buttonPress)	//Si une transition a eu lieu
@@ -357,22 +359,21 @@ int main(void)
 			}
 		}
 		#endif
-
-
+/*
 		#ifdef USE_GLCD
-		/*
+
 		if(buttonPress)
 		{
 			switchScreen(last_nombre);
 			buttonPress = 0;
 		}
-		*/
+		
 		if(distanceActuel < DISTANCEBATT && BATTERIE < 50 && ecran ==2)
 		{
 			switchBatt();
 		}
 		#endif
-
+*/
 		
 		if(buttonPress)
 		{
@@ -429,7 +430,7 @@ void config(void)
 	peripheral_pin_select();
 	
 	//Config peripherals:
-	setup_usart1(); 		//PC/GPS
+ 	setup_usart1(); 		//PC/GPS
 	setup_usart2(); 		//Radio
 	setup_timer1();			//10ms timebase
 	setup_adc();			//ADC
@@ -515,7 +516,7 @@ void switchScreen(last_nombre)
 		toEcran1 = 1;
 	}
 }
-*/
+
 void switchBatt(void)
 {
 	GLCD_ClearScreen();
@@ -525,7 +526,7 @@ void switchBatt(void)
 	BORNERESERVE = 4;
 	confirm=2;
 }
-
+*/
 void getBatt(void)
 {
 	BATTERIE = (adc_result[1]>>3);
@@ -569,38 +570,38 @@ void routine_auto(char *flag_TX, char *flag_RX, char *data_a_envoie, char *data_
 	}
 	
 	//Si on fait l'échange de batterie
-	if(BORNERESERVE == 4 && *flag_TX == 0)
-	{
-		//Signifie à la borne le changement de batterie
-		sprintf(data_a_envoie, "D%02i%02iEEEE", BORNECONFIRME, batterieId);
-		*flag_TX = 1;
-		EtatAuto = 4;
-	}
-	
-	//Confirmation du changement, attente de l'id de la nouvelle batterie
-	if(EtatAuto == 4 && *flag_TX == 0)
-	{
-		EtatAuto = 5;
-	}
-	
-	//Réception du nouvelle Id de la batterie, retour au mode par défault
-	if(EtatAuto == 5 && *flag_RX == 1)
-	{		
-		if(data_recu[4] != "0")
-		{
-			temp = atoi(data_recu[1]);
-			temp = temp + atoi(data_recu[5]);
-			batterieId = temp;
-			
-		}
-		else
-		{
-			batterieId = atoi(data_recu[5]);
-		}
-		
-		EtatAuto = 0;
-		*flag_RX = 0;
-	}
+//	if(BORNERESERVE == 4 && *flag_TX == 0)
+//	{
+//		//Signifie à la borne le changement de batterie
+//		sprintf(data_a_envoie, "D%02i%02iEEEE", BORNECONFIRME, batterieId);
+//		*flag_TX = 1;
+//		EtatAuto = 4;
+//	}
+//	
+//	//Confirmation du changement, attente de l'id de la nouvelle batterie
+//	if(EtatAuto == 4 && *flag_TX == 0)
+//	{
+//		EtatAuto = 5;
+//	}
+//	
+//	//Réception du nouvelle Id de la batterie, retour au mode par défault
+//	if(EtatAuto == 5 && *flag_RX == 1)
+//	{		
+//		if(data_recu[4] != "0")
+//		{
+//			temp = atoi(data_recu[1]);
+//			temp = temp + atoi(data_recu[5]);
+//			batterieId = temp;
+//			
+//		}
+//		else
+//		{
+//			batterieId = atoi(data_recu[5]);
+//		}
+//		
+//		EtatAuto = 0;
+//		*flag_RX = 0;
+//	}
 	
 }
 #endif
@@ -628,67 +629,46 @@ void routine_borne(char *flag_TX, char *flag_RX, char *data_a_envoie, char *data
 			}
 			*flag_RX = 0;
 		}
-		//L'auto signifie le changement de batterie
-		if(data_recu[0] == 'D' && EtatBorne == 0)
-		{
-			//Sauvegarde du numéro de la batterie remis à la borne dans une variable temporaire
-			if(data_recu[1] != '0')
-			{
-				temp = atoi(data_recu[1]);
-				temp = temp + atoi(data_recu[2]);
-				batterie_a_reprendre = temp;
-				
-			}
-			else
-			{
-				batterie_a_reprendre = atoi(data_recu[1]);
-			}
-			*flag_RX = 0;
-			EtatBorne = 1;
-		}
+//		//L'auto signifie le changement de batterie
+//		if(data_recu[0] == 'D' && EtatBorne == 0)
+//		{
+//			//Sauvegarde du numéro de la batterie remis à la borne dans une variable temporaire
+//			if(data_recu[1] != '0')
+//			{
+//				temp = atoi(data_recu[1]);
+//				temp = temp + atoi(data_recu[2]);
+//				batterie_a_reprendre = temp;
+//				
+//			}
+//			else
+//			{
+//				batterie_a_reprendre = atoi(data_recu[1]);
+//			}
+//			*flag_RX = 0;
+//			EtatBorne = 1;
+//		}
 	}
 	
-	//Envoie de l'id de la nouvelle batterie de l'auto
-	if(EtatBorne == 1 && *flag_TX ==0)
-	{
-		
-		sprintf(*data_a_envoie, "D%02dEEEEE", batterieId[0]);
-		*flag_TX = 1;
-		EtatBorne = 2;
-	}
-	
-	//Attente de confirmation de l'auto à propos de l'id de la nouvelle batterie
-	if(EtatBorne == 2 && *flag_TX ==0)
-	{
-		//Faire le switch de batterie et l'envoyer à marcoux*** todo
-		//Sauvegarde de la batterie nouvelle stocker
-		temp = batterieId[0];
-		batterieId[0] = batterie_a_reprendre;
-		EtatBorne = 0;
-	}
+//	//Envoie de l'id de la nouvelle batterie de l'auto
+//	if(EtatBorne == 1 && *flag_TX ==0)
+//	{
+//		
+//		sprintf(*data_a_envoie, "D%02dEEEEE", batterieId[0]);
+//		*flag_TX = 1;
+//		EtatBorne = 2;
+//	}
+//	
+//	//Attente de confirmation de l'auto à propos de l'id de la nouvelle batterie
+//	if(EtatBorne == 2 && *flag_TX ==0)
+//	{
+//		//Faire le switch de batterie et l'envoyer à marcoux*** todo
+//		//Sauvegarde de la batterie nouvelle stocker
+//		temp = batterieId[0];
+//		batterieId[0] = batterie_a_reprendre;
+//		EtatBorne = 0;
+//	}
 }
 #endif
-
-//char convINTTOHEXCHAR(unsigned int *VALEUR)
-//{
-//	switch(BORNERESERVE)
-//	{
-//		case 0:
-//			return 0x00;
-//			break;
-//		case 1:
-//			return 0x01;
-//			break;
-//		case 2:
-//			return 0x02;
-//			break;
-//		case 3:
-//			return 0x03;
-//			break;
-//		case 4:
-//		
-//		}
-//}
 
 #ifdef USE_GLCD
 void borneProche(int sug)
