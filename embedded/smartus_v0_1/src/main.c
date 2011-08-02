@@ -71,7 +71,7 @@ int confirm=2;
 
 #ifdef BORNE
 //Donnée de la borne initiale
-unsigned char NumBorne = 2, NbBatt = 0x05, IdBattOut, IdBattIn, batterieId[5] = {1, 2, 7, 12, 16};
+unsigned char NumBorne = 2, NbBatt = 5, IdBattOut, IdBattIn, batterieId[5] = {1, 2, 7, 12, 16};
 unsigned int  EtatBorne = 0, Queue = 0, batterie_a_reprendre =0;
 #endif
 	
@@ -616,12 +616,23 @@ void routine_borne(char *flag_TX, char *flag_RX, char *data_a_envoie, char *data
 		//Demande de réservation
 		if(data_recu[0] == 'B' && EtatBorne == 0)
 		{
+			char uart_buf[];
+			sprintf(uart_buf, " ID %02d NBBAT %02d QUEUE %02d ", NumBorne, NbBatt, Queue);
+			while(!busy_usart1);
+			puts_usart1((char *)uart_buf);
+
 			Queue = Queue+1;
 			*flag_RX = 0;
 		}
 		//Demande d'annulation de réservation
 		if(data_recu[0] == 'C' && EtatBorne == 0)
 		{
+			
+			char uart_buf[];
+			sprintf(uart_buf, " ID %02d NBBAT %02d QUEUE %02d ", NumBorne, NbBatt, Queue);
+			while(!busy_usart1);
+			puts_usart1((char *)uart_buf);
+			
 			//Protection de retournement
 			if(Queue > 0)
 			{
