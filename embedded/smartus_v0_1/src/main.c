@@ -131,7 +131,10 @@ int main(void)
 	#ifdef AUTO
 	routine_auto(&trame_a_envoye, &trame_complete, trameTX, trameRX);
 	#endif
-	
+
+	#ifdef BORNE
+	routine_borne(&trame_a_envoye, &trame_complete, trameTX, trameRX);
+	#endif
 	
 	//Test
 //	index = 0;
@@ -376,7 +379,7 @@ int main(void)
 			#ifdef BORNE
 			buttonPress = 0;
 			char donnee_test[NBROCTET] = {0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37};
-			envoie = rf_envoie(&donnee_test, clean_buf);
+			envoie = rf_envoie(donnee_test, (char *)clean_buf);
 			#endif
 			#ifdef AUTO
 			puts_usart1(gps);
@@ -607,16 +610,16 @@ void routine_borne(char *flag_TX, char *flag_RX, char *data_a_envoie, char *data
 {
 	unsigned int temp;
 	//Réception de donnée 
-	if(flag_RX == 1)
+	if(*flag_RX == 1)
 	{
 		//Demande de réservation
-		if(data_recu[0] == "B" && EtatBorne == 0)
+		if(data_recu[0] == 'B' && EtatBorne == 0)
 		{
 			Queue = Queue+1;
 			*flag_RX = 0;
 		}
 		//Demande d'annulation de réservation
-		if(data_recu[0] == "C" && EtatBorne == 0)
+		if(data_recu[0] == 'C' && EtatBorne == 0)
 		{
 			//Protection de retournement
 			if(Queue > 0)
@@ -626,10 +629,10 @@ void routine_borne(char *flag_TX, char *flag_RX, char *data_a_envoie, char *data
 			*flag_RX = 0;
 		}
 		//L'auto signifie le changement de batterie
-		if(data_recu[0] == "D" && EtatBorne == 0)
+		if(data_recu[0] == 'D' && EtatBorne == 0)
 		{
 			//Sauvegarde du numéro de la batterie remis à la borne dans une variable temporaire
-			if(data_recu[1] != "0")
+			if(data_recu[1] != '0')
 			{
 				temp = atoi(data_recu[1]);
 				temp = temp + atoi(data_recu[2]);
@@ -649,9 +652,9 @@ void routine_borne(char *flag_TX, char *flag_RX, char *data_a_envoie, char *data
 	if(EtatBorne == 1 && *flag_TX ==0)
 	{
 		
-		sprintf(*data_envoie, "D%02i%02dEEEE", BORNECONFIRME, batterieId[0]);
-		*flag_TX == 1;
-		EtatBorne == 2;
+		sprintf(*data_a_envoie, "D%02dEEEEE", batterieId[0]);
+		*flag_TX = 1;
+		EtatBorne = 2;
 	}
 	
 	//Attente de confirmation de l'auto à propos de l'id de la nouvelle batterie
@@ -661,7 +664,7 @@ void routine_borne(char *flag_TX, char *flag_RX, char *data_a_envoie, char *data
 		//Sauvegarde de la batterie nouvelle stocker
 		temp = batterieId[0];
 		batterieId[0] = batterie_a_reprendre;
-		EtatBorne == 0;
+		EtatBorne = 0;
 	}
 }
 #endif
