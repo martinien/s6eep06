@@ -17,6 +17,7 @@ int D1,D2,D3;
 const int EARTH_RADIUS = 6738;
 const float FACT = 3.14159/180;
 
+#ifdef GPS_FEEDTHROUGH
 int getDist(float LatA,float LonA, float LatB, float LonB)
 {
 	float dLat,dLon,a1,a2,a3,a,c,d;
@@ -130,5 +131,5 @@ void convStr(void)
 	LoA = sign * LoA;
 	
 }
-
+#endif
 
