@@ -16,19 +16,21 @@ namespace SimulReseau
     {
         private SQLiteConnection sql_con;
         private SecteurDTO sectDTO;
-        private BorneDTO borneDTO;
-        private BorneModel borneModel;
+        private BatterieDTO batterieDTO;
+        private BatterieModel batterieModel;
+        private int index = 0;
 
         public Form1()
         {
             InitializeComponent();
             SetConnection();
             sectDTO = new SecteurDTO(sql_con);
-            borneDTO = new BorneDTO(sql_con);
-            borneModel = new BorneModel(borneDTO, borneGridView);
+            batterieDTO = new BatterieDTO(sql_con);
+            batterieModel = new BatterieModel(batterieDTO, borneGridView, label44, label49, label45,label46, label52, label47);
             serialPort1.DataReceived += new SerialDataReceivedEventHandler(serialPort1_DataReceived);
             serialPort1.Open();
             tbox_to_default();
+            comboBox1.SelectedIndex = 0;
         }
 
         private void quitterToolStripMenuItem_Click(object sender, EventArgs e)
@@ -55,113 +57,18 @@ namespace SimulReseau
 
            if (message.Length >= 24)
             {
-                ProcessTransmission(message);
+                batterieModel.ProcessTransmission(message, a);
+                if (index == 2)
+                {
+                    this.Invoke(new EventHandler(ProcessTransmission));
+                }
             }
         }
-
-        void ProcessTransmission(string message)
+        private void ProcessTransmission(object s, EventArgs e)
         {
-            Debug.WriteLine("");
-            message = message.Substring(message.IndexOf("D")-1);
-            Debug.WriteLine("transmission: " + message);
-            textBox1.Text = message;
-
-            if (message.Contains("ID") && message.Contains("NBBAT") && message.Contains("QUEUE"))
-            {
-                Debug.WriteLine("Received status transmission");
-
-                if (GlobalVar.statePointer + 1 == GlobalVar.stackLimit)
-                {
-                    GlobalVar.statePointer = 0;
-                }
-
-                if (message.Count() > 3)
-                {
-                    try
-                    {
-                        GlobalVar.receptionsState[GlobalVar.statePointer, 0] = Int32.Parse(message.Substring(3, 2));//part instead of message
-                    }
-                    catch
-                    {
-                        GlobalVar.receptionsState[GlobalVar.statePointer, 0] = 99;
-                    }
-                }
-                if (message.Count() > 12)
-                {
-                    try
-                    {
-                        GlobalVar.receptionsState[GlobalVar.statePointer, 1] = Int32.Parse(message.Substring(12, 2));//part instead of message
-                    }
-                    catch
-                    {
-                        GlobalVar.receptionsState[GlobalVar.statePointer, 1] = 99;
-                    }
-                }
-                if (message.Count() > 21)
-                {
-                    try
-                    {
-                        GlobalVar.receptionsState[GlobalVar.statePointer, 2] = Int32.Parse(message.Substring(21, 2));//part instead of message
-                    }
-                    catch
-                    {
-                        GlobalVar.receptionsState[GlobalVar.statePointer, 2] = 99;
-                    }
-                }
-
-                Debug.WriteLine("ID: " + GlobalVar.receptionsState[GlobalVar.statePointer, 0] + " NBBAT: " + GlobalVar.receptionsState[GlobalVar.statePointer, 1] + " QUEUE: " + GlobalVar.receptionsState[GlobalVar.statePointer, 2]);
-                GlobalVar.statePointer = GlobalVar.statePointer + 1;
-            }
-            else if (message.Contains("ID") && message.Contains("OUT") && message.Contains("IN"))
-            {
-                Debug.WriteLine("Received check-in/check-out transmission");
-
-                if (GlobalVar.checkIOPointer + 1 == GlobalVar.stackLimit)
-                {
-                    GlobalVar.checkIOPointer = 0;
-                }
-
-                if (message.Count() > 3)
-                {
-                    try
-                    {
-                        GlobalVar.receptionsIO[GlobalVar.checkIOPointer, 0] = Int32.Parse(message.Substring(3, 2));
-                    }
-                    catch
-                    {
-                        GlobalVar.receptionsIO[GlobalVar.checkIOPointer, 0] = 99;
-                    }
-                }
-                if (message.Count() > 12)
-                {
-                    try
-                    {
-                        GlobalVar.receptionsIO[GlobalVar.checkIOPointer, 1] = Int32.Parse(message.Substring(10, 4));
-                    }
-                    catch
-                    {
-                        GlobalVar.receptionsIO[GlobalVar.checkIOPointer, 1] = 99;
-                    }
-                }
-                if (message.Count() > 20)
-                {
-                    try
-                    {
-                        GlobalVar.receptionsIO[GlobalVar.checkIOPointer, 2] = Int32.Parse(message.Substring(18, 4));
-                    }
-                    catch
-                    {
-                        GlobalVar.receptionsIO[GlobalVar.checkIOPointer, 2] = 99;
-                    }
-                }
-
-                Debug.WriteLine("ID: " + GlobalVar.receptionsIO[GlobalVar.checkIOPointer, 0] + " OUT: " + GlobalVar.receptionsIO[GlobalVar.checkIOPointer, 1] + " IN: " + GlobalVar.receptionsIO[GlobalVar.checkIOPointer, 2]);
-                GlobalVar.checkIOPointer = GlobalVar.checkIOPointer + 1;
-            }
-
-            else
-                serialPort1.DiscardInBuffer();
-         }
+            batterieModel.update(index);
+        }
+       
 
         private void pictureBox1_Click(object sender, EventArgs e)
         {
@@ -382,19 +289,20 @@ namespace SimulReseau
             textBox36.AppendText(Convert.ToString(rebateArray[16]));
         }
 
-        private void label1_Click_1(object sender, EventArgs e)
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-
+            index = comboBox1.SelectedIndex;
+            batterieModel.update(index);
         }
 
-        private void label1_Click(object sender, EventArgs e)
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-
+            batterieDTO.formClose();
         }
 
-        private void textBox1_TextChanged(object sender, EventArgs e)
+        private void button4_Click(object sender, EventArgs e)
         {
-
+            batterieModel.batteryRecharge(comboBox1.SelectedIndex);
         }
     }
 }

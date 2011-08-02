@@ -128,19 +128,41 @@
             this.textBox3 = new System.Windows.Forms.TextBox();
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.carPage = new System.Windows.Forms.TabPage();
+            this.bornePage = new System.Windows.Forms.TabPage();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.borneGridView = new System.Windows.Forms.DataGridView();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.label52 = new System.Windows.Forms.Label();
+            this.label51 = new System.Windows.Forms.Label();
+            this.button4 = new System.Windows.Forms.Button();
+            this.label38 = new System.Windows.Forms.Label();
+            this.label39 = new System.Windows.Forms.Label();
+            this.label40 = new System.Windows.Forms.Label();
+            this.label49 = new System.Windows.Forms.Label();
+            this.label41 = new System.Windows.Forms.Label();
+            this.label48 = new System.Windows.Forms.Label();
+            this.label42 = new System.Windows.Forms.Label();
+            this.label47 = new System.Windows.Forms.Label();
+            this.label43 = new System.Windows.Forms.Label();
+            this.label46 = new System.Windows.Forms.Label();
+            this.label44 = new System.Windows.Forms.Label();
+            this.label45 = new System.Windows.Forms.Label();
+            this.label50 = new System.Windows.Forms.Label();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.serialPort1 = new System.IO.Ports.SerialPort(this.components);
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.borneGridView = new System.Windows.Forms.DataGridView();
-            this.bornePage = new System.Windows.Forms.TabPage();
-            this.textBox1 = new System.Windows.Forms.TextBox();
             this.menuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.cartePage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            this.carPage.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.borneGridView)).BeginInit();
             this.bornePage.SuspendLayout();
+            this.panel3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
+            this.panel2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.borneGridView)).BeginInit();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -149,7 +171,7 @@
             this.fichierToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1278, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(1227, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -158,30 +180,29 @@
             this.fichierToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.quitterToolStripMenuItem});
             this.fichierToolStripMenuItem.Name = "fichierToolStripMenuItem";
-            this.fichierToolStripMenuItem.Size = new System.Drawing.Size(50, 20);
+            this.fichierToolStripMenuItem.Size = new System.Drawing.Size(54, 20);
             this.fichierToolStripMenuItem.Text = "Fichier";
             // 
             // quitterToolStripMenuItem
             // 
             this.quitterToolStripMenuItem.Name = "quitterToolStripMenuItem";
-            this.quitterToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
+            this.quitterToolStripMenuItem.Size = new System.Drawing.Size(111, 22);
             this.quitterToolStripMenuItem.Text = "Quitter";
             this.quitterToolStripMenuItem.Click += new System.EventHandler(this.quitterToolStripMenuItem_Click);
             // 
             // tabControl1
             // 
             this.tabControl1.Controls.Add(this.cartePage);
-            this.tabControl1.Controls.Add(this.carPage);
             this.tabControl1.Controls.Add(this.bornePage);
             this.tabControl1.Location = new System.Drawing.Point(12, 27);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(1254, 708);
+            this.tabControl1.Size = new System.Drawing.Size(1208, 708);
             this.tabControl1.TabIndex = 1;
             // 
             // cartePage
             // 
-            this.cartePage.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.cartePage.BackColor = System.Drawing.SystemColors.ButtonHighlight;
             this.cartePage.Controls.Add(this.label21);
             this.cartePage.Controls.Add(this.label22);
             this.cartePage.Controls.Add(this.label23);
@@ -277,7 +298,7 @@
             this.cartePage.Controls.Add(this.pictureBox1);
             this.cartePage.Location = new System.Drawing.Point(4, 22);
             this.cartePage.Name = "cartePage";
-            this.cartePage.Size = new System.Drawing.Size(1246, 682);
+            this.cartePage.Size = new System.Drawing.Size(1200, 682);
             this.cartePage.TabIndex = 4;
             this.cartePage.Text = "Carte du réseau";
             // 
@@ -887,7 +908,6 @@
             this.label1.Size = new System.Drawing.Size(121, 25);
             this.label1.TabIndex = 36;
             this.label1.Text = "Nb voitures";
-            this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // Régions
             // 
@@ -898,7 +918,6 @@
             this.Régions.Size = new System.Drawing.Size(91, 25);
             this.Régions.TabIndex = 35;
             this.Régions.Text = "Régions";
-            this.Régions.Click += new System.EventHandler(this.label1_Click_1);
             // 
             // textBox18
             // 
@@ -1031,21 +1050,246 @@
             this.pictureBox1.TabStop = false;
             this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
             // 
-            // carPage
+            // bornePage
             // 
-            this.carPage.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.carPage.Controls.Add(this.textBox1);
-            this.carPage.Location = new System.Drawing.Point(4, 22);
-            this.carPage.Name = "carPage";
-            this.carPage.Padding = new System.Windows.Forms.Padding(3);
-            this.carPage.Size = new System.Drawing.Size(1246, 682);
-            this.carPage.TabIndex = 0;
-            this.carPage.Text = "Borne Réelle";
+            this.bornePage.BackColor = System.Drawing.Color.White;
+            this.bornePage.Controls.Add(this.panel3);
+            this.bornePage.Controls.Add(this.panel2);
+            this.bornePage.Controls.Add(this.panel1);
+            this.bornePage.Controls.Add(this.label50);
+            this.bornePage.Controls.Add(this.comboBox1);
+            this.bornePage.Location = new System.Drawing.Point(4, 22);
+            this.bornePage.Name = "bornePage";
+            this.bornePage.Padding = new System.Windows.Forms.Padding(3);
+            this.bornePage.Size = new System.Drawing.Size(1200, 682);
+            this.bornePage.TabIndex = 1;
+            this.bornePage.Text = "Borne";
+            // 
+            // panel3
+            // 
+            this.panel3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel3.Controls.Add(this.pictureBox2);
+            this.panel3.Location = new System.Drawing.Point(495, 75);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(623, 403);
+            this.panel3.TabIndex = 21;
+            // 
+            // pictureBox2
+            // 
+            this.pictureBox2.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox2.Image")));
+            this.pictureBox2.InitialImage = ((System.Drawing.Image)(resources.GetObject("pictureBox2.InitialImage")));
+            this.pictureBox2.Location = new System.Drawing.Point(3, 3);
+            this.pictureBox2.Name = "pictureBox2";
+            this.pictureBox2.Size = new System.Drawing.Size(616, 389);
+            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pictureBox2.TabIndex = 18;
+            this.pictureBox2.TabStop = false;
+            // 
+            // panel2
+            // 
+            this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel2.Controls.Add(this.borneGridView);
+            this.panel2.Location = new System.Drawing.Point(21, 75);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(474, 403);
+            this.panel2.TabIndex = 20;
+            // 
+            // borneGridView
+            // 
+            this.borneGridView.AllowUserToAddRows = false;
+            this.borneGridView.AllowUserToDeleteRows = false;
+            this.borneGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.borneGridView.BackgroundColor = System.Drawing.Color.White;
+            this.borneGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.borneGridView.Location = new System.Drawing.Point(3, 3);
+            this.borneGridView.Name = "borneGridView";
+            this.borneGridView.Size = new System.Drawing.Size(466, 389);
+            this.borneGridView.TabIndex = 2;
+            // 
+            // panel1
+            // 
+            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel1.Controls.Add(this.label52);
+            this.panel1.Controls.Add(this.label51);
+            this.panel1.Controls.Add(this.button4);
+            this.panel1.Controls.Add(this.label38);
+            this.panel1.Controls.Add(this.label39);
+            this.panel1.Controls.Add(this.label40);
+            this.panel1.Controls.Add(this.label49);
+            this.panel1.Controls.Add(this.label41);
+            this.panel1.Controls.Add(this.label48);
+            this.panel1.Controls.Add(this.label42);
+            this.panel1.Controls.Add(this.label47);
+            this.panel1.Controls.Add(this.label43);
+            this.panel1.Controls.Add(this.label46);
+            this.panel1.Controls.Add(this.label44);
+            this.panel1.Controls.Add(this.label45);
+            this.panel1.Location = new System.Drawing.Point(21, 478);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(1097, 185);
+            this.panel1.TabIndex = 19;
+            // 
+            // label52
+            // 
+            this.label52.AutoSize = true;
+            this.label52.Location = new System.Drawing.Point(207, 86);
+            this.label52.Name = "label52";
+            this.label52.Size = new System.Drawing.Size(41, 13);
+            this.label52.TabIndex = 18;
+            this.label52.Text = "label52";
+            // 
+            // label51
+            // 
+            this.label51.AutoSize = true;
+            this.label51.Location = new System.Drawing.Point(14, 86);
+            this.label51.Name = "label51";
+            this.label51.Size = new System.Drawing.Size(94, 13);
+            this.label51.TabIndex = 17;
+            this.label51.Text = "Batterie en charge";
+            // 
+            // button4
+            // 
+            this.button4.Location = new System.Drawing.Point(17, 145);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(135, 23);
+            this.button4.TabIndex = 16;
+            this.button4.Text = "Recharger Batterie";
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
+            // 
+            // label38
+            // 
+            this.label38.AutoSize = true;
+            this.label38.Location = new System.Drawing.Point(14, 38);
+            this.label38.Name = "label38";
+            this.label38.Size = new System.Drawing.Size(147, 13);
+            this.label38.TabIndex = 4;
+            this.label38.Text = "Nombre de batterie disponible";
+            // 
+            // label39
+            // 
+            this.label39.AutoSize = true;
+            this.label39.Location = new System.Drawing.Point(14, 13);
+            this.label39.Name = "label39";
+            this.label39.Size = new System.Drawing.Size(126, 13);
+            this.label39.TabIndex = 5;
+            this.label39.Text = "Nombre de batterie totale";
+            // 
+            // label40
+            // 
+            this.label40.AutoSize = true;
+            this.label40.Location = new System.Drawing.Point(280, 13);
+            this.label40.Name = "label40";
+            this.label40.Size = new System.Drawing.Size(138, 13);
+            this.label40.TabIndex = 6;
+            this.label40.Text = "Capacité totale de la station";
+            // 
+            // label49
+            // 
+            this.label49.AutoSize = true;
+            this.label49.Location = new System.Drawing.Point(473, 38);
+            this.label49.Name = "label49";
+            this.label49.Size = new System.Drawing.Size(41, 13);
+            this.label49.TabIndex = 15;
+            this.label49.Text = "label49";
+            // 
+            // label41
+            // 
+            this.label41.AutoSize = true;
+            this.label41.Location = new System.Drawing.Point(280, 38);
+            this.label41.Name = "label41";
+            this.label41.Size = new System.Drawing.Size(127, 13);
+            this.label41.TabIndex = 7;
+            this.label41.Text = "Pourcentage de capacité";
+            // 
+            // label48
+            // 
+            this.label48.AutoSize = true;
+            this.label48.Location = new System.Drawing.Point(473, 13);
+            this.label48.Name = "label48";
+            this.label48.Size = new System.Drawing.Size(19, 13);
+            this.label48.TabIndex = 14;
+            this.label48.Text = "15";
+            // 
+            // label42
+            // 
+            this.label42.AutoSize = true;
+            this.label42.Location = new System.Drawing.Point(14, 110);
+            this.label42.Name = "label42";
+            this.label42.Size = new System.Drawing.Size(171, 13);
+            this.label42.TabIndex = 8;
+            this.label42.Text = "Pourcentage de batterie disponible";
+            // 
+            // label47
+            // 
+            this.label47.AutoSize = true;
+            this.label47.Location = new System.Drawing.Point(208, 110);
+            this.label47.Name = "label47";
+            this.label47.Size = new System.Drawing.Size(41, 13);
+            this.label47.TabIndex = 13;
+            this.label47.Text = "label47";
+            // 
+            // label43
+            // 
+            this.label43.AutoSize = true;
+            this.label43.Location = new System.Drawing.Point(14, 62);
+            this.label43.Name = "label43";
+            this.label43.Size = new System.Drawing.Size(87, 13);
+            this.label43.TabIndex = 9;
+            this.label43.Text = "Batterie réservée";
+            // 
+            // label46
+            // 
+            this.label46.AutoSize = true;
+            this.label46.Location = new System.Drawing.Point(207, 62);
+            this.label46.Name = "label46";
+            this.label46.Size = new System.Drawing.Size(41, 13);
+            this.label46.TabIndex = 12;
+            this.label46.Text = "label46";
+            // 
+            // label44
+            // 
+            this.label44.AutoSize = true;
+            this.label44.Location = new System.Drawing.Point(207, 13);
+            this.label44.Name = "label44";
+            this.label44.Size = new System.Drawing.Size(41, 13);
+            this.label44.TabIndex = 10;
+            this.label44.Text = "label44";
+            // 
+            // label45
+            // 
+            this.label45.AutoSize = true;
+            this.label45.Location = new System.Drawing.Point(207, 38);
+            this.label45.Name = "label45";
+            this.label45.Size = new System.Drawing.Size(41, 13);
+            this.label45.TabIndex = 11;
+            this.label45.Text = "label45";
+            // 
+            // label50
+            // 
+            this.label50.AutoSize = true;
+            this.label50.Location = new System.Drawing.Point(21, 58);
+            this.label50.Name = "label50";
+            this.label50.Size = new System.Drawing.Size(168, 13);
+            this.label50.TabIndex = 17;
+            this.label50.Text = "Liste des batteries de cette station";
+            // 
+            // comboBox1
+            // 
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Items.AddRange(new object[] {
+            "Borne 00",
+            "Borne 01",
+            "Borne 02"});
+            this.comboBox1.Location = new System.Drawing.Point(21, 18);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(121, 21);
+            this.comboBox1.TabIndex = 3;
+            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
             // 
             // serialPort1
             // 
-            this.serialPort1.BaudRate = 19200;
-            this.serialPort1.PortName = "COM2";
+            this.serialPort1.PortName = "COM5";
             this.serialPort1.ReadTimeout = 15;
             this.serialPort1.ReceivedBytesThreshold = 24;
             this.serialPort1.DataReceived += new System.IO.Ports.SerialDataReceivedEventHandler(this.serialPort1_DataReceived);
@@ -1056,42 +1300,17 @@
             this.timer1.Interval = 1000;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
-            // borneGridView
-            // 
-            this.borneGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.borneGridView.Location = new System.Drawing.Point(3, 3);
-            this.borneGridView.Name = "borneGridView";
-            this.borneGridView.Size = new System.Drawing.Size(1237, 674);
-            this.borneGridView.TabIndex = 2;
-            // 
-            // bornePage
-            // 
-            this.bornePage.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.bornePage.Controls.Add(this.borneGridView);
-            this.bornePage.Location = new System.Drawing.Point(4, 22);
-            this.bornePage.Name = "bornePage";
-            this.bornePage.Padding = new System.Windows.Forms.Padding(3);
-            this.bornePage.Size = new System.Drawing.Size(1246, 682);
-            this.bornePage.TabIndex = 1;
-            this.bornePage.Text = "Borne";
-            // 
-            // textBox1
-            // 
-            this.textBox1.Location = new System.Drawing.Point(299, 187);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(100, 20);
-            this.textBox1.TabIndex = 0;
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1278, 738);
+            this.ClientSize = new System.Drawing.Size(1227, 738);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
             this.Text = "SimulRéseau";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
@@ -1099,10 +1318,15 @@
             this.cartePage.ResumeLayout(false);
             this.cartePage.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            this.carPage.ResumeLayout(false);
-            this.carPage.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.borneGridView)).EndInit();
             this.bornePage.ResumeLayout(false);
+            this.bornePage.PerformLayout();
+            this.panel3.ResumeLayout(false);
+            this.panel3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
+            this.panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.borneGridView)).EndInit();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1113,7 +1337,6 @@
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem fichierToolStripMenuItem;
         private System.Windows.Forms.TabControl tabControl1;
-        private System.Windows.Forms.TabPage carPage;
         private System.Windows.Forms.ToolStripMenuItem quitterToolStripMenuItem;
         private System.IO.Ports.SerialPort serialPort1;
         private System.Windows.Forms.TabPage cartePage;
@@ -1213,7 +1436,27 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TabPage bornePage;
         private System.Windows.Forms.DataGridView borneGridView;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.Label label40;
+        private System.Windows.Forms.Label label39;
+        private System.Windows.Forms.Label label38;
+        private System.Windows.Forms.Label label42;
+        private System.Windows.Forms.Label label41;
+        private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.Label label49;
+        private System.Windows.Forms.Label label48;
+        private System.Windows.Forms.Label label47;
+        private System.Windows.Forms.Label label46;
+        private System.Windows.Forms.Label label45;
+        private System.Windows.Forms.Label label44;
+        private System.Windows.Forms.Label label43;
+        private System.Windows.Forms.Label label50;
+        private System.Windows.Forms.PictureBox pictureBox2;
+        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.Label label52;
+        private System.Windows.Forms.Label label51;
     }
 }
 
